@@ -1,0 +1,19 @@
+server:
+  port: 5723
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tourdb
+    username: postgres
+    password: postgres_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+management:
+  tracing:
+    sampling:
+      probability: 1.0

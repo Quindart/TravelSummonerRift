@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  # nginx:
+  #   image: nginx
+  #   ports:
+  #    - "8080:80"
+  postgres:
+    image: 'postgres:12-alpine'
+    container_name: postgres-tour-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/ecom-volumn:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres_password
+    command: ["postgres"]
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin-tour
+    ports:
+      - "8389:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - ./data/pgadmin-volumn:/var/lib/pgadmin
+    restart: always
+
+  redis:
+    image: redis
+    container_name: redis-tour-cache
+    ports:
+      - "6374:6374"
+    restart: always
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-tour
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    restart: always
