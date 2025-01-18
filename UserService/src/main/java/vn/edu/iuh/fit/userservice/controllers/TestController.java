@@ -9,30 +9,22 @@ import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.userservice.exception.errors.InternalServerErrorException;
 import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.userservice.services.TestService;
 
 @RestController
 @RequestMapping("/api")
 public class TestController  {
-
+    private  TestService testService;
+    public  TestController(TestService testService){
+        this.testService = testService;
+    }
 
     @GetMapping("hello")
     public ResponseEntity<MessageResponse<TestDto>> helloword(){
-       try {
-           int i = 0;
-           if(i == 1) throw new NotFoundException("Chos Tu Biến Thái");
-           return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
-       } catch (RuntimeException e) {
-           throw new RuntimeException(e);
-       }
+           return SuccessEntityResponse.FoundResponse("Đã tìm thấy", testService.testSerivce());
     }
     @GetMapping("hello1")
     public ResponseEntity<MessageResponse<TestDto>> helloword2(){
-        try {
-            int i = 1;
-            if(i == 1) throw new RuntimeException("THE HELLOOOO");
             return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
-        } catch (RuntimeException e) {
-            throw new InternalServerErrorException(e);
-        }
     }
 }
