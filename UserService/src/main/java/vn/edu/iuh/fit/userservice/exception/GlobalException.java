@@ -49,4 +49,11 @@ public class GlobalException {
         ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
         return  new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorMessageDto> RuntimeErrorException(RuntimeException exc){
+        MessageResponse error = new MessageResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),exc.getMessage(),false);
+        ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
+        return  new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
