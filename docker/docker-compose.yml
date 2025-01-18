@@ -24,8 +24,9 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@gmail.com
       PGADMIN_DEFAULT_PASSWORD: admin
+    user: '$UID:$GID'
     volumes:
-      - ./data/pgadmin-volumn:/var/lib/pgadmin
+      - ./data/pgadmin:/var/lib/pgadmin
     restart: always
 
   redis:
@@ -34,12 +35,12 @@ services:
     ports:
       - "6374:6374"
     restart: always
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins-tour
-    privileged: true
-    user: root
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    restart: always
+#  jenkins:
+#    image: jenkins/jenkins:lts
+#    container_name: jenkins-tour
+#    privileged: true
+#    user: root
+#    ports:
+#      - "8080:8080"
+#      - "50000:50000"
+#    restart: always
