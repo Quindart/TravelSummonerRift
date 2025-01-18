@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.fit.userservice.dtos.TestDto;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
+import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
 
 @RestController
@@ -16,14 +17,11 @@ public class TestController  {
     @GetMapping("hello")
     public ResponseEntity<MessageResponse<TestDto>> helloword(){
        try {
-           int i = 1;
-//           if(i == 1) throw  throwNotFoundException("Chos Tu Biến Thái");
+           int i = 0;
+
            if(i == 1) throw new NotFoundException("Chos Tu Biến Thái");
-           MessageResponse<TestDto > message =  new MessageResponse<>(200,"hello123o",true,new TestDto("Chos Tu"));
-           return ResponseEntity.status(200).body(message);
+           return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
        } catch (RuntimeException e) {
-           throw new RuntimeException(e);
-       } catch (Throwable e) {
            throw new RuntimeException(e);
        }
     }
