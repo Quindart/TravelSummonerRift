@@ -42,4 +42,11 @@ public class GlobalException {
         ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
         return  new ResponseEntity<>(errorDto, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<ErrorMessageDto> InternalServerError(InternalServerErrorException exc){
+        MessageResponse error = new MessageResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),exc.getMessage(),false);
+        ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
+        return  new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
