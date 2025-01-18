@@ -2,16 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Annotation profile for BookingService" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="BookingService" />
-      </profile>
       <profile name="Annotation profile for GetwayService" enabled="true">
         <sourceOutputDir name="../GetwayService/target/generated-sources/annotations" />
         <sourceTestOutputDir name="../GetwayService/target/generated-test-sources/test-annotations" />
@@ -29,9 +19,10 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
+        <module name="NotificationService" />
+        <module name="BookingService" />
         <module name="DiscoveryService" />
         <module name="UserService" />
-        <module name="NotificationService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
