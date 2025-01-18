@@ -1,13 +1,13 @@
 !/bin/bash
 # allow local ip
 allow_ip(){
-  echo ">>Setup meta ip config on localhost:5143 ...."
-  docker exec -it postgres-meta-db bash -c "echo 'host    all    all    0.0.0.0/0    md5' >> /var/lib/postgresql/data/pg_hba.conf"
-  docker exec -it postgres-meta-db bash -c "echo 'host    all    all    ::/0    md5' >> /var/lib/postgresql/data/pg_hba.conf"
+  echo ">>Setup tour ip config on localhost:5143 ...."
+  docker exec -it postgres-tour-db bash -c "echo 'host    all    all    0.0.0.0/0    md5' >> /var/lib/postgresql/data/pg_hba.conf"
+  docker exec -it postgres-tour-db bash -c "echo 'host    all    all    ::/0    md5' >> /var/lib/postgresql/data/pg_hba.conf"
   echo "Allow localhost:5143 successfull"
 }
 
-# Create database in postgres-meta-db
+# Create database in postgres-tour-db
 create_postgres_db() {
   echo "Creating database in postgres-tour-db..."
   docker exec -i postgres-tour-db psql -U postgres -c "CREATE DATABASE tourdb;" || {
