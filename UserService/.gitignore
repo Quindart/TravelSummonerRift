@@ -18,6 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
+/docker/data
 
 ### NetBeans ###
 /nbproject/private/
