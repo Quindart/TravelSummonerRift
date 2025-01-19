@@ -22,10 +22,15 @@ public class SecurityConfig {
                 .csrf().disable() // Tắt CSRF nếu không cần thiết
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**", "/api//**").permitAll() // Cho phép truy cập không cần xác thực
-                        .anyRequest().authenticated() // Các request khác phải được xác thực
+                        .anyRequest().permitAll()// Các request khác phải được xác thực
                 )
                 .formLogin(Customizer.withDefaults()) // Form login mặc định
                 .httpBasic(Customizer.withDefaults()); // Hỗ trợ Basic Auth
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
