@@ -1,5 +1,7 @@
 server:
   port: 1902
+  servlet:
+    context-path: /booking-service
 spring:
   application:
     name: booking-service
@@ -7,7 +9,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/tourdb
     username: postgres
-    password: postgres
+    password: postgres_password
   jpa:
     hibernate:
       ddl-auto: update
