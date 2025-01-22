@@ -2,8 +2,10 @@ package vn.edu.iuh.fit.bookingservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import vn.edu.iuh.fit.bookingservice.exception.errors.*;
 
 @ControllerAdvice
@@ -54,6 +56,15 @@ public class GlobalException {
     public ResponseEntity<ErrorMessageDto> RuntimeErrorException(RuntimeException exc){
         MessageResponse error = new MessageResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),exc.getMessage(),false);
         ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
-        return  new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessageDto> handleValidationExceptions(
+            MethodArgumentNotValidException exception) {
+        String enumKey = exception.getFieldError().getDefaultMessage();
+        ErrorMessageDto errorDto = new ErrorMessageDto(HttpStatus.BAD_REQUEST.value(), enumKey, false);
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 }

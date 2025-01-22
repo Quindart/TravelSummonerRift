@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
+import vn.edu.iuh.fit.userservice.entities.BaseEntity;
 
 @Entity
 @Table(name = "tickets")
@@ -14,7 +15,7 @@ import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 @ToString
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Ticket {
+public class Ticket extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String ticketId;
