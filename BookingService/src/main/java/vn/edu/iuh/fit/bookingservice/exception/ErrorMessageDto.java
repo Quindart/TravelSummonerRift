@@ -1,5 +1,8 @@
 package vn.edu.iuh.fit.bookingservice.exception;
 
+import lombok.Builder;
+
+@Builder
 public class ErrorMessageDto {
     private int statusCode;
     private String message;
