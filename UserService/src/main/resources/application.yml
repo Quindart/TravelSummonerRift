@@ -2,6 +2,9 @@ server:
   port: 5723
   servlet:
     context-path: /user-service
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 spring:
   application:
     name: user-service
@@ -19,3 +22,8 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+cloudinary:
+  cloud_name: dwip7dplu
+  api_key: 944366892271352
+  api_secret: SGhlTmcznfxn-1T0T8D2BQQOA9Q
