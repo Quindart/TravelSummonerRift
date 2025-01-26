@@ -21,4 +21,14 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="com.github.lipiridi.spotless.applier.ui.settings.ModuleSettingsState">
+    <option name="selectedModules">
+      <list>
+        <option value="UserService" />
+        <option value="NotificationService" />
+        <option value="BookingService" />
+        <option value="DiscoveryService" />
+      </list>
+    </option>
+  </component>
 </project>

@@ -34,6 +34,8 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <spotless.version>2.43.0</spotless.version>
         <org.mapstruct.version>1.6.0</org.mapstruct.version>
+        <spotless.version>2.43.0</spotless.version>
+
     </properties>
     <dependencies>
         <dependency>
@@ -141,14 +143,13 @@
             </plugin>
 
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>11</source>
+                    <target>11</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -173,6 +174,39 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <removeUnusedImports/>
+                        <toggleOffOn/>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                        <indent>
+                            <tabs>true</tabs>
+                            <spacesPerTab>4</spacesPerTab>
+                        </indent>
+                        <palantirJavaFormat/>
+                        <importOrder>
+                            <!-- Specify either order or file, but not both -->
+                            <order>java,jakarta,org,com,com.diffplug,</order>
+                        </importOrder>
+                    </java>
+                </configuration>
+                <!--				<executions>-->
+                <!--					<execution>-->
+                <!--						<phase>compile</phase>-->
+                <!--						<goals>-->
+                <!--							<goal>check</goal>-->
+                <!--						</goals>-->
+                <!--					</execution>-->
+                <!--				</executions>-->
+            </plugin>
+
+
         </plugins>
     </build>
 

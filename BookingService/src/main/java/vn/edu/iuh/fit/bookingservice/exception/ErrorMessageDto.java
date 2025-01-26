@@ -40,10 +40,9 @@ public class ErrorMessageDto {
 
     @Override
     public String toString() {
-        return "ErrorMessageDto{" +
-                "statusCode=" + statusCode +
-                ", message='" + message + '\'' +
-                ", success=" + success +
-                '}';
+        return "ErrorMessageDto{" + "statusCode="
+                + statusCode + ", message='"
+                + message + '\'' + ", success="
+                + success + '}';
     }
 }
