@@ -1,7 +1,11 @@
 package vn.edu.iuh.fit.bookingservice.services.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import vn.edu.iuh.fit.bookingservice.dtos.requests.CategoryTourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.CategoryTourResponse;
 import vn.edu.iuh.fit.bookingservice.entities.CategoryTour;
@@ -11,9 +15,6 @@ import vn.edu.iuh.fit.bookingservice.mapper.CategoryTourMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.CategoryTourRepository;
 import vn.edu.iuh.fit.bookingservice.services.CategoryTourService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class CategoryTourServiceImpl implements CategoryTourService {
     @Autowired
@@ -22,11 +23,9 @@ public class CategoryTourServiceImpl implements CategoryTourService {
     @Autowired
     private CategoryTourMapper categoryTourMapper;
 
-
     @Override
     public List<CategoryTourResponse> getAllCategoryTours() {
-        List<CategoryTourResponse> categoryTourResponses = categoryTourRepository.findAll()
-                .stream()
+        List<CategoryTourResponse> categoryTourResponses = categoryTourRepository.findAll().stream()
                 .map(categoryTourMapper::toCategoryTourResponse)
                 .collect(Collectors.toList());
         return categoryTourResponses;
@@ -34,7 +33,8 @@ public class CategoryTourServiceImpl implements CategoryTourService {
 
     @Override
     public CategoryTourResponse getCategoryTourById(String categoryTourId) {
-        CategoryTour categoryTour = categoryTourRepository.findById(categoryTourId)
+        CategoryTour categoryTour = categoryTourRepository
+                .findById(categoryTourId)
                 .orElseThrow(() -> new NotFoundException("Hong tìm thấy loại tour"));
 
         return categoryTourMapper.toCategoryTourResponse(categoryTour);
@@ -52,7 +52,8 @@ public class CategoryTourServiceImpl implements CategoryTourService {
 
     @Override
     public CategoryTourResponse updateCategoryTour(String categoryTourId, CategoryTourRequest categoryTourRequest) {
-        CategoryTour categoryTour = categoryTourRepository.findById(categoryTourId)
+        CategoryTour categoryTour = categoryTourRepository
+                .findById(categoryTourId)
                 .orElseThrow(() -> new NotFoundException("Hong tìm thấy loại tour"));
 
         categoryTour.setName(categoryTourRequest.getName());
@@ -66,7 +67,8 @@ public class CategoryTourServiceImpl implements CategoryTourService {
 
     @Override
     public void deleteCategoryTour(String categoryTourId) {
-        CategoryTour categoryTour = categoryTourRepository.findById(categoryTourId)
+        CategoryTour categoryTour = categoryTourRepository
+                .findById(categoryTourId)
                 .orElseThrow(() -> new NotFoundException("Hong tìm thấy loại tour"));
 
         categoryTour.setActive(false);

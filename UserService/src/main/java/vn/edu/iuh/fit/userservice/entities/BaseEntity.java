@@ -1,13 +1,13 @@
 package vn.edu.iuh.fit.userservice.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
 @EntityListeners({AuditingEntityListener.class})
@@ -15,8 +15,10 @@ import java.time.LocalDateTime;
 @Setter
 public class BaseEntity {
     protected boolean isActive = true;
+
     @Column(updatable = false)
     LocalDateTime createdAt;
+
     LocalDateTime updatedAt;
 
     @PrePersist
