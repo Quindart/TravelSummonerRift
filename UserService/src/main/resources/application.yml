@@ -10,7 +10,7 @@ spring:
     name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/tourdb
+    url: jdbc:postgresql://localhost:5432/tourdb?sslmode=disable
     username: postgres
     password: postgres_password
   jpa:
@@ -27,3 +27,8 @@ cloudinary:
   cloud_name: dwip7dplu
   api_key: 944366892271352
   api_secret: SGhlTmcznfxn-1T0T8D2BQQOA9Q
+
+jwt:
+  signerKey: zhRPPUbgnHMtrH0Fj3reft+wa6HFXDlcwSNbTPEA3cQUdCb4aXANrlQntnH1QAYc
+  valid-duration: 3600
+  refreshable-duration: 36000
