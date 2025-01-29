@@ -13,9 +13,10 @@ services:
       - ./data/ecom-volumn:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgres_password
-    command: ["postgres"]
+    command: [ "postgres" ]
     restart: always
 
+  
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin-tour
