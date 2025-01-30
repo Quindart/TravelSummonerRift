@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.userservice.dtos.requests.AuthenticationRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.LogoutRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.RefreshRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
@@ -34,5 +36,17 @@ public class AuthController {
         return SuccessEntityResponse.OkResponse("Kiểm tra token thành công", result);
     }
 
-    
+    @PostMapping("/logout")
+    ResponseEntity<MessageResponse<Void>> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+        return SuccessEntityResponse.OkResponse("Đăng xuất thành công", null);
+    }
+
+    @PostMapping("/refresh")
+    ResponseEntity<MessageResponse<AuthenticationResponse>> refresh(@RequestBody @Valid RefreshRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return SuccessEntityResponse.OkResponse("Làm mới token thành công", result);
+    }
+
+
 }
