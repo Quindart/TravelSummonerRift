@@ -25,8 +25,11 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import vn.edu.iuh.fit.userservice.dtos.requests.AuthenticationRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.LogoutRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.RefreshRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
+import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
 import vn.edu.iuh.fit.userservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.userservice.repositories.InvalidatedTokenRepository;
@@ -80,43 +83,42 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
-    //    public void logout(LogoutRequest request) throws ParseException, JOSEException {
-    //        try {
-    //            var signToken = verifyToken(request.getToken(), true);
-    //
-    //            String jit = signToken.getJWTClaimsSet().getJWTID();
-    //            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-    //
-    //            InvalidatedToken invalidatedToken =
-    //                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
-    //
-    //            invalidatedTokenRepository.save(invalidatedToken);
-    //        } catch (AppException exception) {
-    //            log.info("Token already expired");
-    //        }
-    //    }
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            var signToken = verifyToken(request.getToken(), true);
 
-    //    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
-    //        var signedJWT = verifyToken(request.getToken());
-    //
-    //        var jit = signedJWT.getJWTClaimsSet().getJWTID();
-    //        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-    //
-    //        InvalidatedToken invalidatedToken =
-    //                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
-    //
-    //        invalidatedTokenRepository.save(invalidatedToken);
-    //
-    //        var username = signedJWT.getJWTClaimsSet().getSubject();
-    //
-    //        var user =
-    //                userRepository.findByUsername(username).orElseThrow(() -> new
-    // AppException(ErrorCode.UNAUTHENTICATED));
-    //
-    //        var token = generateToken(user);
-    //
-    //        return AuthenticationResponse.builder().token(token).authenticated(true).build();
-    //    }
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+
+            InvalidatedToken invalidatedToken =
+                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (UnauthorizedException exception) {
+            log.info("Token already expired");
+        }
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signedJWT = verifyToken(request.getToken(), true);
+
+        var jit = signedJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken =
+                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signedJWT.getJWTClaimsSet().getSubject();
+
+        var user =
+                userRepository.findByUsername(username).orElseThrow(() -> new UnauthorizedException("Sai tên đăng nhập hoặc mật khẩu"));
+
+        var token = generateToken(user);
+
+        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+    }
 
     private String generateToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
