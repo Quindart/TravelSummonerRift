@@ -40,6 +40,10 @@ import vn.edu.iuh.fit.userservice.repositories.UserRepository;
 public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RedisService redisService;
+
     @Autowired
     private InvalidatedTokenRepository invalidatedTokenRepository;
 
@@ -93,8 +97,10 @@ public class AuthenticationService {
             InvalidatedToken invalidatedToken =
                     InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-            invalidatedTokenRepository.save(invalidatedToken);
+//            invalidatedTokenRepository.save(invalidatedToken);
+            redisService.saveInvalidatedToken(jit, request.getToken());
         } catch (UnauthorizedException exception) {
+
             log.info("Token already expired");
         }
     }
@@ -103,12 +109,16 @@ public class AuthenticationService {
         var signedJWT = verifyToken(request.getToken(), true);
 
         var jit = signedJWT.getJWTClaimsSet().getJWTID();
-        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+//        var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+//
+//        InvalidatedToken invalidatedToken =
+//                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-        InvalidatedToken invalidatedToken =
-                InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
+//        invalidatedTokenRepository.save(invalidatedToken);
 
-        invalidatedTokenRepository.save(invalidatedToken);
+        if (redisService.isTokenInvalidated(jit)) {
+            throw new UnauthorizedException("Token đã bị vô hiệu hóa");
+        }
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
@@ -165,8 +175,11 @@ public class AuthenticationService {
         if (!(verified && expiryTime.after(new Date())))
             throw new UnauthorizedException("Sai tên đăng nhập hoặc mật khẩu");
 
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
-            throw new UnauthorizedException("Sai tên đăng nhập hoặc mật khẩu");
+//        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+//            throw new UnauthorizedException("Sai tên đăng nhập hoặc mật khẩu");
+
+        if (redisService.isTokenInvalidated(signedJWT.getJWTClaimsSet().getJWTID()))
+            throw new UnauthorizedException("Token đã bị vô hiệu hóa");
 
         return signedJWT;
     }
