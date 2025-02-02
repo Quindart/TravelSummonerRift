@@ -1,12 +1,9 @@
 package vn.edu.iuh.fit.userservice.dtos;
 
-
 public class TestDto {
     private String username;
 
-
-    public TestDto() {
-    }
+    public TestDto() {}
 
     public TestDto(String username) {
         this.username = username;
@@ -22,8 +19,6 @@ public class TestDto {
 
     @Override
     public String toString() {
-        return "TestDto{" +
-                "username='" + username + '\'' +
-                '}';
+        return "TestDto{" + "username='" + username + '\'' + '}';
     }
 }
