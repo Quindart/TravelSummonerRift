@@ -18,7 +18,7 @@ import vn.edu.iuh.fit.userservice.services.AuthenticationService;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private AuthenticationService authenticationService;
