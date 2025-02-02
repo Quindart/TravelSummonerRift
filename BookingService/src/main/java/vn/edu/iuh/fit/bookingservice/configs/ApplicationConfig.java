@@ -13,17 +13,17 @@ import java.util.List;
 public class ApplicationConfig {
     private Faker faker = new Faker();
 
-//    @Bean
-//    ApplicationRunner categoryTourSeeder(CategoryTourRepository categoryTourRepository) {
-//        return args -> {
-//            for (int i = 0; i < 10; i++) {
-//                CategoryTour categoryTour = CategoryTour.builder()
-//                        .name(faker.book().title())
-//                        .description(faker.lorem().sentence())
-//                        .image(faker.internet().image())
-//                        .build();
-//                categoryTourRepository.save(categoryTour);
-//            }
-//        };
-//    }
+    @Bean
+    ApplicationRunner categoryTourSeeder(CategoryTourRepository categoryTourRepository) {
+        return args -> {
+            for (int i = 0; i < 10; i++) {
+                CategoryTour categoryTour = CategoryTour.builder()
+                        .name(faker.book().title())
+                        .description(faker.lorem().sentence())
+                        .image(faker.internet().image())
+                        .build();
+                categoryTourRepository.save(categoryTour);
+            }
+        };
+    }
 }
