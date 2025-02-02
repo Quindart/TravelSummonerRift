@@ -15,7 +15,7 @@ import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.bookingservice.services.CategoryTourService;
 
 @RestController
-@RequestMapping("/api/category-tours")
+@RequestMapping("/category-tours")
 public class CategoryTourController {
     @Autowired
     CategoryTourService categoryTourService;

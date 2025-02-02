@@ -15,7 +15,7 @@ import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.userservice.services.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -25,5 +25,5 @@ public class UserController {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy", userService.getUsers());
     }
 
-    
+
 }

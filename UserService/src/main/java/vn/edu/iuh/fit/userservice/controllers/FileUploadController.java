@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.userservice.services.CloudinaryService;
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/files")
 public class FileUploadController {
     @Autowired
     private CloudinaryService cloudinaryService;
