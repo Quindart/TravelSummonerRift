@@ -1,13 +1,12 @@
 package vn.edu.iuh.fit.bookingservice.configs;
 
-import net.datafaker.Faker;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import net.datafaker.Faker;
 import vn.edu.iuh.fit.bookingservice.entities.CategoryTour;
 import vn.edu.iuh.fit.bookingservice.repositories.CategoryTourRepository;
-
-import java.util.List;
 
 @Configuration
 public class ApplicationConfig {
