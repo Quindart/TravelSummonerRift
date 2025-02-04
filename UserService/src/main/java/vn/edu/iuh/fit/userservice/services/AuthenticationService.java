@@ -100,7 +100,6 @@ public class AuthenticationService {
 //            invalidatedTokenRepository.save(invalidatedToken);
             redisService.saveInvalidatedToken(jit, request.getToken());
         } catch (UnauthorizedException exception) {
-
             log.info("Token already expired");
         }
     }
