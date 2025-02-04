@@ -19,6 +19,8 @@ target/
 *.iml
 *.ipr
 
+
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -32,4 +34,15 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 docker/data
+=======
+
+
+
+
+
+application.yml
+/docker/data
+docker/data/ecom-volumn/base/
+>>>>>>> e68e3c34e3e9ec5ca4e8e6e17fe77735b96d337f
