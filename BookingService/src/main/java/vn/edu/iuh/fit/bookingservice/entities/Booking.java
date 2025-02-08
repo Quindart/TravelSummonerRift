@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.bookingservice.entities;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.userservice.entities.BaseEntity;
@@ -33,6 +34,4 @@ public class Booking extends BaseEntity {
     TourSchedule tourSchedule;
 
     String userId;
-
-
 }

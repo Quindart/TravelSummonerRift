@@ -1,18 +1,16 @@
 package vn.edu.iuh.fit.userservice.exception;
 
-public class MessageResponse <T>{
+public class MessageResponse<T> {
     private int statusCode;
     private String message;
     private boolean success;
     private T data;
 
-
-
-    public MessageResponse(int statusCode, String message,boolean success) {
-            this(statusCode, message, success, null);
+    public MessageResponse(int statusCode, String message, boolean success) {
+        this(statusCode, message, success, null);
     }
 
-    public MessageResponse(int statusCode, String message,boolean success, T data) {
+    public MessageResponse(int statusCode, String message, boolean success, T data) {
         this.statusCode = statusCode;
         this.message = message;
         this.success = success;
@@ -53,11 +51,16 @@ public class MessageResponse <T>{
 
     @Override
     public String toString() {
-        return "MessageResponse{" +
-                "statusCode=" + statusCode +
-                ", message='" + message + '\'' +
-                ", success=" + success +
-                ", data=" + data +
-                '}';
+        return "MessageResponse{"
+                + "statusCode="
+                + statusCode
+                + ", message='"
+                + message
+                + '\''
+                + ", success="
+                + success
+                + ", data="
+                + data
+                + '}';
     }
 }

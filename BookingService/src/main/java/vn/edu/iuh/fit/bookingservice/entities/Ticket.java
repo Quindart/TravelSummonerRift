@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.bookingservice.entities;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
@@ -23,6 +24,7 @@ public class Ticket extends BaseEntity {
     double price;
     int status;
     String note;
+
     @Enumerated(EnumType.STRING)
     TicketType ticketType;
 
@@ -33,5 +35,4 @@ public class Ticket extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "tour_schedule_id")
     TourSchedule tourSchedule;
-
 }
