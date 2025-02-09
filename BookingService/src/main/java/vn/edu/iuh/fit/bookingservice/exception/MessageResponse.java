@@ -1,9 +1,11 @@
 package vn.edu.iuh.fit.bookingservice.exception;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class MessageResponse<T> {
+public class MessageResponse<T> implements java.io.Serializable {
     private int statusCode;
     private String message;
     private boolean success;
