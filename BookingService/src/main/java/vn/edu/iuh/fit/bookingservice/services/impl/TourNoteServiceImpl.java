@@ -30,11 +30,10 @@ public class TourNoteServiceImpl implements TourNoteService {
 
     @Override
     public List<TourNoteResponse> getAllTourNote() {
-        List<TourNoteResponse> tourNoteResponses = tourNoteRepository.findAll()
+        return tourNoteRepository.findAll()
                 .stream()
                 .map(tourNoteMapper::toTourNoteResponse)
-                .collect(java.util.stream.Collectors.toList());
-        return tourNoteResponses;
+                .toList();
     }
 
     @Override
@@ -47,41 +46,56 @@ public class TourNoteServiceImpl implements TourNoteService {
 
     @Override
     public TourNoteResponse createTourNote(TourNoteRequest tourNoteRequest) {
+        Tour tour = isTourExist(tourNoteRequest.getTourId());
+
         TourNote tourNote = tourNoteMapper.toTourNote(tourNoteRequest);
+        tourNote.setTour(tour);
         tourNote = tourNoteRepository.save(tourNote);
         if (tourNote == null) {
             throw new InternalServerErrorException("Tạo tour note thất bại");
         }
+
         return tourNoteMapper.toTourNoteResponse(tourNote);
     }
 
     @Override
     public TourNoteResponse updateTourNote(String tourNoteId, TourNoteRequest tourNoteRequest) {
-        TourNote tourNote = tourNoteRepository.findById(tourNoteId)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour note"));
+        Tour tour = isTourExist(tourNoteRequest.getTourId());
+
+        TourNote tourNote = isTourNoteExist(tourNoteId);
 
         tourNote.setTitle(tourNoteRequest.getTitle());
         tourNote.setContent(tourNoteRequest.getContent());
-
-        Tour tour = tourRepository.findById(tourNoteRequest.getTourId())
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour"));
-
+        tourNote.setImage(tourNoteRequest.getImage());
 
         tourNote.setTour(tour);
         tourNote = tourNoteRepository.save(tourNote);
+
         if (tourNote == null) {
-            throw new vn.edu.iuh.fit.bookingservice.exception.errors.InternalServerErrorException("Cập nhật tour note thất bại: không tim thấy tour");
+            throw new InternalServerErrorException("Cập nhật tour note thất bại");
         }
-        return tourNoteMapper.toTourNoteResponse(tourNote);
+
+        TourNoteResponse tourNoteResponse = tourNoteMapper.toTourNoteResponse(tourNote);
+        tourNoteResponse.setTourId(tourNoteRequest.getTourId());
+        return tourNoteResponse;
     }
 
     @Override
     public void deleteTourNote(String tourNoteId) {
-        TourNote tourNote = tourNoteRepository.findById(tourNoteId)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour note"));
+        TourNote tourNote = isTourNoteExist(tourNoteId);
 
         tourNote.setActive(false);
 
         tourNoteRepository.save(tourNote);
+    }
+
+    private Tour isTourExist(String tourId) {
+        return tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour"));
+    }
+
+    private TourNote isTourNoteExist(String tourNoteId) {
+        return tourNoteRepository.findById(tourNoteId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour note"));
     }
 }
