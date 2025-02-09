@@ -22,7 +22,7 @@ public class UserController {
 
     @GetMapping()
     public ResponseEntity<MessageResponse<List<UserResponse>>> getUsers() {
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", userService.getUsers());
+        return SuccessEntityResponse.OkResponse("Đã tìm thấy", userService.getUsers());
     }
 
 
