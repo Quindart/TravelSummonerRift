@@ -13,11 +13,11 @@ import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 
 import java.util.List;
 
-//@FeignClient(name = "user-service", url = "http://localhost:5723/user-service", configuration = FeignConfig.class)
-//public interface UserServiceClient {
-//    @PostMapping(value = "/auth/introspect", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    MessageResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request);
-//
-//    @GetMapping(value = "users", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    MessageResponse<List<UserResponse>> getAllUsers();
-//}
+@FeignClient(name = "user-service", url = "http://localhost:5723/user-service")
+public interface UserServiceClient {
+    @PostMapping(value = "/auth/introspect", consumes = MediaType.APPLICATION_JSON_VALUE)
+    MessageResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request);
+
+    @GetMapping(value = "users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    MessageResponse<List<UserResponse>> getAllUsers();
+}

@@ -10,7 +10,7 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
-//import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.TestService;
 import vn.edu.iuh.fit.userservice.dtos.TestDto;
 
@@ -20,8 +20,8 @@ import java.util.List;
 @RequestMapping("/api")
 public class TestController {
 
-//    @Autowired
-//    private UserServiceClient userServiceClient;
+    @Autowired
+    private UserServiceClient userServiceClient;
 
 
     private TestService testService;
@@ -60,7 +60,7 @@ public class TestController {
 //
 //    }
 
-//    @PostMapping("/introspect")
+    //    @PostMapping("/introspect")
 //    public ResponseEntity<?> testIntrospect(@RequestBody IntrospectRequest request) {
 //        try {
 //            MessageResponse<IntrospectResponse> response = userServiceClient.introspect(request);
@@ -70,11 +70,11 @@ public class TestController {
 //        }
 //    }
 //
-//    @GetMapping("/test-users")
-//    public ResponseEntity<MessageResponse<List<UserResponse>>> testGetUsers() {
-//        MessageResponse<List<UserResponse>> response = userServiceClient.getAllUsers();
-//        List<UserResponse> users = response.getData();
-//        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", users);
-//
-//    }
+    @GetMapping("/test-users")
+    public ResponseEntity<MessageResponse<List<UserResponse>>> testGetUsers() {
+        MessageResponse<List<UserResponse>> response = userServiceClient.getAllUsers();
+        List<UserResponse> users = response.getData();
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", users);
+
+    }
 }
