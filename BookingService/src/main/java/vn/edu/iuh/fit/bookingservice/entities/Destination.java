@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Destination {
+public class Destination extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String destinationId;
