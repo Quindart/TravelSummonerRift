@@ -13,7 +13,6 @@ import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
 @Configuration
 public class ApplicationConfig {
     private Faker faker = new Faker();
-
     @Bean
     ApplicationRunner categoryTourSeeder(CategoryTourRepository categoryTourRepository, TourRepository tourRepository) {
         return args -> {
