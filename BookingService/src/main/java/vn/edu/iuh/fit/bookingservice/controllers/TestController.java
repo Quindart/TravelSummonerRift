@@ -1,12 +1,15 @@
 package vn.edu.iuh.fit.bookingservice.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import vn.edu.iuh.fit.bookingservice.dtos.requests.IntrospectRequest;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.IntrospectResponse;
+import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
@@ -16,6 +19,7 @@ import vn.edu.iuh.fit.userservice.dtos.TestDto;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class TestController {
@@ -71,10 +75,14 @@ public class TestController {
 //    }
 //
     @GetMapping("/test-users")
-    public ResponseEntity<MessageResponse<List<UserResponse>>> testGetUsers() {
-        MessageResponse<List<UserResponse>> response = userServiceClient.getAllUsers();
-        List<UserResponse> users = response.getData();
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", users);
-
+    public ResponseEntity<MessageResponse<List<UserResponse>>> getAllUsers() {
+        List<UserResponse> response = userServiceClient.getAllUsers();
+        log.info("Response: {}", response);
+        return ResponseEntity.ok(MessageResponse.<List<UserResponse>>builder()
+                .success(true)
+                .data(response)
+                .message("Danh sách người dùng")
+                .build());
     }
+
 }
