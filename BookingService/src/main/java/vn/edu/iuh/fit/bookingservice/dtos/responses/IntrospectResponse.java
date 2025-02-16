@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.dtos.responses;
+package vn.edu.iuh.fit.bookingservice.dtos.responses;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
