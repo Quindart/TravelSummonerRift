@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.entities;
+package vn.edu.iuh.fit.bookingservice.entities;
 
 import java.time.LocalDateTime;
 
