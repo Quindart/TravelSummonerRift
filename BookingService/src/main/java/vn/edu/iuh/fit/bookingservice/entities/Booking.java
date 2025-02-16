@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.edu.iuh.fit.userservice.entities.BaseEntity;
 
 @Entity
 @Table(name = "bookings")
@@ -34,4 +33,8 @@ public class Booking extends BaseEntity {
     TourSchedule tourSchedule;
 
     String userId;
+
+    public Booking(String bookingId) {
+        this.bookingId = bookingId;
+    }
 }

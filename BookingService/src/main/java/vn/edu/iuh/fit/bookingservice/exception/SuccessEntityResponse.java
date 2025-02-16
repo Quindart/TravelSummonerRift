@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class SuccessEntityResponse {
+
     public static <T> ResponseEntity<MessageResponse<T>> FoundResponse(String message, T data) {
         MessageResponse msg = new MessageResponse(HttpStatus.FOUND.value(), message, true, data);
         return ResponseEntity.status(HttpStatus.FOUND).body(msg);

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
-import vn.edu.iuh.fit.userservice.entities.BaseEntity;
+import vn.edu.iuh.fit.bookingservice.entities.BaseEntity;
 
 @Entity
 @Table(name = "tickets")
