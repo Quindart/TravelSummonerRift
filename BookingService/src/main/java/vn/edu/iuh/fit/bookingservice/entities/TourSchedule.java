@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import vn.edu.iuh.fit.bookingservice.entities.BaseEntity;
 
 @Entity
 @Table(name = "tour_schedules")

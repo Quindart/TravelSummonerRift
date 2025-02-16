@@ -63,13 +63,19 @@ public class AuthenticationService {
         var token = request.getToken();
         boolean isValid = true;
 
+        log.info("Token: " + token);
+
         try {
             verifyToken(token, false);
+
         } catch (UnauthorizedException e) {
             isValid = false;
         }
 
-        return IntrospectResponse.builder().valid(isValid).build();
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .userId(isValid ? SignedJWT.parse(token).getJWTClaimsSet().getSubject() : null)
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -133,7 +139,7 @@ public class AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUsername())
+                .subject(user.getUserId())
                 .issuer("zycute")
                 .issueTime(new Date())
                 .expirationTime(new Date(
