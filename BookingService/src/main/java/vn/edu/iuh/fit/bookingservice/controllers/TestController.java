@@ -74,15 +74,15 @@ public class TestController {
 //        }
 //    }
 //
-    @GetMapping("/test-users")
-    public ResponseEntity<MessageResponse<List<UserResponse>>> getAllUsers() {
-        List<UserResponse> response = userServiceClient.getAllUsers();
-        log.info("Response: {}", response);
-        return ResponseEntity.ok(MessageResponse.<List<UserResponse>>builder()
-                .success(true)
-                .data(response)
-                .message("Danh sách người dùng")
-                .build());
-    }
+//    @GetMapping("/test-users")
+//    public ResponseEntity<MessageResponse<List<UserResponse>>> getAllUsers() {
+//        List<UserResponse> response = userServiceClient.getAllUsers();
+//        log.info("Response: {}", response);
+//        return ResponseEntity.ok(MessageResponse.<List<UserResponse>>builder()
+//                .success(true)
+//                .data(response)
+//                .message("Danh sách người dùng")
+//                .build());
+//    }
 
 }

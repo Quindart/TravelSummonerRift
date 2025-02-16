@@ -15,9 +15,9 @@ import java.util.List;
 
 @FeignClient(name = "user-service", url = "http://localhost:5723/user-service")
 public interface UserServiceClient {
-    @PostMapping(value = "/auth/introspect", consumes = MediaType.APPLICATION_JSON_VALUE)
-    MessageResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request);
-
-    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    List<UserResponse> getAllUsers();
+//    @PostMapping(value = "/auth/introspect", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    MessageResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request);
+//
+//    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    List<UserResponse> getAllUsers();
 }
