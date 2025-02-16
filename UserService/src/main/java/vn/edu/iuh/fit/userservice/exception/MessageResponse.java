@@ -1,6 +1,13 @@
 package vn.edu.iuh.fit.userservice.exception;
 
-public class MessageResponse<T> {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
+@NoArgsConstructor
+public class MessageResponse<T> implements java.io.Serializable {
     private int statusCode;
     private String message;
     private boolean success;
@@ -51,16 +58,10 @@ public class MessageResponse<T> {
 
     @Override
     public String toString() {
-        return "MessageResponse{"
-                + "statusCode="
-                + statusCode
-                + ", message='"
-                + message
-                + '\''
-                + ", success="
-                + success
-                + ", data="
-                + data
-                + '}';
+        return "MessageResponse{" + "statusCode="
+                + statusCode + ", message='"
+                + message + '\'' + ", success="
+                + success + ", data="
+                + data + '}';
     }
 }
