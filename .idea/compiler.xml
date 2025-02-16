@@ -3,22 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-<<<<<<< HEAD
-      <profile name="Annotation profile for BookingService" enabled="true">
-=======
-      <profile name="Annotation profile for NotificationService" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="DiscoveryService" />
-        <module name="NotificationService" />
-        <module name="GatewayService" />
-      </profile>
       <profile name="Annotation profile for UserService" enabled="true">
->>>>>>> 46eb47e60d33327be7bdc49495830a83f9833be6
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -34,18 +19,6 @@
         <module name="UserService" />
         <module name="BookingService" />
       </profile>
-<<<<<<< HEAD
-      <profile name="Annotation profile for GetwayService" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="GetwayService" />
-      </profile>
-=======
->>>>>>> 46eb47e60d33327be7bdc49495830a83f9833be6
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
