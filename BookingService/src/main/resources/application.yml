@@ -12,10 +12,18 @@ spring:
     password: postgres_password
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 management:
   tracing:
     sampling:
       probability: 1.0
+feign:
+  client:
+    config:
+      default:
+        follow-redirects: false
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic

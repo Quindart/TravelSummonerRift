@@ -21,8 +21,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping()
-    public ResponseEntity<MessageResponse<List<UserResponse>>> getUsers() {
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", userService.getUsers());
+    public MessageResponse<List<UserResponse>> getUsers() {
+        return MessageResponse.<List<UserResponse>>builder()
+                .success(true)
+                .data(userService.getUsers())
+                .message("Danh sách người dùng")
+                .build();
     }
 
 

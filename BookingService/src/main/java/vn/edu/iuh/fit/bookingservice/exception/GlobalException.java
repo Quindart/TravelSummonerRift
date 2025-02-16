@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.bookingservice.exception;
 
+import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -64,5 +65,10 @@ public class GlobalException {
         String enumKey = exception.getFieldError().getDefaultMessage();
         ErrorMessageDto errorDto = new ErrorMessageDto(HttpStatus.BAD_REQUEST.value(), enumKey, false);
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<String> handleFeignException(FeignException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }
