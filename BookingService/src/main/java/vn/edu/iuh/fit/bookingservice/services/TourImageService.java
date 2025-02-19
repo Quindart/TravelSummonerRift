@@ -9,6 +9,6 @@ import java.io.IOException;
 
 public interface TourImageService {
     TourImageResponse saveTourImage(MultipartFile file, TourImageRequest tourImageRequest);
-    TourImageResponse updateTourImage(String tourImageId, TourImageRequest tourImageRequest);
+    TourImageResponse updateTourImage(String tourImageId, TourImageRequest tourImageRequest, MultipartFile file);
     void deleteTourImage(String tourImageId) throws IOException;
 }
