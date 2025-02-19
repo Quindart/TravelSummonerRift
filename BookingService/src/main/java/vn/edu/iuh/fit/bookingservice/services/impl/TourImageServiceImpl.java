@@ -65,20 +65,35 @@ public class TourImageServiceImpl implements TourImageService {
 
 
     @Override
-    public TourImageResponse updateTourImage(String tourImageId, TourImageRequest tourImageRequest) {
+    public TourImageResponse updateTourImage(String tourImageId, TourImageRequest tourImageRequest, MultipartFile file) {
         TourImage existingImage = tourImageRepository.findById(tourImageId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy ảnh với ID: " + tourImageId));
 
-        // Cập nhật thông tin ảnh
+        // Cập nhật mô tả và thứ tự hiển thị
         existingImage.setDescription(tourImageRequest.getDescription());
         existingImage.setOrderIndex(tourImageRequest.getOrderIndex());
         existingImage.setUpdatedAt(LocalDateTime.now());
 
-        // Lưu vào DB
+        // Nếu có file ảnh mới, thực hiện cập nhật ảnh
+        if (file != null && !file.isEmpty()) {
+            try {
+                // Xóa ảnh cũ trên Cloudinary (nếu cần)
+                cloudinaryService.deleteImage(existingImage.getImageUrl());
+
+                // Upload ảnh mới lên Cloudinary
+                String newImageUrl = cloudinaryService.uploadImage(file);
+                existingImage.setImageUrl(newImageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Lỗi khi cập nhật ảnh: " + e.getMessage());
+            }
+        }
+
+        // Lưu thay đổi vào database
         TourImage updatedImage = tourImageRepository.save(existingImage);
 
         return tourImageMapper.toTourImageResponse(updatedImage);
     }
+
 
     @Override
     public void deleteTourImage(String tourImageId) throws IOException {
