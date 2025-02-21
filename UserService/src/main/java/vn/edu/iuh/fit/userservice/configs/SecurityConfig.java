@@ -25,7 +25,6 @@ public class SecurityConfig {
     private final String[] ADMIN_ENDPOINTS = {
 
     };
-
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -35,7 +34,7 @@ public class SecurityConfig {
                 request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, ADMIN_ENDPOINTS).hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)

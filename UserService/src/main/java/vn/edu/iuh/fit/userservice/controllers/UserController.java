@@ -12,6 +12,8 @@ import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
+import vn.edu.iuh.fit.userservice.infra.booking.dto.BookingOfUserResponse;
+import vn.edu.iuh.fit.userservice.infra.booking.service.BookingOfUserService;
 import vn.edu.iuh.fit.userservice.services.UserService;
 
 @RestController
@@ -19,6 +21,8 @@ import vn.edu.iuh.fit.userservice.services.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private BookingOfUserService bookingOfUserService;
 
     @GetMapping()
     public MessageResponse<List<UserResponse>> getUsers() {
@@ -28,6 +32,13 @@ public class UserController {
                 .message("Danh sách người dùng")
                 .build();
     }
-
-
+    @GetMapping("demo")
+    public String demo(){
+        return "hihi";
+    }
+    @GetMapping("demo-book-of-user")
+    public ResponseEntity<MessageResponse<BookingOfUserResponse>> getBookingOfUser() {
+        BookingOfUserResponse bookingOfUserResponse =bookingOfUserService.getBookingOfUser("8f68b683-d5ef-4ede-88fc-37e6e56ef9b1");
+        return SuccessEntityResponse.FoundResponse("Get bookings of user success", bookingOfUserResponse);
+    }
 }
