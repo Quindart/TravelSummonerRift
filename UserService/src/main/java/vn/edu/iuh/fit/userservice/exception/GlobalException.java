@@ -2,6 +2,7 @@ package vn.edu.iuh.fit.userservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -63,5 +64,12 @@ public class GlobalException {
     public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException exc) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                 .body(new MessageResponse(413, "Kích thước file vượt quá giới hạn cho phép", false));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorMessageDto> handleValidationExceptions(MethodArgumentNotValidException exception) {
+        String enumKey = exception.getFieldError().getDefaultMessage();
+        ErrorMessageDto errorDto = new ErrorMessageDto(HttpStatus.BAD_REQUEST.value(), enumKey, false);
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
 }
