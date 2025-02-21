@@ -55,5 +55,13 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("my-info")
+    public MessageResponse<UserResponse> getMyInfo() {
+        return MessageResponse.<UserResponse>builder()
+                .statusCode(200)
+                .message("Thông tin người dùng")
+                .data(userService.getMyInfo())
+                .build();
+    }
 
 }
