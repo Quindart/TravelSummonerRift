@@ -15,8 +15,6 @@ services:
       POSTGRES_PASSWORD: postgres_password
     command: [ "postgres" ]
     restart: always
-
-  
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin-tour
