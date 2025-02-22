@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
@@ -44,5 +44,32 @@ public class TourController {
     public ResponseEntity<MessageResponse<Void>> deleteTour(@PathVariable String tourId) {
         tourService.deleteTour(tourId);
         return SuccessEntityResponse.OkResponse("Xóa tour thành công", null);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<MessageResponse<List<TourResponse>>> searchTours(@RequestParam String tourName) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.searchTours(tourName));
+    }
+
+    @GetMapping("/tour-overviews")
+    public ResponseEntity<MessageResponse<List<TourOverviewResponse>>> getAllTourOverviews() {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.getAllTourOverviews());
+    }
+
+    @GetMapping("/{tourId}/{tourScheduleId}/tourSchedule-detail")
+    public ResponseEntity<MessageResponse<TourScheduleDetailResponse>> getTourScheduleDetail(
+            @PathVariable String tourId, @PathVariable String tourScheduleId) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy chi tiết lịch trình tour",
+                tourService.getTourScheduleDetail(tourId, tourScheduleId));
+    }
+
+    @GetMapping("/{tourId}/tour-images")
+    public ResponseEntity<MessageResponse<List<TourImageResponse>>> getTourImages(@PathVariable String tourId) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách hình ảnh tour", tourService.getTourImages(tourId));
+    }
+
+    @GetMapping("/{tourId}/tour-notes")
+    public ResponseEntity<MessageResponse<List<TourNoteResponse>>> getTourNotes(@PathVariable String tourId) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách ghi chú tour", tourService.getTourNotes(tourId));
     }
 }

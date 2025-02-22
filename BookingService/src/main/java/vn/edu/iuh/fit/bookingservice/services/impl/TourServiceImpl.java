@@ -3,8 +3,10 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
+import vn.edu.iuh.fit.bookingservice.entities.TourImage;
+import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.exception.errors.InternalServerErrorException;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
@@ -72,5 +74,48 @@ public class TourServiceImpl implements TourService {
 
         tour.setActive(false);
         tourRepository.save(tour);
+    }
+
+    @Override
+    public List<TourResponse> searchTours(String tourName) {
+        return tourRepository.findByNameContainingIgnoreCase(tourName).stream()
+                .map(tourMapper::toTourResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TourOverviewResponse> getAllTourOverviews() {
+        return tourRepository.findAll().stream()
+                .map(tourMapper::toTourOverviewResponse)
+                .toList();
+    }
+
+    @Override
+    public TourScheduleDetailResponse getTourScheduleDetail(String tourId, String scheduleId) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour với ID: " + tourId));
+        TourSchedule tourSchedule = tour.getTourSchedules().stream()
+                .filter(schedule -> schedule.getTourScheduleId().equals(scheduleId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch trình với ID: " + scheduleId));
+        return tourMapper.toTourScheduleDetailResponse(tourSchedule);
+    }
+
+    @Override
+    public List<TourImageResponse> getTourImages(String tourId) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour với ID: " + tourId));
+        return tour.getTourImages().stream()
+                .map(tourMapper::toTourImageResponse)
+                .toList();
+    }
+
+    @Override
+    public List<TourNoteResponse> getTourNotes(String tourId) {
+        Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy tour với ID: " + tourId));
+        return tour.getTourNotes().stream()
+                .map(tourMapper::toTourNoteResponse)
+                .toList();
     }
 }
