@@ -1,7 +1,9 @@
 package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.bookingservice.configs.TourSpecification;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
@@ -77,8 +79,9 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourResponse> searchTours(String tourName) {
-        return tourRepository.findByNameContainingIgnoreCase(tourName).stream()
+    public List<TourResponse> searchTours(String tourName, String category, Double minPrice, Double maxPrice, String city, String destination) {
+        Specification<Tour> spec = TourSpecification.filterTours(tourName, category, minPrice, maxPrice, city, destination);
+        return tourRepository.findAll(spec).stream()
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
