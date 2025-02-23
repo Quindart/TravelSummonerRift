@@ -18,7 +18,7 @@ public interface TourService {
 
     void deleteTour(String tourId);
 
-    List<TourResponse> searchTours(String tourName);
+    List<TourResponse> searchTours(String tourName, String category, Double minPrice, Double maxPrice, String city, String destination);
 
     List<TourOverviewResponse> getAllTourOverviews();
 

@@ -47,8 +47,15 @@ public class TourController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<MessageResponse<List<TourResponse>>> searchTours(@RequestParam String tourName) {
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.searchTours(tourName));
+    public List<TourResponse> searchTours(
+            @RequestParam(required = false) String tourName,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String destination) {
+
+        return tourService.searchTours(tourName, category, minPrice, maxPrice, city, destination);
     }
 
     @GetMapping("/tour-overviews")
