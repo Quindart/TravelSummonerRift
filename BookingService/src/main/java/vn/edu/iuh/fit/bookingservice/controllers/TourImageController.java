@@ -16,6 +16,7 @@ import vn.edu.iuh.fit.bookingservice.repositories.TourImageRepository;
 import vn.edu.iuh.fit.bookingservice.services.CloudinaryService;
 import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -23,14 +24,10 @@ import java.util.List;
 public class TourImageController {
 
     private final TourImageService tourImageService;
-    private final TourImageRepository tourImageRepository;
-    private final CloudinaryService cloudinaryService;
 
     @Autowired
     public TourImageController(TourImageService tourImageService, TourImageRepository tourImageRepository, CloudinaryService cloudinaryService) {
         this.tourImageService = tourImageService;
-        this.tourImageRepository = tourImageRepository;
-        this.cloudinaryService = cloudinaryService;
     }
 
     @PostMapping("/upload")
@@ -88,15 +85,14 @@ public class TourImageController {
 
 
 
-//    @DeleteMapping("/{tourImageId}")
-//    public ResponseEntity<String> deleteTourImage(@PathVariable String tourImageId) {
-//        tourImageService.deleteTourImage(tourImageId);
-//        return ResponseEntity.ok("Đã xóa ảnh thành công.");
-//    }
+    @DeleteMapping("/delete/{tourImageId}")
+    public ResponseEntity<String> deleteTourImage(@PathVariable String tourImageId) {
+        try {
+            tourImageService.deleteTourImage(tourImageId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok("Đã xóa ảnh thành công.");
+    }
 
-//    @GetMapping("/tour/{tourId}")
-//    public ResponseEntity<List<TourImageResponse>> getImagesByTourId(@PathVariable String tourId) {
-//        List<TourImageResponse> images = tourImageService.getImagesByTourId(tourId);
-//        return ResponseEntity.ok(images);
-//    }
 }
