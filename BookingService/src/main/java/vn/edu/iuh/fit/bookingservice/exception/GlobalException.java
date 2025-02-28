@@ -71,4 +71,6 @@ public class GlobalException {
     public ResponseEntity<String> handleFeignException(FeignException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
+
+    
 }
