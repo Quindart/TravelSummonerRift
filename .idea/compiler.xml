@@ -10,7 +10,6 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="DiscoveryService" />
         <module name="NotificationService" />
         <module name="GatewayService" />
       </profile>
@@ -30,6 +29,16 @@
         <module name="UserService" />
         <module name="BookingService" />
       </profile>
+      <profile name="Annotation profile for DiscoveryService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="DiscoveryService" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
@@ -38,7 +47,7 @@
       <module name="DiscoveryService" options="-parameters" />
       <module name="GatewayService" options="-parameters" />
       <module name="GetwayService" options="-parameters" />
-      <module name="NotificationService" options="-parameters" />
+      <module name="NotificationService" options="" />
       <module name="UserService" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
     </option>
   </component>
