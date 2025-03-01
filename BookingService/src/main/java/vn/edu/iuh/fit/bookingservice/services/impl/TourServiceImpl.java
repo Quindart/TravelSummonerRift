@@ -24,7 +24,7 @@ public class TourServiceImpl implements TourService {
     public List<TourResponse> getAllTours() {
         return tourRepository.findAll().stream()
                 .map(tourMapper::toTourResponse)
-                .toList(); // Java 16+ thay vì Collectors.toList()
+                .toList();
     }
 
     @Override
