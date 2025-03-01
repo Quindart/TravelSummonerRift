@@ -37,6 +37,7 @@
       <module name="BookingService" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="DiscoveryService" options="-parameters" />
       <module name="GatewayService" options="-parameters" />
+      <module name="GetwayService" options="-parameters" />
       <module name="NotificationService" options="-parameters" />
       <module name="UserService" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
     </option>
