@@ -33,4 +33,8 @@ public class Booking extends BaseEntity {
     TourSchedule tourSchedule;
 
     String userId;
+
+    public Booking(String bookingId) {
+        this.bookingId = bookingId;
+    }
 }
