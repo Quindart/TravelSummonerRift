@@ -9,8 +9,8 @@
         <option value="$PROJECT_DIR$/BookingService/pom.xml" />
         <option value="$PROJECT_DIR$/GetwayService/pom.xml" />
         <option value="$PROJECT_DIR$/NotificationService/pom.xml" />
-        <option value="$PROJECT_DIR$/DiscoveryService/pom.xml" />
         <option value="$PROJECT_DIR$/GatewayService/pom.xml" />
+        <option value="$PROJECT_DIR$/DiscoveryService/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
