@@ -49,8 +49,9 @@ public class TourImageController {
         request.setTourId(tourId);
         request.setDescription(description);
         request.setOrderIndex(orderIndex);
+        request.setImage(file);
 
-        return SuccessEntityResponse.OkResponse("Tạo ảnh tour thành công", tourImageService.saveTourImage(file, request));
+        return SuccessEntityResponse.OkResponse("Tạo ảnh tour thành công", tourImageService.saveTourImage(request));
     }
 
     @PutMapping("/update/{tourImageId}")

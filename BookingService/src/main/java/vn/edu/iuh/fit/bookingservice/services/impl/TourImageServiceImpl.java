@@ -40,9 +40,9 @@ public class TourImageServiceImpl implements TourImageService {
     }
 
     @Override
-    public TourImageResponse saveTourImage(MultipartFile file, TourImageRequest tourImageRequest) {
+    public TourImageResponse saveTourImage(TourImageRequest tourImageRequest) {
         try {
-            String imageUrl = cloudinaryService.uploadImage(file);
+            String imageUrl = cloudinaryService.uploadImage(tourImageRequest.getImage());
 
             Optional<Tour> tour = tourRepository.findById(tourImageRequest.getTourId());
             if (tour.isEmpty()) {
