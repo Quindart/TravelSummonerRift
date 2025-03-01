@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
+import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
 import vn.edu.iuh.fit.bookingservice.exception.errors.InternalServerErrorException;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
@@ -42,9 +43,14 @@ public class TourServiceImpl implements TourService {
         }
 
         Tour tour = tourMapper.toTour(tourRequest);
+
         Tour savedTour = tourRepository.save(tour);
         if (savedTour == null) {
             throw new InternalServerErrorException("Tạo tour thất bại");
+        }
+
+        for(TourDestination tourDestination : tour.getT()) {
+            tourDestination.setTour(tour);
         }
         return tourMapper.toTourResponse(savedTour);
     }

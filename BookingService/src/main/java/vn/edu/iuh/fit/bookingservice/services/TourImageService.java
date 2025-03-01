@@ -8,7 +8,7 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.TourImageResponse;
 import java.io.IOException;
 
 public interface TourImageService {
-    TourImageResponse saveTourImage(MultipartFile file, TourImageRequest tourImageRequest);
+    TourImageResponse saveTourImage(TourImageRequest tourImageRequest);
     TourImageResponse updateTourImage(String tourImageId, TourImageRequest tourImageRequest, MultipartFile file);
     void deleteTourImage(String tourImageId) throws IOException;
 }
