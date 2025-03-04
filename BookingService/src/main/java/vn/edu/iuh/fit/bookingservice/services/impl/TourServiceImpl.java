@@ -2,16 +2,27 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
+import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.TourDestinationResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.TourImageResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
+import vn.edu.iuh.fit.bookingservice.entities.TourImage;
 import vn.edu.iuh.fit.bookingservice.exception.errors.InternalServerErrorException;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.bookingservice.mapper.TourDestinationMapper;
+import vn.edu.iuh.fit.bookingservice.mapper.TourImageMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
+import vn.edu.iuh.fit.bookingservice.repositories.TourDestinationRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourImageRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,20 +31,49 @@ public class TourServiceImpl implements TourService {
     private TourRepository tourRepository;
     @Autowired
     private TourMapper tourMapper;
+    @Autowired
+    private TourDestinationRepository tourDestinationRepository;
+    @Autowired
+    private TourImageService tourImageService;
+    @Autowired
+    private TourDestinationMapper tourDestinationMapper;
+    @Autowired
+    private TourImageRepository tourImageRepository;
+    @Autowired
+    private TourImageMapper tourImageMapper;
 
     @Override
     public List<TourResponse> getAllTours() {
-        return tourRepository.findAll().stream()
-                .map(tourMapper::toTourResponse)
-                .toList();
+        List<TourResponse> tourResponses =  tourRepository.findAll().stream()
+                                .map(tourMapper::toTourResponse)
+                                .toList();
+        for (TourResponse tourResponse : tourResponses) {
+            List<TourDestinationResponse> tourDestinationResponses = tourDestinationRepository.findByTour_TourId(tourResponse.getTourId())
+                    .stream().map(tourDestinationMapper::toTourDestinationResponse)
+                    .toList();
+            List<TourImageResponse> tourImageResponses = tourImageRepository.findByTour_TourId(tourResponse.getTourId())
+                    .stream().map(tourImageMapper::toTourImageResponse)
+                    .toList();
+            tourResponse.setTourDestinationResponses(tourDestinationResponses);
+            tourResponse.setTourImageResponses(tourImageResponses);
+        }
+        return tourResponses;
     }
 
     @Override
     public TourResponse getTourById(String tourId) {
         Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy tour với ID: " + tourId));
-
-        return tourMapper.toTourResponse(tour);
+        TourResponse tourResponse = tourMapper.toTourResponse(tour);
+        List<TourDestinationResponse> tourDestinationResponses = tourDestinationRepository.findByTour_TourId(tourId)
+                .stream().map(tourDestinationMapper::toTourDestinationResponse)
+                .toList();
+        List<TourImageResponse> tourImageResponses = tourImageRepository.findByTour_TourId(tourId)
+                .stream().map(tourImageMapper::toTourImageResponse)
+                .toList();
+        tourResponse.setTourDestinationResponses(tourDestinationResponses);
+        tourResponse.setTourImageResponses(tourImageResponses);
+        return tourResponse;
     }
 
     @Override
@@ -42,33 +82,55 @@ public class TourServiceImpl implements TourService {
             throw new IllegalArgumentException("Tên tour không được để trống");
         }
 
-        Tour tour = tourMapper.toTour(tourRequest);
+        try{
+            Tour tour = tourMapper.toTour(tourRequest);
 
-        Tour savedTour = tourRepository.save(tour);
-        if (savedTour == null) {
-            throw new InternalServerErrorException("Tạo tour thất bại");
+            Tour savedTour = tourRepository.save(tour);
+
+            List<TourDestinationResponse> tourDestinationResponses = new ArrayList<>();
+            for(TourDestinationRequest tourDestinationRequest : tourRequest.getTourDestinationRequests()) {
+                TourDestination tourDestination = TourDestination.builder()
+                        .name(tourDestinationRequest.getName())
+                        .description(tourDestinationRequest.getDescription())
+                        .tour(savedTour)
+                        .build();
+                tourDestinationRepository.save(tourDestination);
+                tourDestinationResponses.add(tourDestinationMapper.toTourDestinationResponse(tourDestination));
+            }
+
+            List<TourImageResponse> tourImageResponses = new ArrayList<>();
+            int i = 1;
+            for (TourImageRequest tourImageRequest : tourRequest.getTourImageRequests()) {
+                tourImageRequest.setTourId(savedTour.getTourId());
+                tourImageRequest.setOrderIndex(i++);
+                TourImageResponse tourImage = tourImageService.saveTourImage(tourImageRequest);
+                tourImageResponses.add(tourImage);
+            }
+
+            TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
+            tourResponse.setTourDestinationResponses(tourDestinationResponses);
+            tourResponse.setTourImageResponses(tourImageResponses);
+            return tourResponse;
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi tạo tour: " + e.getMessage());
         }
 
-        for(TourDestination tourDestination : tour.getT()) {
-            tourDestination.setTour(tour);
-        }
-        return tourMapper.toTourResponse(savedTour);
     }
 
     @Override
     public TourResponse updateTour(String tourId, TourRequest tourRequest) {
-        Tour tour = tourRepository.findById(tourId)
+        Tour updatedTour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy tour với ID: " + tourId));
 
-        tour.setName(tourRequest.getName());
-        tour.setDescription(tourRequest.getDescription());
-        tour.setPrice(tourRequest.getPrice());
-        tour.setDuration(tourRequest.getDuration());
-        tour.setThumbnail(tourRequest.getThumbnail());
+        updatedTour.setName(tourRequest.getName());
+        updatedTour.setDescription(tourRequest.getDescription());
+        updatedTour.setDuration(tourRequest.getDuration());
+        updatedTour.setPrice(tourRequest.getPrice());
 
-        Tour updatedTour = tourRepository.save(tour);
 
-        return tourMapper.toTourResponse(updatedTour);
+        tourRepository.save(updatedTour);
+
+        return getTourById(tourId);
     }
 
     @Override
