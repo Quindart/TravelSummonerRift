@@ -2,6 +2,7 @@ package vn.edu.iuh.fit.userservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -72,4 +73,12 @@ public class GlobalException {
         ErrorMessageDto errorDto = new ErrorMessageDto(HttpStatus.BAD_REQUEST.value(), enumKey, false);
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessageDto> handleAccessDeniedException(AccessDeniedException exc) {
+        MessageResponse error = new MessageResponse(HttpStatus.FORBIDDEN.value(), "Bạn không có quyền truy cập!", false);
+        ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
+        return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
+    }
+
 }
