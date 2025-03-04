@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.userservice.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    @PreAuthorize("hasRole('admin')")
     public List<UserResponse> getUsers() {
         UserResponse userResponse = new UserResponse();
         userResponse = userMapper.toUserResponse(userRepository.findAll().get(0));
