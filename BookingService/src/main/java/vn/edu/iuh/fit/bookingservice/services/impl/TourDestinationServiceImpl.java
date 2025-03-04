@@ -42,12 +42,22 @@ public class TourDestinationServiceImpl implements TourDestinationService {
 
     @Override
     public TourDestinationResponse updateTourDestination(String tourDestinationId, TourDestinationRequest tourDestination) {
-        return null;
+        TourDestination tourDestination1 = tourDestinationRepository.findById(tourDestinationId)
+                .orElse(null);
+        if (tourDestination1 == null) {
+            return null;
+        }
+
+        tourDestination1.setName(tourDestination.getName());
+        tourDestination1.setDescription(tourDestination.getDescription());
+
+        tourDestinationRepository.save(tourDestination1);
+        return tourDestinationMapper.toTourDestinationResponse(tourDestination1);
     }
 
     @Override
     public void deleteTourDestination(String tourDestinationId) {
-
+        tourDestinationRepository.deleteById(tourDestinationId);
     }
 
 }
