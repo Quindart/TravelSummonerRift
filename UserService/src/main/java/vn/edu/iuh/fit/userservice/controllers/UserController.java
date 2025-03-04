@@ -26,6 +26,7 @@ public class UserController {
     @Autowired
     private BookingOfUserService bookingOfUserService;
 
+
     @GetMapping()
     public MessageResponse<List<UserResponse>> getUsers() {
         return MessageResponse.<List<UserResponse>>builder()
