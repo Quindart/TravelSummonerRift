@@ -10,9 +10,9 @@ spring:
     name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/tourdb?sslmode=disable
+    url: jdbc:postgresql://gbsoft.ddns.net:5432/tourdb?sslmode=disable
     username: postgres
-    password: postgres_password
+    password: GB#@)@)2020
   jpa:
     hibernate:
       ddl-auto: update
