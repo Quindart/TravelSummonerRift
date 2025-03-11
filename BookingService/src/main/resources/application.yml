@@ -7,9 +7,9 @@ spring:
     name: booking-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://gbsoft.ddns.net:5432/tourdb
-    username: postgres
-    password: GB#@)@)2020
+    url: jdbc:postgresql://${DATABASE_URL}/tourdb
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

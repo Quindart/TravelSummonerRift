@@ -6,13 +6,15 @@ server:
       max-file-size: 10MB
       max-request-size: 10MB
 spring:
+  config:
+    import: optional:file:../.env[.properties]
   application:
     name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://gbsoft.ddns.net:5432/tourdb?sslmode=disable
-    username: postgres
-    password: GB#@)@)2020
+    url: jdbc:postgresql://${DATABASE_URL}/tourdb?sslmode=disable
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

@@ -1,5 +1,6 @@
 server:
   port: 8080
+  address: ${GATEWAY_URL}
 
 app:
   api-prefix: /api/v1
@@ -8,6 +9,18 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"  # Chỉ cần dòng này
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
       routes:
         - id: identity_service
           uri: http://localhost:5723
