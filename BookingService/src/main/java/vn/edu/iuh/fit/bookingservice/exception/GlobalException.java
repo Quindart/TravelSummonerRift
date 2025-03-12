@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.bookingservice.exception;
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -71,4 +72,14 @@ public class GlobalException {
     public ResponseEntity<String> handleFeignException(FeignException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessageDto> handleAccessDeniedException(AccessDeniedException exc) {
+        MessageResponse error = new MessageResponse(HttpStatus.FORBIDDEN.value(), "Bạn không có quyền truy cập!", false);
+        ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
+        return new ResponseEntity<>(errorDto, HttpStatus.FORBIDDEN);
+    }
+
+    
 }

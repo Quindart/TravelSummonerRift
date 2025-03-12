@@ -2,6 +2,7 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TicketRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TicketResponse;
@@ -22,6 +23,8 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private TicketMapper ticketMapper;
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     public List<TicketResponse> getTickets() {
         return ticketRepository.findAll().stream().map(ticketMapper::toDTO).toList();

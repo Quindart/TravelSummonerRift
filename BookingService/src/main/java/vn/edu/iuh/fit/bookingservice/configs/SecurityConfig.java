@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.configs;
+package vn.edu.iuh.fit.bookingservice.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,21 +13,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users/register", "files/**"
+    private final String[] PUBLIC_ENDPOINTS = {
     };
 
-    private final String[] ADMIN_ENDPOINTS = {
-        "/users",
-    };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -59,9 +54,5 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-    
+
 }
