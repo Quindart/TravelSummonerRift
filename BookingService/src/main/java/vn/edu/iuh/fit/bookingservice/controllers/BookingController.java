@@ -25,7 +25,8 @@ public class BookingController {
     }
     @GetMapping("/open-feign")
     public List<BookingResponse> getBookingsByUserId() {
-        return bookingService.findBookingsByUserId("8f68b683-d5ef-4ede-88fc-37e6e56ef9b1").stream().toList();
-
+        return bookingService.findBookingsByUserId("34ba8507-2cea-411f-84dc-9aa236ae804e").stream().toList();
     }
+
+
 }
