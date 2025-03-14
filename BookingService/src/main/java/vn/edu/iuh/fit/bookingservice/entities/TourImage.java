@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tour_images")
 @Getter
@@ -20,10 +22,13 @@ public class TourImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     String tourImageId;
 
+    Boolean isActive;
     int orderIndex;
     String description;
 
     @ManyToOne
     @JoinColumn(name = "tour_id")
     Tour tour;
+    @Column(nullable = false)
+    private String imageUrl;
 }
