@@ -1,29 +1,32 @@
 server:
-  port: 1902
+  port: ${BOOKING_SERVICE_PORT}
   servlet:
-    context-path: /booking-service
+    context-path: ${BOOKING_SERVICE_CONTEXT_PATH}
+
 spring:
   application:
-    name: booking-service
+    name: ${BOOKING_SERVICE_NAME}
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://gbsoft.ddns.net:5432/tourdb
-    username: postgres
-    password: GB#@)@)2020
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: ${BOOKING_SERVICE_JPA_HIBERNATE_DDL_AUTO}
+    database: ${BOOKING_SERVICE_JPA_DATABASE}
+    database-platform: ${BOOKING_SERVICE_JPA_DATABASE_PLATFORM}
+
 management:
   tracing:
     sampling:
-      probability: 1.0
+      probability: ${BOOKING_SERVICE_MANAGEMENT_TRACING_SAMPLING_PROBABILITY}
+
 feign:
   client:
     config:
       default:
-        follow-redirects: false
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: basic
+        follow-redirects: ${BOOKING_SERVICE_FEIGN_FOLLOW_REDIRECTS}
+        connectTimeout: ${BOOKING_SERVICE_FEIGN_CONNECT_TIMEOUT}
+        readTimeout: ${BOOKING_SERVICE_FEIGN_READ_TIMEOUT}
+        loggerLevel: ${BOOKING_SERVICE_FEIGN_LOGGER_LEVEL}
