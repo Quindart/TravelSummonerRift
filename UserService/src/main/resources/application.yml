@@ -1,43 +1,43 @@
 server:
-  port: ${USER_SERVICE_PORT:5723}
+  port: ${USER_SERVICE_PORT}
   servlet:
-    context-path: ${USER_SERVICE_CONTEXT_PATH:/user-service}
+    context-path: ${USER_SERVICE_CONTEXT_PATH}
     multipart:
-      max-file-size: ${USER_SERVICE_MAX_FILE_SIZE:10MB}
-      max-request-size: ${USER_SERVICE_MAX_REQUEST_SIZE:10MB}
+      max-file-size: ${USER_SERVICE_MAX_FILE_SIZE}
+      max-request-size: ${USER_SERVICE_MAX_REQUEST_SIZE}
 
 spring:
   application:
-    name: ${USER_SERVICE_NAME:user-service}
+    name: ${USER_SERVICE_NAME}
   datasource:
-    driver-class-name: ${USER_SERVICE_DB_DRIVER:org.postgresql.Driver}
-    url: ${USER_SERVICE_DB_URL:jdbc:postgresql://localhost:5432/tourdb?sslmode=disable}
-    username: ${USER_SERVICE_DB_USERNAME:postgres}
-    password: ${USER_SERVICE_DB_PASSWORD:postgres_password}
+    driver-class-name: ${USER_SERVICE_DB_DRIVER}
+    url: ${USER_SERVICE_DB_URL}
+    username: ${USER_SERVICE_DB_USERNAME}
+    password: ${USER_SERVICE_DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: ${USER_SERVICE_JPA_HIBERNATE_DDL_AUTO:update}
-    database: ${USER_SERVICE_JPA_DATABASE:postgresql}
-    database-platform: ${USER_SERVICE_JPA_DATABASE_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}
-    show-sql: ${USER_SERVICE_JPA_SHOW_SQL:true}
+      ddl-auto: ${USER_SERVICE_JPA_HIBERNATE_DDL_AUTO}
+    database: ${USER_SERVICE_JPA_DATABASE}
+    database-platform: ${USER_SERVICE_JPA_DATABASE_PLATFORM}
+    show-sql: ${USER_SERVICE_JPA_SHOW_SQL}
   data:
     redis:
-      host: ${USER_SERVICE_REDIS_HOST:localhost}
-      port: ${USER_SERVICE_REDIS_PORT:6379}
-      password: ${USER_SERVICE_REDIS_PASSWORD:}
-      timeout: ${USER_SERVICE_REDIS_TIMEOUT:60000}
+      host: ${USER_SERVICE_REDIS_HOST}
+      port: ${USER_SERVICE_REDIS_PORT}
+      password: ${USER_SERVICE_REDIS_PASSWORD}
+      timeout: ${USER_SERVICE_REDIS_TIMEOUT}
 
 management:
   tracing:
     sampling:
-      probability: ${USER_SERVICE_MANAGEMENT_TRACING_SAMPLING_PROBABILITY:1.0}
+      probability: ${USER_SERVICE_MANAGEMENT_TRACING_SAMPLING_PROBABILITY}
 
 cloudinary:
-  cloud_name: ${USER_SERVICE_CLOUDINARY_CLOUD_NAME:dwip7dplu}
-  api_key: ${USER_SERVICE_CLOUDINARY_API_KEY:944366892271352}
-  api_secret: ${USER_SERVICE_CLOUDINARY_API_SECRET:SGhlTmcznfxn-1T0T8D2BQQOA9Q}
+  cloud_name: ${USER_SERVICE_CLOUDINARY_CLOUD_NAME}
+  api_key: ${USER_SERVICE_CLOUDINARY_API_KEY}
+  api_secret: ${USER_SERVICE_CLOUDINARY_API_SECRET}
 
 jwt:
-  signerKey: ${USER_SERVICE_JWT_SIGNER_KEY:zhRPPUbgnHMtrH0Fj3reft+wa6HFXDlcwSNbTPEA3cQUdCb4aXANrlQntnH1QAYc}
-  valid-duration: ${USER_SERVICE_JWT_VALID_DURATION:3600}
-  refreshable-duration: ${USER_SERVICE_JWT_REFRESHABLE_DURATION:36000}
+  signerKey: ${USER_SERVICE_JWT_SIGNER_KEY}
+  valid-duration: ${USER_SERVICE_JWT_VALID_DURATION}
+  refreshable-duration: ${USER_SERVICE_JWT_REFRESHABLE_DURATION}
