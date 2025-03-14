@@ -10,10 +10,10 @@ spring:
   application:
     name: ${USER_SERVICE_NAME}
   datasource:
-    driver-class-name: ${USER_SERVICE_DB_DRIVER}
-    url: ${USER_SERVICE_DB_URL}
-    username: ${USER_SERVICE_DB_USERNAME}
-    password: ${USER_SERVICE_DB_PASSWORD}
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: ${USER_SERVICE_JPA_HIBERNATE_DDL_AUTO}
