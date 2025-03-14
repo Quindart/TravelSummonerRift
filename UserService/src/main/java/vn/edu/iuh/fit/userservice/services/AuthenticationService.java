@@ -106,7 +106,6 @@ public class AuthenticationService {
 //            invalidatedTokenRepository.save(invalidatedToken);
             redisService.saveInvalidatedToken(jit, request.getToken());
         } catch (UnauthorizedException exception) {
-
             log.info("Token already expired");
         }
     }
@@ -140,7 +139,7 @@ public class AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getUserId())
+                .subject(user.getUsername())
                 .issuer("zycute")
                 .issueTime(new Date())
                 .expirationTime(new Date(

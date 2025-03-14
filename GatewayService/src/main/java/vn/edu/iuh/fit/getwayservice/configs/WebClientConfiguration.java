@@ -1,0 +1,26 @@
+package vn.edu.iuh.fit.getwayservice.configs;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.support.WebClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+import vn.edu.iuh.fit.getwayservice.repositories.UserServiceClient;
+
+@Configuration
+public class WebClientConfiguration {
+    @Bean
+    WebClient webClient(){
+        return WebClient.builder()
+                .baseUrl("http://localhost:5723/user-service/")
+                .build();
+    }
+
+    @Bean
+    UserServiceClient identityClient(WebClient webClient){
+        HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory
+                .builderFor(WebClientAdapter.create(webClient)).build();
+
+        return httpServiceProxyFactory.createClient(UserServiceClient.class);
+    }
+}
