@@ -1,32 +1,32 @@
 server:
-  port: ${BOOKING_SERVICE_PORT:1902}
+  port: ${BOOKING_SERVICE_PORT}
   servlet:
-    context-path: ${BOOKING_SERVICE_CONTEXT_PATH:/booking-service}
+    context-path: ${BOOKING_SERVICE_CONTEXT_PATH}
 
 spring:
   application:
-    name: ${BOOKING_SERVICE_NAME:booking-service}
+    name: ${BOOKING_SERVICE_NAME}
   datasource:
-    driver-class-name: ${BOOKING_SERVICE_DB_DRIVER:org.postgresql.Driver}
-    url: ${BOOKING_SERVICE_DB_URL:jdbc:postgresql://localhost:5432/tourdb}
-    username: ${BOOKING_SERVICE_DB_USERNAME:postgres}
-    password: ${BOOKING_SERVICE_DB_PASSWORD:postgres_password}
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: ${BOOKING_SERVICE_JPA_HIBERNATE_DDL_AUTO:update}
-    database: ${BOOKING_SERVICE_JPA_DATABASE:postgresql}
-    database-platform: ${BOOKING_SERVICE_JPA_DATABASE_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}
+      ddl-auto: ${BOOKING_SERVICE_JPA_HIBERNATE_DDL_AUTO}
+    database: ${BOOKING_SERVICE_JPA_DATABASE}
+    database-platform: ${BOOKING_SERVICE_JPA_DATABASE_PLATFORM}
 
 management:
   tracing:
     sampling:
-      probability: ${BOOKING_SERVICE_MANAGEMENT_TRACING_SAMPLING_PROBABILITY:1.0}
+      probability: ${BOOKING_SERVICE_MANAGEMENT_TRACING_SAMPLING_PROBABILITY}
 
 feign:
   client:
     config:
       default:
-        follow-redirects: ${BOOKING_SERVICE_FEIGN_FOLLOW_REDIRECTS:false}
-        connectTimeout: ${BOOKING_SERVICE_FEIGN_CONNECT_TIMEOUT:5000}
-        readTimeout: ${BOOKING_SERVICE_FEIGN_READ_TIMEOUT:5000}
-        loggerLevel: ${BOOKING_SERVICE_FEIGN_LOGGER_LEVEL:basic}
+        follow-redirects: ${BOOKING_SERVICE_FEIGN_FOLLOW_REDIRECTS}
+        connectTimeout: ${BOOKING_SERVICE_FEIGN_CONNECT_TIMEOUT}
+        readTimeout: ${BOOKING_SERVICE_FEIGN_READ_TIMEOUT}
+        loggerLevel: ${BOOKING_SERVICE_FEIGN_LOGGER_LEVEL}
