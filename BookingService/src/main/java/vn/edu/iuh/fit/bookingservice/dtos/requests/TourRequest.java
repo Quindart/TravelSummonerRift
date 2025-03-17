@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class TourRequest {
     @NotBlank(message = "Tên tour không được để trống")
@@ -25,4 +27,6 @@ public class TourRequest {
     @NotBlank(message = "Thời lượng không được để trống")
 //    @Pattern(regexp = "^[0-9]+( ngày| giờ| phút)$", message = "Thời lượng phải có đơn vị (ví dụ: 3 ngày, 5 giờ, 45 phút)")
     private String duration;
+    private List<TourDestinationRequest> tourDestinationRequests;
+    private List<TourImageRequest> tourImageRequests;
 }
