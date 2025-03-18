@@ -9,6 +9,7 @@ import vn.edu.iuh.fit.bookingservice.dtos.requests.BookingRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponseDTO;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
+import vn.edu.iuh.fit.bookingservice.entities.Ticket;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.mapper.BookingMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
@@ -17,6 +18,8 @@ import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.services.BookingService;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = query.getResultList();
         return bookings.stream()
                 .map(booking -> new BookingResponse(
-                       booking.getBookingId(),
+                        booking.getBookingId(),
                         booking.getStatus(),
                         booking.getTotalPrice(),
                         booking.getNote(),
@@ -51,43 +54,61 @@ public class BookingServiceImpl implements BookingService {
                 .toList();
     }
 
-//    public BookingResponseDTO createBooking(BookingRequestDTO request) {
-//        TourSchedule tourSchedule = tourScheduleRepository.findById(request.getTourScheduleId())
-//                .orElseThrow(() -> new RuntimeException("Tour schedule not found"));
-//
-//        // Tính tổng giá tiền từ danh sách vé
-//        double totalPrice = request.getTickets().stream().mapToDouble(TicketRequestDTO::getPrice).sum();
-//
-//        // Tạo booking
-//        Booking booking = Booking.builder()
-//                .status(1) // Đang xử lý
-//                .totalPrice(totalPrice)
-//                .note(request.getNote())
-//                .userFullName(request.getUserFullName())
-//                .userPhone(request.getUserPhone())
-//                .userEmail(request.getUserEmail())
-//                .userAddress(request.getUserAddress())
-//                .tourSchedule(tourSchedule)
-//                .userId(request.getUserId())
-//                .build();
-//        bookingRepository.save(booking);
-//
-//        // Tạo danh sách ticket
-//        List<Ticket> tickets = request.getTickets().stream().map(ticketDTO ->
-//                Ticket.builder()
-//                        .ticketType(TicketType.valueOf(ticketDTO.getTicketType()))
-//                        .price(ticketDTO.getPrice())
-//                        .status(1) // Đang xử lý
-//                        .note(ticketDTO.getNote())
-//                        .booking(booking)
-//                        .tourSchedule(tourSchedule)
-//                        .build()
-//        ).collect(Collectors.toList());
-//        ticketRepository.saveAll(tickets);
-//
-//        // Ánh xạ sang DTO Response
-//        return bookingMapper.toBookingResponseDTO(booking, tickets);
-//    }
+    @Override
+    public BookingResponseDTO createBooking(BookingRequest request) {
+        // Lấy thông tin TourSchedule
+        Optional<TourSchedule> tourScheduleOpt = tourScheduleRepository.findById(request.getTourScheduleId());
+        if (tourScheduleOpt.isEmpty()) {
+            throw new RuntimeException("Tour Schedule không tồn tại!");
+        }
+        TourSchedule tourSchedule = tourScheduleOpt.get();
 
+        // Tạo Booking entity
+        Booking booking = Booking.builder()
+                .status(1) // Đang xử lý
+                .totalPrice(0) // Chưa tính tổng, sẽ cập nhật sau
+                .note(request.getNote())
+                .userFullName(request.getUserFullName())
+                .userPhone(request.getUserPhone())
+                .userEmail(request.getUserEmail())
+                .userAddress(request.getUserAddress())
+                .tourSchedule(tourSchedule)
+                .userId(request.getUserId())
+                .build();
+
+        booking = bookingRepository.save(booking);
+
+        // Tạo danh sách Ticket và lưu xuống DB
+        Booking finalBooking = booking;
+        List<Ticket> tickets = request.getTickets().stream().map(ticketDTO -> {
+            double ticketPrice = switch (ticketDTO.getTicketType()) {
+                case ADULT -> tourSchedule.getAdultPrice();
+                case CHILD -> tourSchedule.getChildPrice();
+                case BABY -> tourSchedule.getBabyPrice();
+            };
+
+            return Ticket.builder()
+                    .ticketType(ticketDTO.getTicketType())
+                    .price(ticketPrice) // Giá từ TourSchedule
+                    .status(1) // Mặc định active
+                    .note(ticketDTO.getNote())
+                    .booking(finalBooking)
+                    .tourSchedule(tourSchedule)
+                    .build();
+        }).collect(Collectors.toList());
+
+        ticketRepository.saveAll(tickets);
+
+        // Cập nhật lại tổng tiền booking
+        double totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
+        booking.setTotalPrice(totalPrice);
+        bookingRepository.save(booking);
+
+        // Trả về DTO
+        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking, tickets);
+        response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
+
+        return response;
+    }
 
 }
