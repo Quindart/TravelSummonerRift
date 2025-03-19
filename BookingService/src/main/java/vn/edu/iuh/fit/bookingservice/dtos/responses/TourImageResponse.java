@@ -4,7 +4,11 @@ import lombok.Data;
 
 @Data
 public class TourImageResponse {
-    String tourImageId;
-    int orderIndex;
-    String description;
+    private String tourImageId;
+    private String tourId;
+    private String imageUrl;
+    private String description;
+    private int orderIndex;
+    private boolean isActive;
+
 }

@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "tickets")
 @Getter
@@ -21,11 +23,11 @@ public class Ticket extends BaseEntity {
     String ticketId;
 
     double price;
-    int status;
+    int status; // 0: Chờ thanh toán, 1: Đã thanh toán, 2: Đã sử dụng
     String note;
 
     @Enumerated(EnumType.STRING)
-    TicketType ticketType;
+    TicketType ticketType; // PHÂN LOẠI: NGƯỜI LỚN, TRẺ EM, EM BÉ
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
@@ -34,4 +36,8 @@ public class Ticket extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "tour_schedule_id")
     TourSchedule tourSchedule;
+
+    String fullName;
+    String gender;
+    LocalDate birthDate;
 }
