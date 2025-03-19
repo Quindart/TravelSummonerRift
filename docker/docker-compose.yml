@@ -1,33 +1,61 @@
 version: '3.8'
+
 services:
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #    - "8080:80"
-  postgres:
-    image: 'postgres:12-alpine'
-    container_name: postgres-tour-db
+  discovery-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: discovery-service  # Chỉ định stage Discovery Service
+    container_name: discovery-service
+    hostname: localhost
+    env_file:
+      - ../.env
     ports:
-      - "5432:5432"
-    volumes:
-      - ./data/ecom-volumn:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgres_password
-    command: [ "postgres" ]
+      - "8761:8761"
     restart: always
 
-  
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin-tour
+  gateway-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: gateway-service  # Chỉ định stage Gateway Service
+    container_name: gateway-service
+    env_file:
+      - ../.env
     ports:
-      - "8389:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    user: '$UID:$GID'
-    volumes:
-      - ./data/pgadmin:/var/lib/pgadmin
+      - "8080:8080"
+    depends_on:
+      - discovery-service
+    restart: always
+
+  user-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: user-service  # Chỉ định stage User Service
+    container_name: user-service
+    env_file:
+      - ../.env
+    ports:
+      - "5723:5723"
+    depends_on:
+      - discovery-service
+      - redis
+    restart: always
+
+  booking-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: booking-service  # Chỉ định stage Booking Service
+    container_name: booking-service
+    env_file:
+      - ../.env
+    ports:
+      - "1902:1902"
+    depends_on:
+      - discovery-service
+      - user-service
     restart: always
 
   redis:
