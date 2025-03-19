@@ -1,6 +1,16 @@
 server:
   port: ${GATEWAY_SERVICE_PORT:8080}
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
+    hostname: ${HOSTNAME:localhost}
+
 app:
   api-prefix: ${GATEWAY_API_PREFIX:/api/v1}
 
