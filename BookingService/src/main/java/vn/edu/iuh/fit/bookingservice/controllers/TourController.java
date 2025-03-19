@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
 import vn.edu.iuh.fit.bookingservice.entities.TourImage;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
