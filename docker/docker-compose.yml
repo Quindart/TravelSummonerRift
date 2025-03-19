@@ -64,13 +64,3 @@ services:
     ports:
       - "6379:6379"
     restart: always
-#  jenkins:
-#    image: jenkins/jenkins:lts
-#    container_name: jenkins-tour
-#    privileged: true
-#    user: root
-#    ports:
-#      - "8080:8080"
-#      - "50000:50000"
-#    restart: always
-
