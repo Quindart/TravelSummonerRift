@@ -10,9 +10,9 @@ spring:
     name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/tourdb?sslmode=disable
-    username: postgres
-    password: postgres_password
+    url: jdbc:postgresql://ep-little-block-a1gvm7lg-pooler.ap-southeast-1.aws.neon.tech:5432/tourdb?sslmode=require
+    username: zy
+    password: npg_VeClRkTZ28fS
   jpa:
     hibernate:
       ddl-auto: update
