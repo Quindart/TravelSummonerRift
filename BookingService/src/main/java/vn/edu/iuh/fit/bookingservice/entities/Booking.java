@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "bookings")
 @Getter
@@ -19,7 +21,7 @@ public class Booking extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     String bookingId;
 
-    int status;
+    int status; // Trạng thái booking (0: Chờ xác nhận, 1: Đã xác nhận, 2: Đã thanh toán, 3: Đã hủy)
     double totalPrice;
     String note;
 
@@ -32,7 +34,10 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "tourSchedule_id")
     TourSchedule tourSchedule;
 
-    String userId;
+    String userId; // ID của user đặt tour
+
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Ticket> tickets;
 
     public Booking(String bookingId) {
         this.bookingId = bookingId;

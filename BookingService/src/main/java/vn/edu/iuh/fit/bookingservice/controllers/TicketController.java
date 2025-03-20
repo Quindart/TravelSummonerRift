@@ -17,22 +17,22 @@ import java.util.UUID;
 @RequestMapping("tickets")
 public class TicketController {
     
-    @Autowired
-    private TicketService ticketService;
-    
-    @GetMapping
-    public ResponseEntity<MessageResponse<List<TicketResponse>>> getAllTickets() {
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", ticketService.getTickets());
-    }
-
-    @GetMapping("/{ticketId}")
-    public ResponseEntity<MessageResponse<TicketResponse>> getTicketById(@PathVariable String ticketId){
-
-        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", ticketService.getTicketById(ticketId));
-    }
-
-    @PostMapping
-    public  ResponseEntity<MessageResponse<TicketResponse>> createTicket(@RequestBody TicketRequest ticketRequest){
-        return SuccessEntityResponse.CreateResponse("Tạo vé thành công", ticketService.createTicket(ticketRequest));
-    }
+//    @Autowired
+//    private TicketService ticketService;
+//
+//    @GetMapping
+//    public ResponseEntity<MessageResponse<List<TicketResponse>>> getAllTickets() {
+//        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", ticketService.getTickets());
+//    }
+//
+//    @GetMapping("/{ticketId}")
+//    public ResponseEntity<MessageResponse<TicketResponse>> getTicketById(@PathVariable String ticketId){
+//
+//        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", ticketService.getTicketById(ticketId));
+//    }
+//
+//    @PostMapping
+//    public  ResponseEntity<MessageResponse<TicketResponse>> createTicket(@RequestBody TicketRequest ticketRequest){
+//        return SuccessEntityResponse.CreateResponse("Tạo vé thành công", ticketService.createTicket(ticketRequest));
+//    }
 }
