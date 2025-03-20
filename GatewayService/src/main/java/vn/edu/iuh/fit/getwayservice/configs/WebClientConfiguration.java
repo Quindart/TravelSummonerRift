@@ -41,19 +41,4 @@ public class WebClientConfiguration {
 
         return httpServiceProxyFactory.createClient(UserServiceClient.class);
     }
-
-    @Bean
-    public CorsWebFilter corsWebFilter() {
-        CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowCredentials(true);
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Thay đổi nếu cần
-        corsConfig.setAllowedHeaders(Arrays.asList("*"));
-        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfig.addExposedHeader("Authorization"); // ✅ Cho phép đọc header Authorization
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); // Đúng class của WebFlux
-        source.registerCorsConfiguration("/**", corsConfig);
-
-        return new CorsWebFilter(source);
-    }
 }
