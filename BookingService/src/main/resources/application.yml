@@ -40,3 +40,6 @@ feign:
         connectTimeout: ${BOOKING_SERVICE_FEIGN_CONNECT_TIMEOUT}
         readTimeout: ${BOOKING_SERVICE_FEIGN_READ_TIMEOUT}
         loggerLevel: ${BOOKING_SERVICE_FEIGN_LOGGER_LEVEL}
+
+jwt:
+  signerKey: ${USER_SERVICE_JWT_SIGNER_KEY}
