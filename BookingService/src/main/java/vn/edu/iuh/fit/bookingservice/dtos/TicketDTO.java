@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 
 @Data
 @AllArgsConstructor
@@ -14,5 +15,5 @@ public class TicketDTO {
     double price;
     int status;
     String note;
-    String ticketType;
+    TicketType ticketType;
 }
