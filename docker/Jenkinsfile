@@ -8,5 +8,14 @@ pipeline {
             }
         }
     }
-    //test 
+    stage('Build and Restart Services') {
+            steps {
+                script {
+                    sh '''
+                    docker-compose down
+                    docker-compose up --build -d
+                    '''
+                }
+            }
+        }
 }
