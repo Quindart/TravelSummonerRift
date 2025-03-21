@@ -43,4 +43,9 @@ public class TestController {
     }
 
     // add để được commit ==Zy
+
+    @GetMapping("/em-zy-cute-voai")
+    public String testCICD() {
+        return "Em Zy làm xong CICD rồi đó mn, djtmemay che nua di";
+    }
 }
