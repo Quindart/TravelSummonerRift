@@ -7,8 +7,8 @@ pipeline {
                 git branch: 'loc', url: 'https://github.com/Quindart/TravelSummonerRift.git'
             }
         }
-    }
-    stage('Build and Restart Services') {
+
+        stage('Build and Restart Services') {
             steps {
                 script {
                     sh '''
@@ -18,4 +18,5 @@ pipeline {
                 }
             }
         }
+    }
 }
