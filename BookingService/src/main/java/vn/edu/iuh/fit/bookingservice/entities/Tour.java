@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
+
 @Entity
 @Table(name = "tours")
 @Getter
@@ -28,4 +31,13 @@ public class Tour extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "category_tour_id")
     CategoryTour categoryTour;
+
+    @OneToMany(mappedBy = "tour")
+    List<TourSchedule> tourSchedules;
+
+    @OneToMany(mappedBy = "tour")
+    List<TourImage> tourImages;
+
+    @OneToMany(mappedBy = "tour")
+    List<TourNote> tourNotes;
 }

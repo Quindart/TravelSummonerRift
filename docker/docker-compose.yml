@@ -1,32 +1,73 @@
-version: '3.8'
 services:
-  # nginx:
-  #   image: nginx
-  #   ports:
-  #    - "8080:80"
-#  postgres:
-#    image: 'postgres:12-alpine'
-#    container_name: postgres-tour-db
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - ./data/ecom-volumn:/var/lib/postgresql/data
-#    environment:
-#      POSTGRES_PASSWORD: postgres_password
-#    command: [ "postgres" ]
-#    restart: always
-#  pgadmin:
-#    image: dpage/pgadmin4
-#    container_name: pgadmin-tour
-#    ports:
-#      - "8389:80"
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
-#      PGADMIN_DEFAULT_PASSWORD: admin
-#    user: '$UID:$GID'
-#    volumes:
-#      - ./data/pgadmin:/var/lib/pgadmin
-#    restart: always
+  discovery-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: discovery-service
+    container_name: discovery-service
+    env_file:
+      - ../.env
+    ports:
+      - "8761:8761"
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/eureka/apps/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - my-network
+
+  gateway-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: gateway-service
+    container_name: gateway-service
+    env_file:
+      - ../.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    restart: always
+    networks:
+      - my-network
+
+  user-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: user-service
+    container_name: user-service
+    env_file:
+      - ../.env
+    ports:
+      - "5723:5723"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    restart: always
+    networks:
+      - my-network
+
+  booking-service:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: booking-service
+    container_name: booking-service
+    env_file:
+      - ../.env
+    ports:
+      - "1902:1902"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    restart: always
+    networks:
+      - my-network
 
   redis:
     image: redis
@@ -34,13 +75,9 @@ services:
     ports:
       - "6379:6379"
     restart: always
-#  jenkins:
-#    image: jenkins/jenkins:lts
-#    container_name: jenkins-tour
-#    privileged: true
-#    user: root
-#    ports:
-#      - "8080:8080"
-#      - "50000:50000"
-#    restart: always
+    networks:
+      - my-network
 
+networks:
+  my-network:
+    driver: bridge

@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Quindart/TravelSummonerRift.git'
+            }
+        }
+
+        stage('Build and Restart Services') {
+            steps {
+                script {
+                    sh '''
+                    cd docker
+                    docker-compose down
+                    docker-compose up --build -d 
+                    '''
+                }
+            }
+        }
+    }
+}
