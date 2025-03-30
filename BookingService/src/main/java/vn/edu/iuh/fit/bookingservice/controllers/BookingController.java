@@ -28,7 +28,7 @@ public class BookingController {
         return bookingService.findBookingsByUserId("34ba8507-2cea-411f-84dc-9aa236ae804e").stream().toList();
     }
 
-    @PostMapping("create-booking")
+    @PostMapping("/create-booking")
     public MessageResponse<BookingResponseDTO> createBooking (@RequestBody BookingRequest request){
         BookingResponseDTO response = bookingService.createBooking(request);
         return MessageResponse.<BookingResponseDTO>builder()
