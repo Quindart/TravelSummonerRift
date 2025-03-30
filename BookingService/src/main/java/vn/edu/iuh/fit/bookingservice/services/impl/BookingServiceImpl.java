@@ -17,6 +17,7 @@ import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.services.BookingService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,14 +57,28 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO createBooking(BookingRequest request) {
-        // Lấy thông tin TourSchedule
         Optional<TourSchedule> tourScheduleOpt = tourScheduleRepository.findById(request.getTourScheduleId());
         if (tourScheduleOpt.isEmpty()) {
             throw new RuntimeException("Tour Schedule không tồn tại!");
         }
         TourSchedule tourSchedule = tourScheduleOpt.get();
 
-        // Tạo Booking entity
+        if (LocalDateTime.now().isAfter(tourSchedule.getStartDate())) {
+            throw new RuntimeException("Không thể đặt tour, ngày khởi hành đã qua!");
+        }
+
+        // Đếm số vé đã được đặt trước đó
+        long bookedTicketsCount = ticketRepository.countByTourSchedule(tourSchedule);
+
+        // Số lượng vé muốn đặt
+        int requestedTicketsCount = request.getTickets().size();
+
+        // Kiểm tra nếu đủ chỗ
+        if (bookedTicketsCount + requestedTicketsCount > tourSchedule.getSlot()) {
+            throw new RuntimeException("Không đủ chỗ để đặt vé! Số chỗ còn lại: "
+                    + (tourSchedule.getSlot() - bookedTicketsCount));
+        }
+
         Booking booking = Booking.builder()
                 .status(1) // Đang xử lý
                 .totalPrice(0) // Chưa tính tổng, sẽ cập nhật sau
@@ -104,7 +119,6 @@ public class BookingServiceImpl implements BookingService {
         booking.setTotalPrice(totalPrice);
         bookingRepository.save(booking);
 
-        // Trả về DTO
         BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking, tickets);
         response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
 
