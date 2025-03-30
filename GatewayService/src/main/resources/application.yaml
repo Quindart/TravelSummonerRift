@@ -4,7 +4,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
     registerWithEureka: true
     fetchRegistry: true
   instance:
