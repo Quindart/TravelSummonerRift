@@ -1,5 +1,6 @@
 server:
   port: 2005
+
 spring:
   application:
     name: notification-service

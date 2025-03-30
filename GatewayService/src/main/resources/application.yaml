@@ -4,7 +4,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
     registerWithEureka: true
     fetchRegistry: true
   instance:
@@ -21,13 +21,13 @@ spring:
     gateway:
       routes:
         - id: identity_service
-          uri: ${IDENTITY_SERVICE_URI:http://user-service:5723}
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI:http://user-service:5723}
           predicates:
             - Path=${app.api-prefix}/user-service/**
           filters:
             - StripPrefix=2
         - id: booking_service
-          uri: ${BOOKING_SERVICE_URI:http://booking-service:1902}
+          uri: ${GATEWAY_BOOKING_SERVICE_URI:http://booking-service:1902}
           predicates:
             - Path=${app.api-prefix}/booking-service/**
           filters:
