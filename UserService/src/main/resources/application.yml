@@ -26,10 +26,10 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: ${USER_SERVICE_JPA_HIBERNATE_DDL_AUTO}
-    database: ${USER_SERVICE_JPA_DATABASE}
-    database-platform: ${USER_SERVICE_JPA_DATABASE_PLATFORM}
-    show-sql: ${USER_SERVICE_JPA_SHOW_SQL}
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    database: ${JPA_DATABASE}
+    database-platform: ${JPA_DATABASE_PLATFORM}
+    show-sql: ${JPA_SHOW_SQL}
   data:
     redis:
       host: ${USER_SERVICE_REDIS_HOST}

@@ -23,9 +23,10 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: ${BOOKING_SERVICE_JPA_HIBERNATE_DDL_AUTO}
-    database: ${BOOKING_SERVICE_JPA_DATABASE}
-    database-platform: ${BOOKING_SERVICE_JPA_DATABASE_PLATFORM}
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    database: ${JPA_DATABASE}
+    database-platform: ${JPA_DATABASE_PLATFORM}
+    show-sql: ${JPA_SHOW_SQL}
 
 management:
   tracing:
