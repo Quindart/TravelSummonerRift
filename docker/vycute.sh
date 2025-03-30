@@ -26,4 +26,4 @@ generate_databases() {
 }
 
 Main script execution
-generate_databases
+generate_databases 

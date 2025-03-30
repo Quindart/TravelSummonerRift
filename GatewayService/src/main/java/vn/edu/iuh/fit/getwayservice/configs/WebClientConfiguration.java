@@ -15,9 +15,9 @@ import java.util.List;
 @Configuration
 public class WebClientConfiguration {
     @Bean
-    WebClient webClient(){
+    WebClient webClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:5723/user-service/")
+                .baseUrl("http://user-service:5723/user-service/")
                 .build();
     }
 
