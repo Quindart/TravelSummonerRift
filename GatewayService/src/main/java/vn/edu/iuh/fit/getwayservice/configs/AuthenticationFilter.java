@@ -76,6 +76,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     Mono<Void> unauthenticated(ServerHttpResponse response){
         MessageResponse<?> apiResponse = MessageResponse.builder()
+                .statusCode(401)
                 .success(false)
                 .message("Unauthenticated")
                 .build();
