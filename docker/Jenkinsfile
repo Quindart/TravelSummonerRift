@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'loc', url: 'https://github.com/Quindart/TravelSummonerRift.git'
+                git branch: 'main', url: 'https://github.com/Quindart/TravelSummonerRift.git'
             }
         }
 
