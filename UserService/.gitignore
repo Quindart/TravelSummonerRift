@@ -32,21 +32,7 @@ build/
 !**/src/test/**/build/
 
 
-### VS Code ###
-<<<<<<< HEAD
-.vscode/
-<<<<<<< HEAD
-docker/data
-=======
 
-
-
-
-
-application.yml
 /docker/data
 docker/data/ecom-volumn/base/
->>>>>>> e68e3c34e3e9ec5ca4e8e6e17fe77735b96d337f
-=======
 .vscode/
->>>>>>> 46eb47e60d33327be7bdc49495830a83f9833be6
