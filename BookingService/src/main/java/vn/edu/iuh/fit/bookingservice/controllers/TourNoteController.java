@@ -13,7 +13,7 @@ import vn.edu.iuh.fit.bookingservice.services.TourNoteService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tour-notes")
+@RequestMapping("/tour-notes")
 public class TourNoteController {
     @Autowired
     private TourNoteService tourNoteService;

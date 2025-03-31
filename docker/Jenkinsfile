@@ -8,6 +8,14 @@ pipeline {
             }
         }
 
+        stage('Copy .env file') {
+            steps {
+                configFileProvider([configFile(fileId: 'Struct-and-design-software', targetLocation: '.env')]) {
+                    sh 'ls -la && cat .env' // Kiểm tra file có tồn tại không?
+                }
+            }
+        }
+
         stage('Build and Restart Services') {
             steps {
                 script {
