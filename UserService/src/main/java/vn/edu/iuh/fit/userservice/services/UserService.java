@@ -28,7 +28,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    @PreAuthorize("hasRole('admin')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
         UserResponse userResponse = new UserResponse();
         userResponse = userMapper.toUserResponse(userRepository.findAll().get(0));
