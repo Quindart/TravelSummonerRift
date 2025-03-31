@@ -29,6 +29,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         response.getWriter().write(objectMapper.writeValueAsString(errorMessageDto));
         response.flushBuffer();
     }
