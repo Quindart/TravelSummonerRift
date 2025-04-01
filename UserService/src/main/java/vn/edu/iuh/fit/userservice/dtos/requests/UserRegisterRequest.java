@@ -30,6 +30,8 @@ public class UserRegisterRequest {
     @NotBlank
     private String fullName;
 
+    private String avatarUrl;
+
     String role;
 }
 

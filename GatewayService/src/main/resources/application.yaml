@@ -12,22 +12,23 @@ eureka:
     hostname: ${HOSTNAME:localhost}
 
 app:
-  api-prefix: ${GATEWAY_API_PREFIX:/api/v1}
+  api-prefix: ${GATEWAY_API_PREFIX}
+  user-client-url: ${GATEWAY_IDENTITY_SERVICE_URI}${USER_SERVICE_CONTEXT_PATH}
 
 spring:
   application:
-    name: ${GATEWAY_SERVICE_NAME:api-gateway}
+    name: ${GATEWAY_SERVICE_NAME}
   cloud:
     gateway:
       routes:
         - id: identity_service
-          uri: ${GATEWAY_IDENTITY_SERVICE_URI:http://user-service:5723}
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/user-service/**
           filters:
             - StripPrefix=2
         - id: booking_service
-          uri: ${GATEWAY_BOOKING_SERVICE_URI:http://booking-service:1902}
+          uri: ${GATEWAY_BOOKING_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/booking-service/**
           filters:

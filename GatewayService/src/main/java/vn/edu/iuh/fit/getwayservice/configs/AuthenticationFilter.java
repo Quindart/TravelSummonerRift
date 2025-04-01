@@ -62,7 +62,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             else
                 return unauthenticated(exchange.getResponse());
-        }).onErrorResume(throwable -> unauthenticated(exchange.getResponse()));
+        }).onErrorResume(throwable -> {
+            System.out.println("Error: " + throwable.getMessage());
+            return unauthenticated(exchange.getResponse());
+        });
     }
 
     @Override
