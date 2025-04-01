@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.getwayservice.configs;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -14,10 +15,14 @@ import java.util.List;
 
 @Configuration
 public class WebClientConfiguration {
+
+    @Value("${app.user-client-url}")
+    private String userClientUrl;
+
     @Bean
     WebClient webClient() {
         return WebClient.builder()
-                .baseUrl("http://user-service:5723/user-service/")
+                .baseUrl(userClientUrl)
                 .build();
     }
 

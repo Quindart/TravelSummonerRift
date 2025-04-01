@@ -44,3 +44,8 @@ feign:
 
 jwt:
   signerKey: ${USER_SERVICE_JWT_SIGNER_KEY}
+
+cloudinary:
+  cloud_name: ${USER_SERVICE_CLOUDINARY_CLOUD_NAME}
+  api_key: ${USER_SERVICE_CLOUDINARY_API_KEY}
+  api_secret: ${USER_SERVICE_CLOUDINARY_API_SECRET}
