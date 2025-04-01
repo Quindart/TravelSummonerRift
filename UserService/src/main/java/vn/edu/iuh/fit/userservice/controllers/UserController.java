@@ -51,6 +51,7 @@ public class UserController {
     public MessageResponse<UserResponse> registerUser(@RequestBody @Valid UserRegisterRequest request) {
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
+                .success(true)
                 .message("Đăng ký người dùng thành công")
                 .data(userService.registerUser(request))
                 .build();
@@ -60,6 +61,7 @@ public class UserController {
     public MessageResponse<UserResponse> getMyInfo() {
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
+                .success(true)
                 .message("Thông tin người dùng")
                 .data(userService.getMyInfo())
                 .build();
@@ -69,6 +71,7 @@ public class UserController {
     public MessageResponse<UserResponse> getUserById(@PathVariable String id) {
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
+                .success(true)
                 .message("Thông tin người dùng")
                 .data(userService.getUserById(id))
                 .build();

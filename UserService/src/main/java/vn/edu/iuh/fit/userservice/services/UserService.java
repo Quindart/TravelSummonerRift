@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vn.edu.iuh.fit.userservice.dtos.requests.UserRegisterRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.UserUpdateRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.entities.User;
 import vn.edu.iuh.fit.userservice.exception.errors.InternalServerErrorException;
@@ -59,5 +60,9 @@ public class UserService {
     public UserResponse getUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này."));
         return userMapper.toUserResponse(user);
+    }
+
+    public UserResponse updateUser(UserUpdateRequest request) {
+        return null;
     }
 }

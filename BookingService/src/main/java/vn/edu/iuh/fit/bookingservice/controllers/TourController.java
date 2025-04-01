@@ -69,7 +69,6 @@ public class TourController {
         return SuccessEntityResponse.CreateResponse("Tạo tour thành công", tourResponse);
     }
 
-
     @PutMapping("/{tourId}")
     public ResponseEntity<MessageResponse<TourResponse>> updateTour(
             @PathVariable String tourId, @RequestBody @Valid TourRequest tourRequest) {
