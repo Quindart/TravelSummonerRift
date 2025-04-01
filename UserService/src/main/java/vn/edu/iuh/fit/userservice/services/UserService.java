@@ -55,4 +55,9 @@ public class UserService {
 
         return userMapper.toUserResponse(user);
     }
+
+    public UserResponse getUserById(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này."));
+        return userMapper.toUserResponse(user);
+    }
 }

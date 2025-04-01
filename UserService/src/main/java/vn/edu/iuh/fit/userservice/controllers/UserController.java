@@ -65,4 +65,13 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{id}")
+    public MessageResponse<UserResponse> getUserById(@PathVariable String id) {
+        return MessageResponse.<UserResponse>builder()
+                .statusCode(200)
+                .message("Thông tin người dùng")
+                .data(userService.getUserById(id))
+                .build();
+    }
+
 }
