@@ -1,3 +1,6 @@
+app:
+  swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${BOOKING_SERVICE_CONTEXT_PATH}
+
 server:
   port: ${BOOKING_SERVICE_PORT}
   servlet:
@@ -52,9 +55,7 @@ cloudinary:
 
 springdoc:
   api-docs:
+    enabled: true
     path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
-    oauth:
-      scope: read write
-      use-basic-auth: true
+    enabled: true
