@@ -18,7 +18,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://localhost:8080/api/v1/user-service").description("API Gateway"))
+                .addServersItem(new Server().url(swagger_gateway_uri).description("API Gateway"))
 
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
