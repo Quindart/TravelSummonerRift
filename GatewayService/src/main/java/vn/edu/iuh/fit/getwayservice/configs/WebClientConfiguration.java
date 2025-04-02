@@ -27,18 +27,16 @@ public class WebClientConfiguration {
     }
 
     @Bean
-    CorsWebFilter corsWebFilter() {
+    CorsWebFilter corsWebFilter(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("*"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowedMethods(List.of("*"));
 
-        corsConfiguration.setAllowedOriginPatterns(List.of("*")); // Hoặc thay thế bằng domain cụ thể
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowCredentials(true);  // Nếu dùng cookies/token trong request
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-
-        return new CorsWebFilter(source);
+        return new CorsWebFilter(urlBasedCorsConfigurationSource);
     }
 
     @Bean
