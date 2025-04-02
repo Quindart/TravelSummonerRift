@@ -39,7 +39,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             //public endpoint api
             "/user-service/auth/.*",
             "/user-service/users/register",
-            "/booking-service/tours",
+            "/booking-service/tours.*",
 
             //swagger
             "/swagger-ui.*",
