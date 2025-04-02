@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.userservice.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,13 +18,13 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    @NotBlank
-    private String user;
+
     @NotBlank
     private String phone;
     @NotBlank
     private String fullName;
-    private MultipartFile avatarUrl;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     Date birthday;
     int gender; //1: nam, 0 nữ
 }

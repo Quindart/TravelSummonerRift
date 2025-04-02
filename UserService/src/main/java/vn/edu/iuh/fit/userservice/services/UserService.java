@@ -1,13 +1,17 @@
 package vn.edu.iuh.fit.userservice.services;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserRegisterRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserUpdateRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
@@ -27,6 +31,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,7 +69,22 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-    public UserResponse updateUser(UserUpdateRequest request) {
-        return null;
+//    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponse updateUser(String userId, UserUpdateRequest request, MultipartFile avatar) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        user.setPhone(request.getPhone());
+        user.setFullName(request.getFullName());
+        user.setGender(request.getGender());
+        user.setBirthday(request.getBirthday());
+
+        if (avatar != null && !avatar.isEmpty()) {
+            String imageUrl = cloudinaryService.uploadImage(avatar);
+            user.setAvatarUrl(imageUrl);
+        }
+
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 }

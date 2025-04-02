@@ -1,15 +1,21 @@
 package vn.edu.iuh.fit.userservice.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserRegisterRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.UserUpdateRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
@@ -20,6 +26,7 @@ import vn.edu.iuh.fit.userservice.services.UserService;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
@@ -74,6 +81,27 @@ public class UserController {
                 .success(true)
                 .message("Thông tin người dùng")
                 .data(userService.getUserById(id))
+                .build();
+    }
+
+
+    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MessageResponse<UserResponse> updateUser(
+            @PathVariable String userId,
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar
+    ) throws IOException {
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        UserUpdateRequest userUpdateRequest = objectMapper.readValue(userJson, UserUpdateRequest.class);
+
+        UserResponse updatedUser = userService.updateUser(userId, userUpdateRequest, avatar);
+        return MessageResponse.<UserResponse>builder()
+                .statusCode(200)
+                .success(true)
+                .message("Thông tin người dùng")
+                .data(updatedUser)
                 .build();
     }
 
