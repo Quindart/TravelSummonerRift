@@ -1,3 +1,6 @@
+app:
+  swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}
+
 server:
   port: ${USER_SERVICE_PORT}
   servlet:
@@ -19,6 +22,8 @@ eureka:
 spring:
   application:
     name: ${USER_SERVICE_NAME}
+
+
   datasource:
     driver-class-name: ${DB_DRIVER}
     url: ${DB_URL}
@@ -54,9 +59,7 @@ jwt:
 
 springdoc:
   api-docs:
+    enabled: true
     path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
-    oauth:
-      scope: read write
-      use-basic-auth: true
+    enabled: true

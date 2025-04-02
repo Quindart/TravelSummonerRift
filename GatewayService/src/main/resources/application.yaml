@@ -44,17 +44,21 @@ spring:
           predicates:
             - Path=/swagger-ui.html
 
-      # Route cho API Docs của user-service
+        # Route cho API Docs của user-service qua Gateway
         - id: user-service-docs
-          uri: ${GATEWAY_IDENTITY_SERVICE_URI}
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI} # Đưa về đúng service gốc
           predicates:
             - Path=${app.api-prefix}/user-service/v3/api-docs
+          filters:
+            - StripPrefix=2
 
-      # Route cho API Docs của booking-service
+        # Route cho API Docs của booking-service qua Gateway
         - id: booking-service-docs
           uri: ${GATEWAY_BOOKING_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/booking-service/v3/api-docs
+          filters:
+            - StripPrefix=2
 
 
 
@@ -80,4 +84,6 @@ springdoc:
         url: /api/v1/user-service/v3/api-docs
       - name: Booking Service
         url: /api/v1/booking-service/v3/api-docs
+
+
 
