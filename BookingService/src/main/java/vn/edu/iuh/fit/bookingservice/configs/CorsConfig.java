@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.configs;
+package vn.edu.iuh.fit.bookingservice.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

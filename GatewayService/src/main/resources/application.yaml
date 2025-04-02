@@ -21,20 +21,63 @@ spring:
   cloud:
     gateway:
       routes:
+        #User service
         - id: identity_service
           uri: ${GATEWAY_IDENTITY_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/user-service/**
           filters:
             - StripPrefix=2
+
+        #Booking service
         - id: booking_service
           uri: ${GATEWAY_BOOKING_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/booking-service/**
           filters:
             - StripPrefix=2
+
+
+      # Route cho Swagger UI, sử dụng cả hai dịch vụ
+        - id: swagger-ui
+          uri: http://localhost:${GATEWAY_SERVICE_PORT}
+          predicates:
+            - Path=/swagger-ui.html
+
+      # Route cho API Docs của user-service
+        - id: user-service-docs
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/user-service/v3/api-docs
+
+      # Route cho API Docs của booking-service
+        - id: booking-service-docs
+          uri: ${GATEWAY_BOOKING_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/booking-service/v3/api-docs
+
+
+
+
     zookeeper:
       config:
         enabled: ${GATEWAY_ZOOKEEPER_CONFIG_ENABLED:false}
         import-check:
           enabled: ${GATEWAY_ZOOKEEPER_IMPORT_CHECK_ENABLED:false}
+
+
+
+#Cấu hình swagger
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: User Service
+        url: /api/v1/user-service/v3/api-docs
+      - name: Booking Service
+        url: /api/v1/booking-service/v3/api-docs
+

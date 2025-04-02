@@ -32,6 +32,7 @@ import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
 import vn.edu.iuh.fit.userservice.exception.errors.UnauthorizedException;
+import vn.edu.iuh.fit.userservice.mapper.UserMapper;
 import vn.edu.iuh.fit.userservice.repositories.InvalidatedTokenRepository;
 import vn.edu.iuh.fit.userservice.repositories.UserRepository;
 
@@ -58,6 +59,8 @@ public class AuthenticationService {
     @NonFinal
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
+    @Autowired
+    private UserMapper userMapper;
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -90,7 +93,11 @@ public class AuthenticationService {
 
         var token = generateToken(user);
 
-        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .user(userMapper.toUserResponse(user))
+                .build();
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {

@@ -35,7 +35,21 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     ObjectMapper objectMapper;
 
     @NonFinal
-    private String[] publicEndpoints = {"/user-service/auth/.*", "/user-service/users/register", "/booking-service/tours"};
+    private String[] publicEndpoints = {
+            //public endpoint api
+            "/user-service/auth/.*",
+            "/user-service/users/register",
+            "/booking-service/tours",
+
+            //swagger
+            "/swagger-ui.*",
+            "/swagger-ui/.*",
+            "/swagger-resources/.*",
+            "/v3/api-docs/.*",
+            "/webjars/.*",
+            ".*/v3/api-docs",
+            ".*/swagger-resources.*"
+    };
 
     @Value("${app.api-prefix}")
     @NonFinal

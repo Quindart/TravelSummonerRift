@@ -49,3 +49,12 @@ cloudinary:
   cloud_name: ${USER_SERVICE_CLOUDINARY_CLOUD_NAME}
   api_key: ${USER_SERVICE_CLOUDINARY_API_KEY}
   api_secret: ${USER_SERVICE_CLOUDINARY_API_SECRET}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    oauth:
+      scope: read write
+      use-basic-auth: true
