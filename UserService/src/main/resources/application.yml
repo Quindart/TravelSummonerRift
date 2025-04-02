@@ -51,3 +51,12 @@ jwt:
   signerKey: ${USER_SERVICE_JWT_SIGNER_KEY}
   valid-duration: ${USER_SERVICE_JWT_VALID_DURATION}
   refreshable-duration: ${USER_SERVICE_JWT_REFRESHABLE_DURATION}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    oauth:
+      scope: read write
+      use-basic-auth: true
