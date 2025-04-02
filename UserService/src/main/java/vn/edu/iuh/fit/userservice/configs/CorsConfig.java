@@ -10,29 +10,24 @@ import java.util.List;
 
 @Configuration
 public class CorsConfig {
+
     @Bean
-    UrlBasedCorsConfigurationSource myCorsConfigurationSource() {
+    UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // Hoặc giới hạn theo domain
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Không dùng "*"
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true); // Chỉ dùng nếu KHÔNG dùng "*"
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedOrigins(List.of("*")); // Cổng Swagger UI hoặc FE của bạn
-//        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-//        corsConfiguration.setAllowedHeaders(List.of("*"));
-//        corsConfiguration.setAllowCredentials(true);
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", corsConfiguration);
-//
-//        return new CorsFilter(source);
-//    }
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
+    }
 }
+
