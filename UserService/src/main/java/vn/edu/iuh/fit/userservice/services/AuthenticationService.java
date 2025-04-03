@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,12 @@ import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
+import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.userservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.userservice.mapper.UserMapper;
 import vn.edu.iuh.fit.userservice.repositories.InvalidatedTokenRepository;
 import vn.edu.iuh.fit.userservice.repositories.UserRepository;
+import vn.edu.iuh.fit.userservice.utils.OtpUtils;
 
 @Service
 @Slf4j
@@ -47,6 +50,9 @@ public class AuthenticationService {
 
     @Autowired
     private InvalidatedTokenRepository invalidatedTokenRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -203,5 +209,16 @@ public class AuthenticationService {
         }
 
         return "ROLE_" + user.getRole().name();
+    }
+
+    public void processForgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        String otpCode = OtpUtils.generateOtp();
+
+        redisService.saveOtp(email, otpCode);
+
+        emailService.sendOtpEmail(email, otpCode);
     }
 }

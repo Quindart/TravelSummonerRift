@@ -87,7 +87,6 @@ public class GlobalException {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorMessageDto> handleNoResourceFoundException(NoResourceFoundException ex) {
-
         MessageResponse error = new MessageResponse(HttpStatus.NOT_FOUND.value(), "Không tìm thấy tài nguyên: " + ex.getMessage(), false);
         ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
         return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);

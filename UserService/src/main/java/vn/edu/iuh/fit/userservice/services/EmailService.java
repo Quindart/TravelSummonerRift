@@ -17,7 +17,7 @@ public class EmailService {
         message.setFrom("tieuvy5723@gmail.com");
         message.setTo(email);
         message.setSubject("Reset Password - OTP Verification");
-        message.setText("OPT của bạn là: " + otp + ".OTP này sẽ hết hạn trong 5 phút.");
+        message.setText("OTP của bạn là: " + otp + ".OTP này sẽ hết hạn trong 5 phút.");
         emailSender.send(message);
     }
 }
