@@ -24,14 +24,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import vn.edu.iuh.fit.userservice.dtos.requests.AuthenticationRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.LogoutRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.RefreshRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.*;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
+import vn.edu.iuh.fit.userservice.exception.errors.BadRequestException;
 import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.userservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.userservice.mapper.UserMapper;
@@ -220,5 +218,34 @@ public class AuthenticationService {
         redisService.saveOtp(email, otpCode);
 
         emailService.sendOtpEmail(email, otpCode);
+    }
+
+    public void resetPassword(ResetPasswordRequest otpRequest) {
+        String otp = otpRequest.getOtp();
+        String email = otpRequest.getEmail();
+        String newPassword = otpRequest.getNewPassword();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Người dùng không tồn tại."));
+
+        String storedOtp = redisService.getOtp(email);
+        if (storedOtp == null) {
+            throw new NotFoundException("OTP đã hết hạn hoặc không tồn tại.");
+        }
+
+        if (!storedOtp.equals(otp)) {
+            throw new BadRequestException("OTP không hợp lệ. Vui lòng thử lại.");
+        }
+
+
+
+
+        // Cập nhật mật khẩu mới
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        redisService.deleteOtp(email);
+
     }
 }

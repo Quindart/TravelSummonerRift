@@ -5,10 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.fit.userservice.dtos.requests.AuthenticationRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.LogoutRequest;
-import vn.edu.iuh.fit.userservice.dtos.requests.RefreshRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.*;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
@@ -56,6 +53,16 @@ public class AuthController {
                 .statusCode(200)
                 .success(true)
                 .message("Đã gửi OTP về email của bạn, xin vui lòng kiểm tra.")
+                .build();
+    }
+
+    @PostMapping("/reset-password")
+    public MessageResponse<Void> verifyOtp(@RequestBody ResetPasswordRequest otpRequest) {
+        authenticationService.resetPassword(otpRequest);
+        return MessageResponse.<Void>builder()
+                .statusCode(200)
+                .success(true)
+                .message("Đặt lại mật khẩu thành công.")
                 .build();
     }
 

@@ -32,6 +32,7 @@ public class SecurityConfig {
             "/auth/logout",
             "/auth/refresh",
             "/auth/forgot-password",
+            "/auth/reset-password",
             "/users/register",
             "files/**",
             "/api/em-zy-cute-voai",
