@@ -33,7 +33,6 @@ public class UserController {
     @Autowired
     private BookingOfUserService bookingOfUserService;
 
-
     @GetMapping()
     public MessageResponse<List<UserResponse>> getUsers() {
         return MessageResponse.<List<UserResponse>>builder()
@@ -64,7 +63,7 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("my-info")
+    @GetMapping("/my-info")
     public MessageResponse<UserResponse> getMyInfo() {
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
@@ -85,18 +84,11 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{userId}")
     public MessageResponse<UserResponse> updateUser(
             @PathVariable String userId,
-            @RequestPart("user") String userJson,
-            @RequestPart(value = "avatar", required = false) MultipartFile avatar
-    ) throws IOException {
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        UserUpdateRequest userUpdateRequest = objectMapper.readValue(userJson, UserUpdateRequest.class);
-
-        UserResponse updatedUser = userService.updateUser(userId, userUpdateRequest, avatar);
+            @RequestBody UserUpdateRequest request) {
+        UserResponse updatedUser = userService.updateUser(userId, request);
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
                 .success(true)
@@ -104,5 +96,7 @@ public class UserController {
                 .data(updatedUser)
                 .build();
     }
+
+
 
 }
