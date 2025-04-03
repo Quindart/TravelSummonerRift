@@ -92,7 +92,20 @@ public class UserController {
         return MessageResponse.<UserResponse>builder()
                 .statusCode(200)
                 .success(true)
-                .message("Thông tin người dùng")
+                .message("Cập nhật thông tin người dùng thành công.")
+                .data(updatedUser)
+                .build();
+    }
+
+    @PutMapping(value = "/{userId}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MessageResponse<UserResponse> updateAvatar(
+            @PathVariable String userId,
+            @RequestPart("avatar") MultipartFile avatar) throws IOException {
+        UserResponse updatedUser = userService.updateUserAvatar(userId, avatar);
+        return MessageResponse.<UserResponse>builder()
+                .statusCode(200)
+                .success(true)
+                .message("Cập nhật ảnh đại diện thành công.")
                 .data(updatedUser)
                 .build();
     }

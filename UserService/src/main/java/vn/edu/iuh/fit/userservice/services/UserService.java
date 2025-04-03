@@ -84,4 +84,16 @@ public class UserService {
     }
 
 
+    public UserResponse updateUserAvatar(String userId, MultipartFile avatar) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        String avatarUrl = cloudinaryService.uploadImage(avatar);
+        user.setAvatarUrl(avatarUrl);
+
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
+    }
+
+
 }
