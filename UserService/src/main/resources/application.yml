@@ -22,6 +22,15 @@ eureka:
 spring:
   application:
     name: ${USER_SERVICE_NAME}
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${USER_NAME_MAIL}
+    password: ${PASSWORD_MAIL}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: false
 
 
   datasource:

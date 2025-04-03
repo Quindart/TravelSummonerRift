@@ -26,7 +26,7 @@
         </processorPath>
         <module name="DiscoveryService" />
       </profile>
-      <profile name="Annotation profile for GetwayService" enabled="true">
+      <profile name="Annotation profile for UserService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
