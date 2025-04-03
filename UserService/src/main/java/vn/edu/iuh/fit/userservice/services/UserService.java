@@ -70,7 +70,7 @@ public class UserService {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    public UserResponse updateUser(String userId, UserUpdateRequest request, MultipartFile avatar) throws IOException {
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
 
@@ -79,12 +79,21 @@ public class UserService {
         user.setGender(request.getGender());
         user.setBirthday(request.getBirthday());
 
-        if (avatar != null && !avatar.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(avatar);
-            user.setAvatarUrl(imageUrl);
-        }
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
+    }
+
+
+    public UserResponse updateUserAvatar(String userId, MultipartFile avatar) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        String avatarUrl = cloudinaryService.uploadImage(avatar);
+        user.setAvatarUrl(avatarUrl);
 
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
+
+
 }
