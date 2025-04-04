@@ -82,7 +82,7 @@ public class TourController {
     }
 
     @GetMapping("/search")
-    public List<TourResponse> searchTours(
+    public MessageResponse<List<TourResponse>> searchTours(
             @RequestParam(required = false) String tourName,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Double minPrice,
@@ -90,7 +90,12 @@ public class TourController {
             @RequestParam(required = false) String city,
             @RequestParam(required = false) String destination) {
 
-        return tourService.searchTours(tourName, category, minPrice, maxPrice, city, destination);
+        var data =  tourService.searchTours(tourName, category, minPrice, maxPrice, city, destination);
+        return MessageResponse.<List<TourResponse>>builder()
+                .success(true)
+                .statusCode(200)
+                .data(data)
+                .build();
     }
 
     @GetMapping("/tour-overviews")
