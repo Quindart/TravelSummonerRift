@@ -95,5 +95,13 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    public void deleteUser(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        user.setActive(false);
+        userRepository.save(user);
+    }
+
 
 }
