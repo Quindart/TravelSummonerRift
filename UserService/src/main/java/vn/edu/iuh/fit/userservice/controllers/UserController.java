@@ -158,6 +158,17 @@ public class UserController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{userId}")
+    public MessageResponse<Void> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
+        return MessageResponse.<Void>builder()
+                .statusCode(200)
+                .success(true)
+                .message("Xóa tài khoản thành công.")
+                .build();
+    }
+
 
 
 
