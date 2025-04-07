@@ -2,20 +2,17 @@ package vn.edu.iuh.fit.userservice.controllers;
 
 import java.util.List;
 
-import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserRegisterRequest;
-import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
-import vn.edu.iuh.fit.userservice.infra.booking.dto.BookingOfUserResponse;
-import vn.edu.iuh.fit.userservice.infra.booking.service.BookingOfUserService;
+import vn.edu.iuh.fit.userservice.infra.dto.BookingOfUserResponse;
+import vn.edu.iuh.fit.userservice.infra.service.BookingOfUserService;
 import vn.edu.iuh.fit.userservice.services.UserService;
 
 @RestController
@@ -64,5 +61,7 @@ public class UserController {
                 .data(userService.getMyInfo())
                 .build();
     }
+
+
 
 }

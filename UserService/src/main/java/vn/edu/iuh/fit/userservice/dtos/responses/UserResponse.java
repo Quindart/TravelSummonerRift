@@ -19,5 +19,4 @@ public class UserResponse {
     String fullName;
     Role role;
 
-
 }
