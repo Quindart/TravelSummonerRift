@@ -11,6 +11,7 @@ import vn.edu.iuh.fit.userservice.entities.User;
 public interface UserMapper {
     @Mapping(target = "role", source = "role")
     @Mapping(target = "email", source = "email")
+    @Mapping(target = "birthday", source = "birthday")
     UserResponse toUserResponse(User user);
 
     @Mapping(target = "role", source = "role")

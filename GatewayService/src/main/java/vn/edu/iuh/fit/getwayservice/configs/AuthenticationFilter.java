@@ -35,7 +35,22 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     ObjectMapper objectMapper;
 
     @NonFinal
-    private String[] publicEndpoints = {"/user-service/auth/.*", "/user-service/users/register", "/booking-service/tours","/booking-service/reviews.*"};
+    private String[] publicEndpoints = {
+            //public endpoint api
+            "/user-service/auth/.*",
+            "/user-service/users/register",
+            "/booking-service/tours.*",
+            "/booking-service/reviews.*",
+            //swagger
+            "/swagger-ui.*",
+            "/swagger-ui/.*",
+            "/swagger-resources/.*",
+            "/v3/api-docs/.*",
+            "/webjars/.*",
+            ".*/v3/api-docs",
+            ".*/swagger-resources.*"
+    };
+
     @Value("${app.api-prefix}")
     @NonFinal
     private String apiPrefix;
@@ -61,7 +76,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             else
                 return unauthenticated(exchange.getResponse());
-        }).onErrorResume(throwable -> unauthenticated(exchange.getResponse()));
+        }).onErrorResume(throwable -> {
+            System.out.println("Error: " + throwable.getMessage());
+            return unauthenticated(exchange.getResponse());
+        });
     }
 
     @Override
@@ -90,6 +108,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS");
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Authorization, Content-Type");
         return response.writeWith(
                 Mono.just(response.bufferFactory().wrap(body.getBytes())));
     }

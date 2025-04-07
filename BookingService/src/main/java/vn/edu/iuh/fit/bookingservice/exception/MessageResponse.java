@@ -14,7 +14,7 @@ public class MessageResponse<T> implements java.io.Serializable {
     private String message;
 
     @JsonProperty("success")
-    private boolean success;
+    private boolean success = true;
     
     @JsonProperty("data")
     private T data;

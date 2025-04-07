@@ -20,9 +20,9 @@ public class FileUploadController {
 
     @PostMapping("/upload/image")
     public ResponseEntity<?> uploadImage(
-            @RequestParam("file") MultipartFile file, @RequestParam("folder") String folderName)
+            @RequestParam("file") MultipartFile file)
             throws IOException, IOException {
-        return ResponseEntity.ok(cloudinaryService.uploadFile(file, folderName));
+        return ResponseEntity.ok(cloudinaryService.uploadImage(file));
     }
 
     @PostMapping("/upload/video")

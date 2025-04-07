@@ -45,6 +45,13 @@ public class TestController {
     }
 
 
+
+    @GetMapping("zycute")
+    public ResponseEntity<MessageResponse<TestDto>> zycutevailon() {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
+    }
+
+
 //    @PostMapping("/user-info")
 //    public ResponseEntity<IntrospectResponse> getUserInfo(@RequestHeader("Authorization") String token) {
 //        String accessToken = token.replace("Bearer ", "");

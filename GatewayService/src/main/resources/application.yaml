@@ -12,28 +12,78 @@ eureka:
     hostname: ${HOSTNAME:localhost}
 
 app:
-  api-prefix: ${GATEWAY_API_PREFIX:/api/v1}
+  api-prefix: ${GATEWAY_API_PREFIX}
+  user-client-url: ${GATEWAY_IDENTITY_SERVICE_URI}${USER_SERVICE_CONTEXT_PATH}
 
 spring:
   application:
-    name: ${GATEWAY_SERVICE_NAME:api-gateway}
+    name: ${GATEWAY_SERVICE_NAME}
   cloud:
     gateway:
       routes:
+        #User service
         - id: identity_service
-          uri: ${GATEWAY_IDENTITY_SERVICE_URI:http://user-service:5723}
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/user-service/**
           filters:
             - StripPrefix=2
+
+        #Booking service
         - id: booking_service
-          uri: ${GATEWAY_BOOKING_SERVICE_URI:http://booking-service:1902}
+          uri: ${GATEWAY_BOOKING_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/booking-service/**
           filters:
             - StripPrefix=2
+
+
+      # Route cho Swagger UI, sử dụng cả hai dịch vụ
+        - id: swagger-ui
+          uri: http://localhost:${GATEWAY_SERVICE_PORT}
+          predicates:
+            - Path=/swagger-ui.html
+
+        # Route cho API Docs của user-service qua Gateway
+        - id: user-service-docs
+          uri: ${GATEWAY_IDENTITY_SERVICE_URI} # Đưa về đúng service gốc
+          predicates:
+            - Path=${app.api-prefix}/user-service/v3/api-docs
+          filters:
+            - StripPrefix=2
+
+        # Route cho API Docs của booking-service qua Gateway
+        - id: booking-service-docs
+          uri: ${GATEWAY_BOOKING_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/booking-service/v3/api-docs
+          filters:
+            - StripPrefix=2
+
+
+
+
     zookeeper:
       config:
         enabled: ${GATEWAY_ZOOKEEPER_CONFIG_ENABLED:false}
         import-check:
           enabled: ${GATEWAY_ZOOKEEPER_IMPORT_CHECK_ENABLED:false}
+
+
+
+#Cấu hình swagger
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: User Service
+        url: /api/v1/user-service/v3/api-docs
+      - name: Booking Service
+        url: /api/v1/booking-service/v3/api-docs
+
+
+
