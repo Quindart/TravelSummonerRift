@@ -14,6 +14,7 @@ import vn.edu.iuh.fit.userservice.services.TestService;
 import vn.edu.iuh.fit.userservice.services.UserService;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
@@ -45,7 +46,13 @@ public class TestController {
     // add để được commit ==Zy
 
     @GetMapping("/em-zy-cute-voai")
-    public String testCICD() {
-        return "Em Zy làm xong CICD rồi đó mn, djtmemay che nua di  ấdđ"  ;
+    public String testCICD() throws InterruptedException {
+//        try {
+//            TimeUnit.SECONDS.sleep(0);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt(); // restore interrupt flag
+//            return "Request bị gián đoạn";
+//        }
+        return "Zy cute ahhhh";
     }
 }
