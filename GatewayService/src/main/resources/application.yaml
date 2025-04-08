@@ -20,6 +20,8 @@ spring:
     name: ${GATEWAY_SERVICE_NAME}
   cloud:
     gateway:
+      httpclient:
+        response-timeout: 20s
       routes:
         #User service
         - id: identity_service
@@ -28,6 +30,10 @@ spring:
             - Path=${app.api-prefix}/user-service/**
           filters:
             - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: userService
+                fallbackUri: forward:/fallback/user
 
         #Booking service
         - id: booking_service
@@ -36,6 +42,10 @@ spring:
             - Path=${app.api-prefix}/booking-service/**
           filters:
             - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: bookingService
+                fallbackUri: forward:/fallback/booking
 
 
       # Route cho Swagger UI, sử dụng cả hai dịch vụ
@@ -61,8 +71,6 @@ spring:
             - StripPrefix=2
 
 
-
-
     zookeeper:
       config:
         enabled: ${GATEWAY_ZOOKEEPER_CONFIG_ENABLED:false}
@@ -85,5 +93,58 @@ springdoc:
       - name: Booking Service
         url: /api/v1/booking-service/v3/api-docs
 
+#Cấu hình Circuit Breaker
+#resilience4j:
+#  circuitbreaker:
+#    instances:
+#      userServiceCircuitBreaker:
+#        registerHealthIndicator: true
+#        slidingWindowSize: 10
+#        failureRateThreshold: 50
+#        waitDurationInOpenState: 10s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        minimumNumberOfCalls: 5
+#
+#      bookingServiceCircuitBreaker:
+#        registerHealthIndicator: true
+#        slidingWindowSize: 10
+#        failureRateThreshold: 50
+#        waitDurationInOpenState: 10s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        minimumNumberOfCalls: 5
 
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
+    io.github.resilience4j: DEBUG
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        slidingWindowSize: 10
+        slowCallDurationThreshold: 5s         # ← Tăng ngưỡng "chậm" lên
+        slowCallRateThreshold: 100            # ← Cho phép 100% call chậm vẫn ok
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+      bookingService:
+        slidingWindowSize: 10
+        slowCallDurationThreshold: 5s         # ← Tăng ngưỡng "chậm" lên
+        slowCallRateThreshold: 100            # ← Cho phép 100% call chậm vẫn ok
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  timelimiter:
+    instances:
+      userService:
+        timeoutDuration: 6s                   # ← Tăng timeout để sleep 5s vẫn chạy
+      bookingService:
+        timeoutDuration: 20s

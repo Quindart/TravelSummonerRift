@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.getwayservice.configs;
-
+//import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+//import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -34,21 +35,24 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     UserService userService;
     ObjectMapper objectMapper;
 
+//    CircuitBreakerRegistry circuitBreakerRegistry;
+
     @NonFinal
     private String[] publicEndpoints = {
             //public endpoint api
+            "/user-service/api/.*",
             "/user-service/auth/.*",
             "/user-service/users/register",
             "/booking-service/tours.*",
 
             //swagger
-            "/swagger-ui.*",
-            "/swagger-ui/.*",
-            "/swagger-resources/.*",
-            "/v3/api-docs/.*",
-            "/webjars/.*",
-            ".*/v3/api-docs",
-            ".*/swagger-resources.*"
+//            "/swagger-ui.*",
+//            "/swagger-ui/.*",
+//            "/swagger-resources/.*",
+//            "/v3/api-docs/.*",
+//            "/webjars/.*",
+//            ".*/v3/api-docs",
+//            ".*/swagger-resources.*"
     };
 
     @Value("${app.api-prefix}")
@@ -58,10 +62,20 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Enter authentication filter....");
+//        log.info("Enter authentication filter....");
+
+//        CircuitBreaker userServiceCircuitBreaker = circuitBreakerRegistry.circuitBreaker("userServiceCircuitBreaker");
+
+
+//        System.out.println("CB state: "  + userServiceCircuitBreaker.getState());
+//        System.out.println("Failure Rate:" + userServiceCircuitBreaker.getMetrics().getFailureRate());
+//        System.out.println("Current Number of Failed Calls" +  userServiceCircuitBreaker.getMetrics().getNumberOfFailedCalls());
 
         if(isPublicEndpoint(exchange.getRequest()))
+        {
             return chain.filter(exchange);
+        }
+
 
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);

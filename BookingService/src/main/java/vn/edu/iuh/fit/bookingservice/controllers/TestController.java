@@ -36,6 +36,7 @@ public class TestController {
 
     @GetMapping("hello")
     public ResponseEntity<MessageResponse<TestDto>> helloword() {
+        userServiceClient.getAllUsers();
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy", testService.testSerivce());
     }
 
