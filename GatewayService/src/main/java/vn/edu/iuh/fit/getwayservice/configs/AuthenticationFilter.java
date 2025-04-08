@@ -46,13 +46,13 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/booking-service/tours.*",
 
             //swagger
-//            "/swagger-ui.*",
-//            "/swagger-ui/.*",
-//            "/swagger-resources/.*",
-//            "/v3/api-docs/.*",
-//            "/webjars/.*",
-//            ".*/v3/api-docs",
-//            ".*/swagger-resources.*"
+            "/swagger-ui.*",
+            "/swagger-ui/.*",
+            "/swagger-resources/.*",
+            "/v3/api-docs/.*",
+            "/webjars/.*",
+            ".*/v3/api-docs",
+            ".*/swagger-resources.*"
     };
 
     @Value("${app.api-prefix}")
