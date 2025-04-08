@@ -1,13 +1,13 @@
-package vn.edu.iuh.fit.userservice.infra.booking.service;
+package vn.edu.iuh.fit.userservice.infra.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import vn.edu.iuh.fit.userservice.infra.booking.client.IBookingClient;
-import vn.edu.iuh.fit.userservice.infra.booking.dto.BookingOfUserResponse;
-import vn.edu.iuh.fit.userservice.infra.booking.dto.BookingResponse;
+import vn.edu.iuh.fit.userservice.infra.client.IBookingClient;
+import vn.edu.iuh.fit.userservice.infra.dto.BookingOfUserResponse;
+import vn.edu.iuh.fit.userservice.infra.dto.BookingResponse;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class BookingOfUserService {
 
     public BookingOfUserResponse getBookingOfUser(String userId) {
 
-        ResponseEntity<List<BookingResponse>> booksResponse = bookingClient.getBookingsOfUser();
+        ResponseEntity<List<vn.edu.iuh.fit.userservice.infra.dto.BookingResponse>> booksResponse = bookingClient.getBookingsOfUser();
 
         BookingOfUserResponse bookingOfUserRes = new BookingOfUserResponse();
         bookingOfUserRes.setUserId(userId);
