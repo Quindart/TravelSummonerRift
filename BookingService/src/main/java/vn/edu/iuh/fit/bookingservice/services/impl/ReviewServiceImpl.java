@@ -6,11 +6,14 @@ import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.ReviewResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourScheduleResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
+import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.mapper.ReviewMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.ReviewRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
 import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +26,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private TourScheduleMapper tourScheduleMapper;
+
+    @Autowired
+    private TourRepository tourRepository;
+
     @Override
     public List<ReviewResponse> getReviews() {
         List<ReviewResponse> reviewResponses = reviewRepository.findAll()
@@ -41,6 +48,25 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResponse getReview(String id) {
         return null;
+    }
+
+    @Override
+    public  List<ReviewResponse>  getReviewByTourId(String tourId) {
+        Tour current_tour = tourRepository.findById(tourId).orElseThrow();
+        List<String> tourScheduleIds = new ArrayList<>();
+
+        current_tour.getTourSchedules().stream().forEach(tour-> {
+            tourScheduleIds.add(tour.getTourScheduleId());
+        });
+        List<Review> reviewSaved = new ArrayList<>();
+        for (String tourScheduleId : tourScheduleIds) {
+            List<Review> reviews = reviewRepository.findByTourScheduleId(tourScheduleId);
+
+            reviews.stream().forEach(review -> {
+                 reviewSaved.add(review);
+            });
+        }
+        return reviewSaved.stream().map(reviewMapper::toReviewResponse).toList();
     }
 
     @Override

@@ -9,8 +9,8 @@ import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 @RequestMapping("reviews")
 public class ReviewController {
 
-    @PostMapping("review")
-    public MessageResponse<ReviewResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
-
-    }
+//    @PostMapping("review")
+//    public MessageResponse<ReviewResponse> createReview(@RequestBody ReviewRequest reviewRequest) {
+//
+//    }
 }

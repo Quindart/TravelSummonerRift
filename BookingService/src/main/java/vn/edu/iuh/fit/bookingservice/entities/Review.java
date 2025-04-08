@@ -27,10 +27,9 @@ public class Review extends BaseEntity {
 
     private float rating;
 
-    @Column(columnDefinition = "NVARCHAR(100)")
     String username;
 
-    @Column(columnDefinition = "NVARCHAR(5000)")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
 

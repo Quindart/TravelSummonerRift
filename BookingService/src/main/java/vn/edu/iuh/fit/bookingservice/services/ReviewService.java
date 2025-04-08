@@ -10,6 +10,8 @@ import java.util.List;
 public interface ReviewService {
     List<ReviewResponse> getReviews();
     ReviewResponse getReview(String id);
+    List<ReviewResponse>  getReviewByTourId(String tourId);
+
     ReviewResponse addReview(ReviewRequest review);
     ReviewResponse updateReview(ReviewRequest review);
     void deleteReview(String id);

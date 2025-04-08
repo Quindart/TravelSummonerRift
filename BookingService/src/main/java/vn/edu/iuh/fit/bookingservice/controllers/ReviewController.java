@@ -17,9 +17,14 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping("/")
-    public ResponseEntity<MessageResponse<List<ReviewResponse>>> getAllReviews() {
-        return SuccessEntityResponse.FoundResponse("Get all reviews success", reviewService.getReviews());
+    @GetMapping
+    public MessageResponse<List<ReviewResponse>> getAllReviews() {
+        return MessageResponse.<List<ReviewResponse>>builder()
+                .statusCode(200)
+                .success(true)
+                .data(reviewService.getReviews())
+                .message("Tạo review thanh cong")
+                .build();
     }
     @PostMapping("/create")
     public  MessageResponse<ReviewResponse> createReview(@RequestBody ReviewRequest review) {
