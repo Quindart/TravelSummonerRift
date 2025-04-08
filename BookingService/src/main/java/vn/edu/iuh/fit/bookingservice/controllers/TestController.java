@@ -27,6 +27,7 @@ public class TestController {
     @Autowired
     private UserServiceClient userServiceClient;
 
+
     private TestService testService;
 
     public TestController(TestService testService) {

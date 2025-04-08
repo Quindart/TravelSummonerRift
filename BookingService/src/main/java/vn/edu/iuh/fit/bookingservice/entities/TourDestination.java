@@ -22,7 +22,6 @@ public class TourDestination extends BaseEntity {
     String name;
     String description;
     String image;
-    Integer orderIndex;
 
     @ManyToOne
     @JoinColumn(name = "destination_id")

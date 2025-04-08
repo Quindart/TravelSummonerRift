@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Tour extends BaseEntity {
