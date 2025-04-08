@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.infra.booking.dto;
+package vn.edu.iuh.fit.userservice.infra.dto;
 
 import java.util.List;
 

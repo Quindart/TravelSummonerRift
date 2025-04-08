@@ -24,8 +24,8 @@ import vn.edu.iuh.fit.userservice.entities.User;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
-import vn.edu.iuh.fit.userservice.infra.booking.dto.BookingOfUserResponse;
-import vn.edu.iuh.fit.userservice.infra.booking.service.BookingOfUserService;
+import vn.edu.iuh.fit.userservice.infra.dto.BookingOfUserResponse;
+import vn.edu.iuh.fit.userservice.infra.service.BookingOfUserService;
 import vn.edu.iuh.fit.userservice.repositories.UserRepository;
 import vn.edu.iuh.fit.userservice.services.UserService;
 
