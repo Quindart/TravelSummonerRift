@@ -29,6 +29,7 @@ public class SecurityConfig {
             "/tours/**",
             "/destinations/**",
             "/tour-destinations/**",
+            "/category-tours/**"
     };
 
     @Autowired
