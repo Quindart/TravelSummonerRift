@@ -1,6 +1,8 @@
 package vn.edu.iuh.fit.bookingservice.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -34,4 +36,7 @@ public class TourSchedule extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "tour_id")
     Tour tour;
+
+    @OneToMany(mappedBy = "tourSchedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Review> reviews = new ArrayList<>();
 }
