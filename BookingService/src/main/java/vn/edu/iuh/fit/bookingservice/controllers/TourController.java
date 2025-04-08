@@ -12,10 +12,12 @@ import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
+import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
 import vn.edu.iuh.fit.bookingservice.entities.TourImage;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
+import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
 import java.lang.reflect.Array;
@@ -30,14 +32,25 @@ public class TourController {
 
     @Autowired
     TourService tourService;
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<MessageResponse<List<TourResponse>>> getAllTours() {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.getAllTours());
     }
 
+    //TODO: REVIEW
+    @GetMapping("/{tourId}/reviews")
+    public ResponseEntity<MessageResponse<List<ReviewResponse>>> getReviewsByTourId(@PathVariable String tourId) {
+        List<ReviewResponse> reviews = reviewService.getReviewByTourId(tourId);
+        reviews.stream().forEach(System.out::println);
+        return SuccessEntityResponse.FoundResponse("Get all reviews success", reviews);
+    }
+
     @GetMapping("/{tourId}")
     public ResponseEntity<MessageResponse<TourResponse>> getTourById(@PathVariable String tourId) {
+
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy tour", tourService.getTourById(tourId));
     }
 
