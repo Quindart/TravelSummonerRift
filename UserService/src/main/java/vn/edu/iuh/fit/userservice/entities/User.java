@@ -6,6 +6,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.userservice.enums.Role;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,11 @@ public class User extends BaseEntity {
     String username;
     String password;
     String fullName;
+    String avatarUrl;
+
+    Date birthday;
+
+    Integer gender; //1: nam, 0 nữ
 
     @Enumerated(EnumType.STRING)
     Role role;

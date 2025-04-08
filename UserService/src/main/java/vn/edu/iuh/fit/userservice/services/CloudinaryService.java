@@ -19,9 +19,19 @@ public class CloudinaryService {
         return cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("folder", folderName));
     }
 
+
     public Map uploadVideo(MultipartFile file, String folderName) throws IOException {
         return cloudinary
                 .uploader()
                 .upload(file.getBytes(), ObjectUtils.asMap("resource_type", "video", "folder", folderName));
+    }
+
+    public String uploadImage(MultipartFile file) throws IOException {
+        Map<String, Object> options = ObjectUtils.asMap(
+                "folder", "travel"
+        );
+
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
+        return uploadResult.get("url").toString();
     }
 }

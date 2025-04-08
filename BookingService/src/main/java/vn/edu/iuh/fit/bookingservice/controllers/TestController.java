@@ -36,11 +36,19 @@ public class TestController {
 
     @GetMapping("hello")
     public ResponseEntity<MessageResponse<TestDto>> helloword() {
+        userServiceClient.getAllUsers();
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy", testService.testSerivce());
     }
 
     @GetMapping("hello1")
     public ResponseEntity<MessageResponse<TestDto>> helloword2() {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
+    }
+
+
+
+    @GetMapping("zycute")
+    public ResponseEntity<MessageResponse<TestDto>> zycutevailon() {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy", new TestDto("Cho Tú"));
     }
 

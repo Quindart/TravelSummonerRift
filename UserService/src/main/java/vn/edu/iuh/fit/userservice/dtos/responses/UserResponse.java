@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.userservice.enums.Role;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,9 @@ public class UserResponse {
     String phone;
     String username;
     String fullName;
+    String avatarUrl;
+    Date birthday;
+    int gender;
+
     Role role;
-
-
 }

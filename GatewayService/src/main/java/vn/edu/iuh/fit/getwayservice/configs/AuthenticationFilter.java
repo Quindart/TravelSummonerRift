@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.getwayservice.configs;
-
+//import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+//import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -34,8 +35,28 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     UserService userService;
     ObjectMapper objectMapper;
 
+//    CircuitBreakerRegistry circuitBreakerRegistry;
+
     @NonFinal
-    private String[] publicEndpoints = {"/user-service/auth/.*", "/user-service/users/register", "/booking-service/tours"};
+    private String[] publicEndpoints = {
+            //public endpoint api
+            "/user-service/api/.*",
+            "/user-service/auth/.*",
+            "/user-service/users/register",
+            "/booking-service/tours.*",
+            "/booking-service/destination.*",
+            "/booking-service/tour-destination.*",
+            "/booking-service/reviews.*",
+            "/booking-service/category-tours.*",
+            //swagger
+            "/swagger-ui.*",
+            "/swagger-ui/.*",
+            "/swagger-resources/.*",
+            "/v3/api-docs/.*",
+            "/webjars/.*",
+            ".*/v3/api-docs",
+            ".*/swagger-resources.*"
+    };
 
     @Value("${app.api-prefix}")
     @NonFinal
@@ -44,10 +65,19 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        log.info("Enter authentication filter....");
+//        log.info("Enter authentication filter....");
+
+//        CircuitBreaker userServiceCircuitBreaker = circuitBreakerRegistry.circuitBreaker("userServiceCircuitBreaker");
+
+
+//        System.out.println("CB state: "  + userServiceCircuitBreaker.getState());
+//        System.out.println("Failure Rate:" + userServiceCircuitBreaker.getMetrics().getFailureRate());
+//        System.out.println("Current Number of Failed Calls" +  userServiceCircuitBreaker.getMetrics().getNumberOfFailedCalls());
 
         if(isPublicEndpoint(exchange.getRequest()))
+        {
             return chain.filter(exchange);
+        }
 
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
@@ -62,7 +92,10 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             else
                 return unauthenticated(exchange.getResponse());
-        }).onErrorResume(throwable -> unauthenticated(exchange.getResponse()));
+        }).onErrorResume(throwable -> {
+            System.out.println("Error: " + throwable.getMessage());
+            return unauthenticated(exchange.getResponse());
+        });
     }
 
     @Override
@@ -91,6 +124,9 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "GET, POST, PUT, DELETE, OPTIONS");
+        response.getHeaders().add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Authorization, Content-Type");
         return response.writeWith(
                 Mono.just(response.bufferFactory().wrap(body.getBytes())));
     }

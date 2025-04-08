@@ -1,3 +1,6 @@
+app:
+  swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}
+
 server:
   port: ${USER_SERVICE_PORT}
   servlet:
@@ -19,6 +22,17 @@ eureka:
 spring:
   application:
     name: ${USER_SERVICE_NAME}
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${USER_NAME_MAIL}
+    password: ${PASSWORD_MAIL}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: false
+
+
   datasource:
     driver-class-name: ${DB_DRIVER}
     url: ${DB_URL}
@@ -51,3 +65,13 @@ jwt:
   signerKey: ${USER_SERVICE_JWT_SIGNER_KEY}
   valid-duration: ${USER_SERVICE_JWT_VALID_DURATION}
   refreshable-duration: ${USER_SERVICE_JWT_REFRESHABLE_DURATION}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+
+
+

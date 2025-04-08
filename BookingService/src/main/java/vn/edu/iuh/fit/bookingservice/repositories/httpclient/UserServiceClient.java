@@ -18,6 +18,6 @@ public interface UserServiceClient {
 //    @PostMapping(value = "/auth/introspect", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    MessageResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request);
 //
-//    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    List<UserResponse> getAllUsers();
+    @GetMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    List<UserResponse> getAllUsers();
 }
