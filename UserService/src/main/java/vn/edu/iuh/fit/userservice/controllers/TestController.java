@@ -47,12 +47,12 @@ public class TestController {
 
     @GetMapping("/em-zy-cute-voai")
     public String testCICD() throws InterruptedException {
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); // restore interrupt flag
-            return "Request bị gián đoạn";
-        }
-        return "xy";
+//        try {
+//            TimeUnit.SECONDS.sleep(0);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt(); // restore interrupt flag
+//            return "Request bị gián đoạn";
+//        }
+        return "Zy cute ahhhh";
     }
 }

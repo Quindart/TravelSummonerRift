@@ -16,6 +16,13 @@ app:
   user-client-url: ${GATEWAY_IDENTITY_SERVICE_URI}${USER_SERVICE_CONTEXT_PATH}
 
 spring:
+  data:
+    redis:
+      host: ${USER_SERVICE_REDIS_HOST}
+      port: ${USER_SERVICE_REDIS_PORT}
+      password: ${USER_SERVICE_REDIS_PASSWORD}
+      timeout: ${USER_SERVICE_REDIS_TIMEOUT}
+
   application:
     name: ${GATEWAY_SERVICE_NAME}
   cloud:
@@ -34,6 +41,12 @@ spring:
               args:
                 name: userService
                 fallbackUri: forward:/fallback/user
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 20 #Hồi 20 request mỗi giây (token/second)
+                redis-rate-limiter.burstCapacity: 100 #Cho phép tối đa 100 request bắn một phát
+                key-resolver: "#{@ipKeyResolver}"
+
 
         #Booking service
         - id: booking_service
