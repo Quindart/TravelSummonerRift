@@ -44,6 +44,8 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/user-service/auth/.*",
             "/user-service/users/register",
             "/booking-service/tours.*",
+            "/booking-service/destination.*",
+            "/booking-service/tour-destination.*",
 
             //swagger
             "/swagger-ui.*",
@@ -75,7 +77,6 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         {
             return chain.filter(exchange);
         }
-
 
         // Get token from authorization header
         List<String> authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION);
