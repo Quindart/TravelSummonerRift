@@ -30,6 +30,7 @@ public class SecurityConfig {
             "/destinations/**",
             "/reviews/**",
             "/tour-destinations/**",
+            "/category-tours/**"
     };
 
     @Autowired
