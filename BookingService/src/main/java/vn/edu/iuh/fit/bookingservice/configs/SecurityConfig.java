@@ -28,7 +28,9 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/tours/**",
             "/destinations/**",
+            "/reviews/**",
             "/tour-destinations/**",
+            "/category-tours/**"
     };
 
     @Autowired
