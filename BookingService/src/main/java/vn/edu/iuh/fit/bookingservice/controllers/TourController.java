@@ -111,6 +111,11 @@ public class TourController {
                 .build();
     }
 
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<MessageResponse<List<TourResponse>>> searchToursByKeyword(@PathVariable String keyword) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.searchToursByKeyword(keyword));
+    }
+
     @GetMapping("/tour-overviews")
     public ResponseEntity<MessageResponse<List<TourOverviewResponse>>> getAllTourOverviews() {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.getAllTourOverviews());
