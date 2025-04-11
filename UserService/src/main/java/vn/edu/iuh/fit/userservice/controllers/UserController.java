@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.userservice.dtos.requests.ChangePasswordRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.IntrospectRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserRegisterRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.UserUpdateRequest;
@@ -67,6 +69,18 @@ public class UserController {
                 .success(true)
                 .message("Đăng ký người dùng thành công")
                 .data(userService.registerUser(request))
+                .build();
+    }
+
+    @PostMapping("/change-password")
+    public MessageResponse<UserResponse> changePassword(@RequestBody ChangePasswordRequest request,
+                                                        Authentication authentication) {
+        String username = authentication.getName();
+        userService.changePassword(username, request);
+        return MessageResponse.<UserResponse>builder()
+                .statusCode(200)
+                .success(true)
+                .message("Đổi mật khẩu thành công")
                 .build();
     }
 
