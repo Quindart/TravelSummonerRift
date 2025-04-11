@@ -25,10 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.io.UnsupportedEncodingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/tours")
 public class TourController {
+
+    private static final Logger log = LoggerFactory.getLogger(TourController.class);
 
     @Autowired
     TourService tourService;
@@ -113,6 +118,11 @@ public class TourController {
 
     @GetMapping("/search/{keyword}")
     public ResponseEntity<MessageResponse<List<TourResponse>>> searchToursByKeyword(@PathVariable String keyword) {
+        try {
+            keyword = java.net.URLDecoder.decode(keyword, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Error decoding keyword: {}", e.getMessage());
+        }
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.searchToursByKeyword(keyword));
     }
 
