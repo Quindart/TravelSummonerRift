@@ -28,5 +28,13 @@ public class TourFavoriteController {
         List<TourFavoriteResponse> favorites = tourFavoriteService.getAllFavoritesByUserId(userId);
         return SuccessEntityResponse.OkResponse("Đã tìm thấy danh sách yêu thích!", favorites);
     }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateFavorites(
+            @PathVariable String userId,
+            @RequestBody List<String> tourIds) {
+        tourFavoriteService.updateTourFavorite(userId, tourIds);
+        return SuccessEntityResponse.OkResponse("Danh sách yêu thích đã được cập nhật!", null);
+    }
 }
 

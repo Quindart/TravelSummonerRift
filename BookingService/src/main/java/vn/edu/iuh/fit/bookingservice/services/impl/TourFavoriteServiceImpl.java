@@ -53,4 +53,29 @@ public class TourFavoriteServiceImpl implements TourFavoriteService {
         List<TourFavorite> favorites = tourFavoriteRepository.findByUserId(userId);
         return tourFavoriteMapper.toFavoriteDtoList(favorites);
     }
+
+    @Override
+    public void updateTourFavorite(String userId, List<String> tourIds) {
+        try {
+            userClient.getUserById(userId);
+        } catch (Exception e) {
+            throw new RuntimeException("User không tồn tại");
+        }
+        
+        // Xóa tất cả favorites hiện tại của user
+        List<TourFavorite> currentFavorites = tourFavoriteRepository.findByUserId(userId);
+        tourFavoriteRepository.deleteAll(currentFavorites);
+        
+        // Thêm mới các favorites từ danh sách tour IDs
+        for (String tourId : tourIds) {
+            Tour tour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour không tồn tại: " + tourId));
+            
+            TourFavorite tourFavorite = new TourFavorite();
+            tourFavorite.setUserId(userId);
+            tourFavorite.setTour(tour);
+            
+            tourFavoriteRepository.save(tourFavorite);
+        }
+    }
 }
