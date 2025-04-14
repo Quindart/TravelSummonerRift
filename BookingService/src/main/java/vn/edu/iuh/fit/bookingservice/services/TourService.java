@@ -27,4 +27,6 @@ public interface TourService {
     List<TourImageResponse> getTourImages(String tourId);
 
     List<TourNoteResponse> getTourNotes(String tourId);
+
+    List<TourResponse> searchToursByKeyword(String keyword);
 }

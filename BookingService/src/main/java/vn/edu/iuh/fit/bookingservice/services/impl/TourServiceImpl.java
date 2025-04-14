@@ -190,4 +190,60 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourNoteResponse)
                 .toList();
     }
+
+    @Override
+    public List<TourResponse> searchToursByKeyword(String keyword) {
+        Specification<Tour> spec = (root, query, builder) -> {
+            String likeKeyword = "%" + keyword.toLowerCase() + "%";
+            String accents = "áàảãạâấầẩẫậăắằẳẵặđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÁÀẢÃẠÂẤẦẨẪẬĂẮẰẲẴẶĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ";
+            String noAccents = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
+            
+            return builder.or(
+                    builder.like(
+                        builder.function("translate", String.class, 
+                            builder.lower(root.get("name")), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        ), 
+                        builder.function("translate", String.class, 
+                            builder.literal(likeKeyword), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        )
+                    ),
+                    builder.like(
+                        builder.function("translate", String.class, 
+                            builder.lower(root.get("description")), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        ), 
+                        builder.function("translate", String.class, 
+                            builder.literal(likeKeyword), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        )
+                    ),
+                    builder.like(
+                        builder.function("translate", String.class, 
+                            builder.lower(root.get("duration")), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        ), 
+                        builder.function("translate", String.class, 
+                            builder.literal(likeKeyword), 
+                            builder.literal(accents), 
+                            builder.literal(noAccents)
+                        )
+                    )
+            );
+        };
+        
+        List<Tour> tours = tourRepository.findAll(spec);
+        if (tours.isEmpty()) {
+            throw new NotFoundException("Không tìm thấy tour nào với từ khóa: " + keyword);
+        }
+        return tours.stream()
+                .map(tourMapper::toTourResponse)
+                .toList();
+    }
 }
