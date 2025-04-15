@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,7 +14,8 @@ public class TourHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String historyId;
+    @Column(name = "history_id", nullable = false, updatable = false)
+    private String tourHistoryId;
 
     @Column(name = "user_id", nullable = false)
     private String userId;
@@ -24,4 +26,5 @@ public class TourHistory extends BaseEntity {
 
     @Column(name = "view_date", nullable = false)
     private LocalDateTime viewDate;
+
 }
