@@ -2,19 +2,15 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.bookingservice.Infra.client.IUserClient;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourFavoriteResponse;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourFavorite;
-import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
-import vn.edu.iuh.fit.bookingservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourFavoriteMapperImpl;
 import vn.edu.iuh.fit.bookingservice.repositories.TourFavoriteRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.TourFavoriteService;
 
 import java.util.List;
@@ -25,7 +21,7 @@ public class TourFavoriteServiceImpl implements TourFavoriteService {
 
     private final TourRepository tourRepository;
     private final TourFavoriteRepository tourFavoriteRepository;
-    private final IUserClient userClient;
+    private final UserServiceClient userClient;
     private final TourFavoriteMapperImpl tourFavoriteMapper;
 
     @Override
