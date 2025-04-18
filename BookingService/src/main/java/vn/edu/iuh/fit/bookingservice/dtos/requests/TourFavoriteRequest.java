@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.bookingservice.Infra.request;
+package vn.edu.iuh.fit.bookingservice.dtos.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
