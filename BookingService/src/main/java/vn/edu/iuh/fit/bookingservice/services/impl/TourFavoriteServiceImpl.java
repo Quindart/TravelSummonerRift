@@ -56,11 +56,9 @@ public class TourFavoriteServiceImpl implements TourFavoriteService {
 
     @Override
     public void updateTourFavorite(String userId, List<String> tourIds) {
-        try {
+
             userClient.getUserById(userId);
-        } catch (Exception e) {
-            throw new RuntimeException("User không tồn tại");
-        }
+
         
         // Xóa tất cả favorites hiện tại của user
         List<TourFavorite> currentFavorites = tourFavoriteRepository.findByUserId(userId);
