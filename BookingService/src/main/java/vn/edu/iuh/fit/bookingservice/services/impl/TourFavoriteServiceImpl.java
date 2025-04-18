@@ -10,6 +10,8 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourFavorite;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.bookingservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourFavoriteMapperImpl;
 import vn.edu.iuh.fit.bookingservice.repositories.TourFavoriteRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
@@ -31,14 +33,12 @@ public class TourFavoriteServiceImpl implements TourFavoriteService {
 
         // Kiểm tra tour tồn tại
         Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
+                .orElseThrow(() -> new NotFoundException("Tour không tồn tại"));
 
         // Kiểm tra user tồn tại
-        try {
-            userClient.getUserById(userId);
-        } catch (Exception e) {
-            throw new RuntimeException("User không tồn tại");
-        }
+
+        userClient.getUserById(userId);
+
 
         // Tạo mới TourFavorite
         TourFavorite tourFavorite = new TourFavorite();
@@ -56,11 +56,9 @@ public class TourFavoriteServiceImpl implements TourFavoriteService {
 
     @Override
     public void updateTourFavorite(String userId, List<String> tourIds) {
-        try {
+
             userClient.getUserById(userId);
-        } catch (Exception e) {
-            throw new RuntimeException("User không tồn tại");
-        }
+
         
         // Xóa tất cả favorites hiện tại của user
         List<TourFavorite> currentFavorites = tourFavoriteRepository.findByUserId(userId);
