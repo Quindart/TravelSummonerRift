@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.userservice.services;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -40,9 +41,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        UserResponse userResponse = new UserResponse();
-        userResponse = userMapper.toUserResponse(userRepository.findAll().get(0));
-        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+        return userRepository.findByIsActive(true).orElse(Collections.emptyList()).stream().map(userMapper::toUserResponse).toList();
     }
 
     public UserResponse registerUser(UserRegisterRequest request) {
@@ -116,6 +115,4 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
     }
-
-
 }

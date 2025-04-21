@@ -2,13 +2,15 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.bookingservice.Infra.client.IUserClient;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourHistoryResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourHistory;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.bookingservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourHistoryMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.TourHistoryRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.TourHistoryService;
 
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public class TourHistoryServiceImpl implements TourHistoryService {
 
     private final TourRepository tourRepository;
     private final TourHistoryRepository tourHistoryRepository;
-    private final IUserClient userClient;
+    private final UserServiceClient userClient;
     private final TourHistoryMapper tourHistoryMapper;
 
     private static final int MAX_HISTORY_SIZE = 10;
@@ -30,13 +32,13 @@ public class TourHistoryServiceImpl implements TourHistoryService {
     public void addTourToHistory(String userId, String tourId) {
         // Kiểm tra tour tồn tại
         Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
+                .orElseThrow(() -> new NotFoundException("Tour không tồn tại"));
 
         // Kiểm tra user tồn tại
         try {
             userClient.getUserById(userId);
         } catch (Exception e) {
-            throw new RuntimeException("User không tồn tại");
+            throw new UnauthorizedException("User không tồn tại");
         }
 
         // Kiểm tra xem đã có lịch sử xem tour này chưa

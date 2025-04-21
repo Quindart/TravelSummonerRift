@@ -3,7 +3,7 @@ package vn.edu.iuh.fit.bookingservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.fit.bookingservice.Infra.request.TourFavoriteRequest;
+import vn.edu.iuh.fit.bookingservice.dtos.requests.TourFavoriteRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourFavoriteResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.bookingservice.services.TourFavoriteService;

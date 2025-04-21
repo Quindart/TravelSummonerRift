@@ -3,7 +3,6 @@ package vn.edu.iuh.fit.bookingservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.iuh.fit.bookingservice.Infra.request.TourFavoriteRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourHistoryResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.bookingservice.services.TourHistoryService;
@@ -17,7 +16,7 @@ public class TourHistoryController {
     private final TourHistoryService tourHistoryService;
 
     @PostMapping("")
-    public ResponseEntity<?> addToHistory(@RequestBody TourFavoriteRequest request) {
+    public ResponseEntity<?> addToHistory(@RequestBody vn.edu.iuh.fit.bookingservice.dtos.requests.TourFavoriteRequest request) {
         tourHistoryService.addTourToHistory(request.getUserId(), request.getTourId());
         List<TourHistoryResponse> history = tourHistoryService.getUserTourHistory(request.getUserId());
         return SuccessEntityResponse.OkResponse("Đã cập nhật lịch sử xem tour!", history);
