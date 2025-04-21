@@ -20,7 +20,8 @@ public class TourFavoriteController {
     @PostMapping("")
     public ResponseEntity<?> addToFavorite(@RequestBody TourFavoriteRequest request) {
         tourFavoriteService.addTourToFavorite(request.getUserId(), request.getTourId());
-        return SuccessEntityResponse.OkResponse("Đã thêm tour vào yêu thích!", null);
+        List<TourFavoriteResponse> favorites = tourFavoriteService.getAllFavoritesByUserId(request.getUserId());
+        return SuccessEntityResponse.OkResponse("Đã thêm tour vào yêu thích!", favorites);
     }
 
     @GetMapping("/{userId}")
@@ -35,6 +36,13 @@ public class TourFavoriteController {
             @RequestBody List<String> tourIds) {
         tourFavoriteService.updateTourFavorite(userId, tourIds);
         return SuccessEntityResponse.OkResponse("Danh sách yêu thích đã được cập nhật!", null);
+    }
+
+    @DeleteMapping("/{userId}/{tourId}")
+    public ResponseEntity<?> deleteFavorite(@PathVariable String userId, @PathVariable String tourId) {
+        tourFavoriteService.deleteTourFavorite(userId, tourId);
+        List<TourFavoriteResponse> favorites = tourFavoriteService.getAllFavoritesByUserId(userId);
+        return SuccessEntityResponse.OkResponse("Đã xóa tour khỏi danh sách yêu thích!", favorites);
     }
 }
 
