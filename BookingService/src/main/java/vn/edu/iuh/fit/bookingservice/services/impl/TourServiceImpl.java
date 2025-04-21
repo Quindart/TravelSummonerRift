@@ -246,4 +246,8 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
+
+    public List<TourResponse> getTourCheap(int limit){
+
+    }
 }
