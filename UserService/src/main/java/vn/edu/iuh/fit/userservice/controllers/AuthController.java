@@ -46,8 +46,8 @@ public class AuthController {
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String googleSecret;
 
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
-    private String googleRedirectUrl;
+
+    private String googleRedirectUrl = "https://baa2-139-59-117-56.ngrok-free.app/api/v1/user-service/auth/google/callback";
 
 
     @PostMapping("/token")
