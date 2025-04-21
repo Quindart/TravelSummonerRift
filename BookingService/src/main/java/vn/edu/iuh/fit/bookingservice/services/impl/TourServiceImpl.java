@@ -262,13 +262,13 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourResponse> getToursByCategory(String categoryID) {
+    public List<TourOverviewResponse> getToursByCategory(String categoryID) {
         List<Tour> ls = tourRepository.findToursByCategoryTour_CategoryTourId(categoryID);
         if (ls.isEmpty()) {
             throw new NotFoundException("Chưa tìm thấy Tour nào trong Categorie: " + categoryID);
         }
         return ls.stream()
-                .map(tourMapper::toTourResponse)
+                .map(tourMapper::toTourOverviewResponse)
                 .toList();
     }
 }

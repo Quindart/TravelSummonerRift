@@ -151,8 +151,8 @@ public class TourController {
 
 
     @GetMapping("/{categoryId}/tours")
-    public MessageResponse<List<TourResponse>> getTours(@PathVariable String categoryId) {
-        return MessageResponse.<List<TourResponse>>builder()
+    public MessageResponse<List<TourOverviewResponse>> getTours(@PathVariable String categoryId) {
+        return MessageResponse.<List<TourOverviewResponse>>builder()
             .success(true)
             .statusCode(200)
             .message("Danh sách tour theo category")
