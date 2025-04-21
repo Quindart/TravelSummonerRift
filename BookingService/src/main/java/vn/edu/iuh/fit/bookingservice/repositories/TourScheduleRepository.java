@@ -4,4 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 
-public interface TourScheduleRepository extends JpaRepository<TourSchedule, String> {}
+import java.util.List;
+
+public interface TourScheduleRepository extends JpaRepository<TourSchedule, String> {
+    public List<TourSchedule> findTourScheduleByTour_TourId(String tourId);
+}

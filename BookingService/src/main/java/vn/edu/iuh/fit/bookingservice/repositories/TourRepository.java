@@ -12,4 +12,5 @@ import java.util.List;
 public interface TourRepository extends JpaRepository<Tour, String>, JpaSpecificationExecutor<Tour> {
 
     List<Tour>  findByNameContainingIgnoreCase(String tourName);
+    List<Tour> findToursByCategoryTour_CategoryTourId(String categoryTourId);
 }
