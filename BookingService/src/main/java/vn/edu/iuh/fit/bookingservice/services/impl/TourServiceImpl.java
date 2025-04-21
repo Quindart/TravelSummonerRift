@@ -21,10 +21,13 @@ import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourDestinationMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourImageMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
+import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.TourDestinationRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourImageRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.services.TourImageService;
+import vn.edu.iuh.fit.bookingservice.services.TourScheduleService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
 import java.util.ArrayList;
@@ -46,6 +49,10 @@ public class TourServiceImpl implements TourService {
     private TourImageRepository tourImageRepository;
     @Autowired
     private TourImageMapper tourImageMapper;
+    @Autowired
+    private TourScheduleRepository tourScheduleRepository;
+    @Autowired
+    private TourScheduleMapper tourScheduleMapper;
 
     @Override
     public List<TourResponse> getAllTours() {
@@ -76,8 +83,15 @@ public class TourServiceImpl implements TourService {
         List<TourImageResponse> tourImageResponses = tourImageRepository.findByTour_TourId(tourId)
                 .stream().map(tourImageMapper::toTourImageResponse)
                 .toList();
+
+        List<TourScheduleResponse> tourScheduleResponses = tourScheduleRepository.findTourScheduleByTour_TourId(tourId)
+                        .stream()
+                        .map(tourScheduleMapper::entityToResponse)
+                        .toList();
+
         tourResponse.setTourDestinationResponses(tourDestinationResponses);
         tourResponse.setTourImageResponses(tourImageResponses);
+        tourResponse.setTourScheduleResponses(tourScheduleResponses);
         return tourResponse;
     }
 
@@ -247,7 +261,16 @@ public class TourServiceImpl implements TourService {
                 .toList();
     }
 
-    public List<TourResponse> getTourCheap(int limit){
+
+    @Override
+    public List<TourOverviewResponse> getToursByCategory(String categoryID) {
+        List<Tour> ls = tourRepository.findToursByCategoryTour_CategoryTourId(categoryID);
+        if (ls.isEmpty()) {
+            throw new NotFoundException("Chưa tìm thấy Tour nào trong Categorie: " + categoryID);
+        }
+        return ls.stream()
+                .map(tourMapper::toTourOverviewResponse)
+                .toList();
 
     }
 }

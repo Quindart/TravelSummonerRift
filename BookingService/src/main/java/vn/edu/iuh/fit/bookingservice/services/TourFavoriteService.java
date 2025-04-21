@@ -10,4 +10,5 @@ public interface TourFavoriteService {
     void addTourToFavorite(String userId, String tourId);
     List<TourFavoriteResponse> getAllFavoritesByUserId(String userId);
     void updateTourFavorite(String userId, List<String> tourIds);
+    void deleteTourFavorite(String userId, String tourId);
 }
