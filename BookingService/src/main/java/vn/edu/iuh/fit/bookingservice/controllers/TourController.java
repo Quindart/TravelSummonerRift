@@ -148,9 +148,11 @@ public class TourController {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách ghi chú tour", tourService.getTourNotes(tourId));
     }
 
+
+
     @GetMapping("/{categoryId}/tours")
     public MessageResponse<List<TourResponse>> getTours(@PathVariable String categoryId) {
-    return MessageResponse.<List<TourResponse>>builder()
+        return MessageResponse.<List<TourResponse>>builder()
             .success(true)
             .statusCode(200)
             .message("Danh sách tour theo category")
