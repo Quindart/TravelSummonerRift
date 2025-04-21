@@ -77,7 +77,20 @@ services:
     restart: always
     networks:
       - my-network
-
+  ngrok:
+      image: ngrok/ngrok:latest
+      restart: unless-stopped
+      command: http app:3000
+      environment:
+        - NGROK_AUTHTOKEN=2p0RhYu6zxcdLZvpsvDv93P173A_4EQXMNNTRH49qphwi4tyR
+      depends_on:
+        - app
+        - discovery-service
+        - gateway-service
+        - user-service
+        - booking-service
+      networks:
+        - my-network
 networks:
   my-network:
     driver: bridge
