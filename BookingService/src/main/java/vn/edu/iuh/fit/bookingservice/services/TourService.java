@@ -29,4 +29,6 @@ public interface TourService {
     List<TourNoteResponse> getTourNotes(String tourId);
 
     List<TourResponse> searchToursByKeyword(String keyword);
+
+    List<TourResponse> getToursByCategory(String category);
 }

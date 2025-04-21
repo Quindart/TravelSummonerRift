@@ -246,4 +246,15 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
+
+    @Override
+    public List<TourResponse> getToursByCategory(String categoryID) {
+        List<Tour> ls = tourRepository.findToursByCategoryTour_CategoryTourId(categoryID);
+        if (ls.isEmpty()) {
+            throw new NotFoundException("Chưa tìm thấy Tour nào trong Categorie: " + categoryID);
+        }
+        return ls.stream()
+                .map(tourMapper::toTourResponse)
+                .toList();
+    }
 }
