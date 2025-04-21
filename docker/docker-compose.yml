@@ -84,7 +84,6 @@ services:
       environment:
         - NGROK_AUTHTOKEN=2p0RhYu6zxcdLZvpsvDv93P173A_4EQXMNNTRH49qphwi4tyR
       depends_on:
-        - app
         - discovery-service
         - gateway-service
         - user-service
