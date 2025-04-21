@@ -1,41 +1,34 @@
 package vn.edu.iuh.fit.userservice.services;
 
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.userservice.dtos.requests.*;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
+import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
-import vn.edu.iuh.fit.userservice.exception.errors.BadRequestException;
-import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
-import vn.edu.iuh.fit.userservice.exception.errors.UnauthorizedException;
+import vn.edu.iuh.fit.userservice.exception.errors.*;
 import vn.edu.iuh.fit.userservice.mapper.UserMapper;
 import vn.edu.iuh.fit.userservice.repositories.InvalidatedTokenRepository;
 import vn.edu.iuh.fit.userservice.repositories.UserRepository;
 import vn.edu.iuh.fit.userservice.utils.OtpUtils;
+
+import java.text.ParseException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -250,5 +243,38 @@ public class AuthenticationService {
 
         redisService.deleteOtp(email);
 
+    }
+
+    public AuthenticationResponse loginWithGitHub(GitHubInforRequest githubInfo){
+        try{
+            User foundUser = userRepository.findByEmail(githubInfo.getId()).orElse(null);
+            if(foundUser == null) {
+                foundUser = new User();
+                foundUser.setEmail(githubInfo.getId());
+                foundUser.setAvatarUrl(githubInfo.getAvatar_url());
+                foundUser.setFullName(githubInfo.getLogin());
+                foundUser = userRepository.save(foundUser);
+            }
+
+            var token = generateToken(foundUser);
+
+            return AuthenticationResponse.builder().token(token).authenticated(true).user(userMapper.toUserResponse(foundUser)).build();
+        }catch (Exception e){
+            throw  e;
+        }
+    }
+
+    public AuthenticationResponse loginWithGoogle(GoogleInfoRequest googleInfoRequest){
+            User foundUser = userRepository.findByEmail(googleInfoRequest.getEmail()).orElse(null);
+            if(foundUser == null) {
+                foundUser = new User();
+                foundUser.setEmail(googleInfoRequest.getEmail());
+                foundUser.setAvatarUrl(googleInfoRequest.getPicture());
+                foundUser.setFullName(googleInfoRequest.getName());
+                foundUser = userRepository.save(foundUser);
+            }
+            var token = generateToken(foundUser);
+
+            return AuthenticationResponse.builder().token(token).authenticated(true).user(userMapper.toUserResponse(foundUser)).build();
     }
 }
