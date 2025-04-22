@@ -11,27 +11,22 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.TourDestinationResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourImageResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
-import vn.edu.iuh.fit.bookingservice.entities.Tour;
-import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
+import vn.edu.iuh.fit.bookingservice.entities.*;
 import vn.edu.iuh.fit.bookingservice.entities.TourImage;
-import vn.edu.iuh.fit.bookingservice.entities.TourImage;
-import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.exception.errors.InternalServerErrorException;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourDestinationMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourImageMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
-import vn.edu.iuh.fit.bookingservice.repositories.TourDestinationRepository;
-import vn.edu.iuh.fit.bookingservice.repositories.TourImageRepository;
-import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
-import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.*;
 import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 import vn.edu.iuh.fit.bookingservice.services.TourScheduleService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -53,6 +48,9 @@ public class TourServiceImpl implements TourService {
     private TourScheduleRepository tourScheduleRepository;
     @Autowired
     private TourScheduleMapper tourScheduleMapper;
+
+    @Autowired
+    private CategoryTourRepository categoryTourRepository;
 
     @Override
     public List<TourResponse> getAllTours() {
@@ -102,7 +100,10 @@ public class TourServiceImpl implements TourService {
         }
 
         try{
+            Optional<CategoryTour> foundCategory = this.categoryTourRepository.findByCategoryTourId(tourRequest.getCategoryId());
+            if(foundCategory == null) throw new NotFoundException("Không tim thấy category id ");
             Tour tour = tourMapper.toTour(tourRequest);
+            System.out.printf("foudn categorty"+foundCategory.toString());
 
             Tour savedTour = tourRepository.save(tour);
 

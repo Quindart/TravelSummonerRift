@@ -21,6 +21,7 @@ public class TourRequest {
     @Min(value = 0, message = "Giá tour không thể nhỏ hơn 0")
     private double price;
 
+
     @NotBlank(message = "Thumbnail không được để trống")
     private String thumbnail;
 
@@ -29,4 +30,5 @@ public class TourRequest {
     private String duration;
     private List<TourDestinationRequest> tourDestinationRequests;
     private List<TourImageRequest> tourImageRequests;
+    private String categoryId;
 }
