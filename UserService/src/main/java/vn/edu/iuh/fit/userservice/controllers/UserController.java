@@ -56,11 +56,11 @@ public class UserController {
         return "hihi";
     }
 
-    @GetMapping("demo-book-of-user")
-    public ResponseEntity<MessageResponse<BookingOfUserResponse>> getBookingOfUser() {
-        BookingOfUserResponse bookingOfUserResponse = bookingOfUserService.getBookingOfUser("8f68b683-d5ef-4ede-88fc-37e6e56ef9b1");
-        return SuccessEntityResponse.FoundResponse("Get bookings of user success", bookingOfUserResponse);
-    }
+//    @GetMapping("demo-book-of-user")
+//    public ResponseEntity<MessageResponse<BookingOfUserResponse>> getBookingOfUser() {
+//        BookingOfUserResponse bookingOfUserResponse = bookingOfUserService.getBookingOfUser("8f68b683-d5ef-4ede-88fc-37e6e56ef9b1");
+//        return SuccessEntityResponse.FoundResponse("Get bookings of user success", bookingOfUserResponse);
+//    }
 
     @PostMapping("/register")
     public MessageResponse<UserResponse> registerUser(@RequestBody @Valid UserRegisterRequest request) {
