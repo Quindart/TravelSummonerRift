@@ -2,6 +2,7 @@ package vn.edu.iuh.fit.userservice.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -23,6 +24,7 @@ import vn.edu.iuh.fit.userservice.dtos.requests.UserUpdateRequest;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.entities.User;
+import vn.edu.iuh.fit.userservice.enums.Role;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 import vn.edu.iuh.fit.userservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.userservice.exception.errors.NotFoundException;
@@ -70,6 +72,12 @@ public class UserController {
                 .message("Đăng ký người dùng thành công")
                 .data(userService.registerUser(request))
                 .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public  ResponseEntity<MessageResponse<List<UserResponse>>> search(@RequestBody Map<String,String> filters){
+        return SuccessEntityResponse.OkResponse("Tìm thành công",userService.usersFilter(filters));
     }
 
     @PostMapping("/change-password")

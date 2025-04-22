@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -115,4 +121,16 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
     }
+
+    public List<UserResponse> usersFilter(Map<String,String> filter){
+        Specification<User> query = Specification.where(null);
+        for(Map.Entry<String,String> keyValue: filter.entrySet()){
+            query = query.and(((root, query1, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get(keyValue.getKey()), keyValue.getValue())
+                    ));
+        }
+        return userRepository.findAll(query).stream().map(userMapper::toUserResponse).toList();
+    }
 }
+
+
