@@ -10,6 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import vn.edu.iuh.fit.userservice.dtos.requests.*;
 import vn.edu.iuh.fit.userservice.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
@@ -48,6 +49,9 @@ public class AuthController {
 
     @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String googleRedirectUrl;
+
+    @Value("${app.frontend-domain}")
+    private String frontendDomain;
 
 
     @PostMapping("/token")
@@ -109,7 +113,7 @@ public class AuthController {
     }
 
     @GetMapping("/github/callback")
-    public ResponseEntity<?> githubCallback(@RequestParam String code, @RequestParam String state) {
+    public void githubCallback(@RequestParam String code, @RequestParam String state, HttpServletResponse redirect) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
@@ -138,7 +142,18 @@ public class AuthController {
         githubrequest.setLogin((String) userInfo.get("login"));
         githubrequest.setAvatar_url((String) userInfo.get("avatar_url"));
         githubrequest.setId(userInfo.get("id").toString());
-        return ResponseEntity.ok( this.authenticationService.loginWithGitHub(githubrequest));
+        AuthenticationResponse loginData = this.authenticationService.loginWithGitHub(GitHubInforRequest.builder()
+                        .login((String) userInfo.get("login"))
+                        .id(userInfo.get("id").toString())
+                        .avatar_url((String) userInfo.get("avatar_url"))
+                        .build());
+        String redirectData = UriComponentsBuilder
+                .fromHttpUrl(frontendDomain)
+                .queryParam("token",loginData.getToken())
+                .queryParam("user",loginData.getUser())
+                .queryParam("authenticate",true)
+                .toUriString();
+        redirect.sendRedirect(redirectData);
     }
 
     @GetMapping("/google/login")
@@ -205,7 +220,5 @@ public class AuthController {
     public  String testAuth(){
         return "Hello World";
     }
-
-
 
 }

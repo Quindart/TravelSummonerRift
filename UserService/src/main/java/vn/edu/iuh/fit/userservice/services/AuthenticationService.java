@@ -18,6 +18,7 @@ import vn.edu.iuh.fit.userservice.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.userservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.userservice.entities.InvalidatedToken;
 import vn.edu.iuh.fit.userservice.entities.User;
+import vn.edu.iuh.fit.userservice.enums.Role;
 import vn.edu.iuh.fit.userservice.exception.errors.*;
 import vn.edu.iuh.fit.userservice.mapper.UserMapper;
 import vn.edu.iuh.fit.userservice.repositories.InvalidatedTokenRepository;
@@ -246,22 +247,19 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse loginWithGitHub(GitHubInforRequest githubInfo){
-        try{
             User foundUser = userRepository.findByEmail(githubInfo.getId()).orElse(null);
             if(foundUser == null) {
                 foundUser = new User();
                 foundUser.setEmail(githubInfo.getId());
                 foundUser.setAvatarUrl(githubInfo.getAvatar_url());
                 foundUser.setFullName(githubInfo.getLogin());
+                foundUser.setRole(Role.USER);
+                foundUser.setActive(true);
                 foundUser = userRepository.save(foundUser);
             }
 
             var token = generateToken(foundUser);
-
             return AuthenticationResponse.builder().token(token).authenticated(true).user(userMapper.toUserResponse(foundUser)).build();
-        }catch (Exception e){
-            throw  e;
-        }
     }
 
     public AuthenticationResponse loginWithGoogle(GoogleInfoRequest googleInfoRequest){
