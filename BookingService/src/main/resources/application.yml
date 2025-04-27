@@ -2,6 +2,10 @@ app:
   swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${BOOKING_SERVICE_CONTEXT_PATH}
   user-client-url: ${GATEWAY_IDENTITY_SERVICE_URI}${USER_SERVICE_CONTEXT_PATH}
 
+vnpay:
+  vnp_TmnCode: ${VNP_TMN_CODE}
+  secretKey: ${VNP_SECRET_KEY}
+
 server:
   port: ${BOOKING_SERVICE_PORT}
   servlet:

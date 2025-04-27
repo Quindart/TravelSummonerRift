@@ -12,11 +12,11 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentService {
+public class VNPayService {
 
     private final VNPayConfig vnPayConfig;
 
-    public String createPaymentUrl(long amount, String bankCode, String language) throws UnsupportedEncodingException {
+    public String createPaymentUrl(String bookingId, long amount, String bankCode, String language) throws UnsupportedEncodingException {
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -24,10 +24,11 @@ public class PaymentService {
 
         // amount phải nhân với 100 vì VNPay yêu cầu đơn vị là cent
         long vnp_Amount = amount * 100;
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);  // Mã giao dịch duy nhất
+//        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);  // Mã giao dịch duy nhất
+        String vnp_TxnRef =bookingId;
         String vnp_IpAddr = "127.0.0.1";  // Lấy địa chỉ IP của người dùng
 
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -94,7 +95,7 @@ public class PaymentService {
 
         // Tạo Secure Hash
         String queryUrl = query.toString();
-        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(vnPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
         // Trả về URL thanh toán
