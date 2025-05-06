@@ -1,19 +1,34 @@
 package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.bookingservice.dtos.PrincipalAuthentication;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.ReviewResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourScheduleResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
+import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.ReviewMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.ReviewRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
+import vn.edu.iuh.fit.bookingservice.services.CloudinaryService;
+import vn.edu.iuh.fit.bookingservice.services.IAuthData;
 import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -25,10 +40,22 @@ public class ReviewServiceImpl implements ReviewService {
     private ReviewMapper reviewMapper;
 
     @Autowired
+    private CloudinaryService cloudinaryService;
+
+    @Autowired
     private TourScheduleMapper tourScheduleMapper;
 
     @Autowired
     private TourRepository tourRepository;
+
+    @Autowired
+    private TourScheduleRepository tourScheduleRepository;
+
+    @Autowired
+    private UserServiceClient userServiceClient;
+
+    @Autowired
+    private IAuthData authData;
 
     @Override
     public List<ReviewResponse> getReviews() {
@@ -70,9 +97,33 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResponse addReview(ReviewRequest review) {
-        return null;
+    public ReviewResponse addReview(MultipartFile[] files, ReviewRequest review) throws IOException {
+        PrincipalAuthentication auth = this.authData.getAuth();
+        String userId = auth.getUserId();
+
+        Object foundUser = this.userServiceClient.getUserById(userId);
+
+
+        TourSchedule foundTourSchedule = this.tourScheduleRepository.findById(review.getTourScheduleId()).orElseThrow(()->new NotFoundException("Không tìm thấy tour schedule"));
+        List<String> linkFiles = new LinkedList<>();
+        for(MultipartFile file:files){
+            String link = cloudinaryService.uploadImage(file);
+            linkFiles.add(link);
+        }
+        Review modelReview = Review.builder()
+            .reviewDate(LocalDateTime.now())
+//                .userId(foundUser.getUserId())
+//                .username(foundUser.getUsername())
+                .rating(review.getRating())
+                .content(review.getContent())
+                .files(linkFiles)
+                .tourSchedule(foundTourSchedule)
+        .build();
+        Review savedResult = this.reviewRepository.save(modelReview);
+
+        return reviewMapper.toReviewResponse(savedResult);
     }
+
 
     @Override
     public ReviewResponse updateReview(ReviewRequest review) {
