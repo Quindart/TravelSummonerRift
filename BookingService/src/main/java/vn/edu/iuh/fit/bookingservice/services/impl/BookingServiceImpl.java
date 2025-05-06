@@ -11,6 +11,8 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponseDTO;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
 import vn.edu.iuh.fit.bookingservice.entities.Ticket;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.BookingMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
@@ -80,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         Booking booking = Booking.builder()
-                .status(1) // Đang xử lý
+                .status(BookingStatus.PENDING) // Đang xử lý
                 .totalPrice(0) // Chưa tính tổng, sẽ cập nhật sau
                 .note(request.getNote())
                 .userFullName(request.getUserFullName())
@@ -124,5 +126,37 @@ public class BookingServiceImpl implements BookingService {
 
         return response;
     }
+
+
+    public void handleSuccessedPayment(String txnRef) {
+        Booking booking = bookingRepository.findById(txnRef)
+                .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
+
+        booking.setStatus(BookingStatus.PAID);
+    }
+
+
+    public void handleFailedPayment(String txnRef) {
+        Booking booking = bookingRepository.findById(txnRef)
+                .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
+
+        // Cập nhật trạng thái booking thành FAILED
+        booking.setStatus(BookingStatus.FAILED);
+        bookingRepository.save(booking);
+
+        // Giải phóng slot tour: Trả lại số vé đã chiếm
+        TourSchedule tourSchedule = booking.getTourSchedule();
+        long bookedTicketsCount = ticketRepository.countByBooking_BookingId(booking.getBookingId());
+
+        // Trả lại slot tour
+        tourSchedule.setSlot((int) (tourSchedule.getSlot() + bookedTicketsCount));
+        tourScheduleRepository.save(tourSchedule);
+
+        // Xóa tất cả các vé liên quan đến booking thất bại
+        ticketRepository.deleteByBooking(booking);
+    }
+
+
+
 
 }

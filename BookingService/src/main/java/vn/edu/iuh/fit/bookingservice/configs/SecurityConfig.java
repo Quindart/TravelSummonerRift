@@ -30,9 +30,15 @@ public class SecurityConfig {
             "/destinations/**",
             "/reviews/**",
             "/tour-destinations/**",
-            "/category-tours/**"
+            "/category-tours/**",
+            "/vnpay/**"
+
     };
 
+    private final String[] PUBLIC_ENDPOINTS_POST = {
+            "/vnpay/**"
+
+    };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
@@ -41,7 +47,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(
                 request -> request
                         .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-//                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
                         .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()  );
 

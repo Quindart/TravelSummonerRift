@@ -1,11 +1,14 @@
 package vn.edu.iuh.fit.bookingservice.dtos.responses;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.iuh.fit.bookingservice.dtos.TicketDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
 
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 @Builder
 public class BookingResponseDTO {
     String bookingId;
-    int status;
+    BookingStatus status;
     double totalPrice;
     String note;
     String userFullName;

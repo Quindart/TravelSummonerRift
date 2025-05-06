@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class Booking extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     String bookingId;
 
-    int status; // Trạng thái booking (0: Chờ xác nhận, 1: Đã xác nhận, 2: Đã thanh toán, 3: Đã hủy)
+    @Enumerated(EnumType.STRING)
+    BookingStatus status;
     double totalPrice;
     String note;
 

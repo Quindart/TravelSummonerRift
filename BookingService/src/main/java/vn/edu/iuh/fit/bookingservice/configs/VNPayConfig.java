@@ -14,11 +14,12 @@ import java.util.*;
 @Configuration
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_ReturnUrl = "https://0f94-171-252-188-218.ngrok-free.app/api/v1/booking-service/vnpay/result";
     @Value("${vnpay.vnp_TmnCode}")
     public String vnp_TmnCode;
     @Value("${vnpay.secretKey}")
     public String secretKey;
+    public static String vnp_IPNUrl = "https://e96f-42-112-152-48.ngrok-free.app/api/v1/booking-service/vnpay/ipn";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
