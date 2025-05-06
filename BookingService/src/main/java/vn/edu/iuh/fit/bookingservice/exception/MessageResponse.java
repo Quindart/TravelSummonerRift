@@ -3,20 +3,15 @@ package vn.edu.iuh.fit.bookingservice.exception;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
+@NoArgsConstructor
 public class MessageResponse<T> implements java.io.Serializable {
-    @JsonProperty("statusCode")
     private int statusCode;
-
-    @JsonProperty("message")
     private String message;
-
-    @JsonProperty("success")
-    private boolean success = true;
-    
-    @JsonProperty("data")
+    private boolean success;
     private T data;
 
     public MessageResponse(int statusCode, String message, boolean success) {
