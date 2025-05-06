@@ -13,11 +13,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class ReviewRequest {
-    private LocalDateTime reviewDate;
-    private String userId;
     private String content;
-    private String username;
-    private List<String> imageUrls;
-    private List<String> videoUrls;
     private String tourScheduleId;
+    private float rating;
+
+    private String listFiles = null;
 }

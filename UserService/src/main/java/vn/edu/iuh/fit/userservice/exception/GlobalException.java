@@ -36,8 +36,8 @@ public class GlobalException {
         return new ResponseEntity<>(errorDto, HttpStatus.BAD_GATEWAY);
     }
 
-    @ExceptionHandler(ConflicException.class)
-    public ResponseEntity<ErrorMessageDto> ConflicException(ConflicException exc) {
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorMessageDto> ConflicException(ConflictException exc) {
         MessageResponse error = new MessageResponse(HttpStatus.CONFLICT.value(), exc.getMessage(), false);
         ErrorMessageDto errorDto = new ErrorMessageDto(error.getStatusCode(), error.getMessage(), error.isSuccess());
         return new ResponseEntity<>(errorDto, HttpStatus.CONFLICT);

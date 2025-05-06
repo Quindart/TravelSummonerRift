@@ -1,6 +1,6 @@
 app:
   swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}
-
+  frontend-domain : ${FULL_DOMAIN}
 server:
   port: ${USER_SERVICE_PORT}
   servlet:
@@ -50,6 +50,30 @@ spring:
       port: ${USER_SERVICE_REDIS_PORT}
       password: ${USER_SERVICE_REDIS_PASSWORD}
       timeout: ${USER_SERVICE_REDIS_TIMEOUT}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}${GOOGLE_REDIRECT_URL}
+            scope:
+              - email
+              - profile
+          github:
+            client-id: Ov23liumeIJXkXMH4Xy1
+            client-secret: eab058a632999418b0e028aea675c0ead9b2f6ff
+            redirect-uri: http://localhost:8080/api/v1/user-service/auth/github/callback
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
 
 management:
   tracing:

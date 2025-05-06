@@ -18,7 +18,8 @@ public class TourHistoryController {
     @PostMapping("")
     public ResponseEntity<?> addToHistory(@RequestBody vn.edu.iuh.fit.bookingservice.dtos.requests.TourFavoriteRequest request) {
         tourHistoryService.addTourToHistory(request.getUserId(), request.getTourId());
-        return SuccessEntityResponse.OkResponse("Đã cập nhật lịch sử xem tour!", null);
+        List<TourHistoryResponse> history = tourHistoryService.getUserTourHistory(request.getUserId());
+        return SuccessEntityResponse.OkResponse("Đã cập nhật lịch sử xem tour!", history);
     }
 
     @GetMapping("/{userId}")

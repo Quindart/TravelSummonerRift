@@ -1,11 +1,18 @@
 package vn.edu.iuh.fit.userservice.services;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,9 +47,7 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        UserResponse userResponse = new UserResponse();
-        userResponse = userMapper.toUserResponse(userRepository.findAll().get(0));
-        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+        return userRepository.findByIsActive(true).orElse(Collections.emptyList()).stream().map(userMapper::toUserResponse).toList();
     }
 
     public UserResponse registerUser(UserRegisterRequest request) {
@@ -117,5 +122,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-
+    public List<UserResponse> usersFilter(Map<String,String> filter){
+        Specification<User> query = Specification.where(null);
+        for(Map.Entry<String,String> keyValue: filter.entrySet()){
+            query = query.and(((root, query1, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get(keyValue.getKey()), keyValue.getValue())
+                    ));
+        }
+        return userRepository.findAll(query).stream().map(userMapper::toUserResponse).toList();
+    }
 }
+
+
