@@ -4,17 +4,25 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.BookingRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponseDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
 import vn.edu.iuh.fit.bookingservice.entities.Ticket;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.BookingMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.BookingService;
 
 import java.time.LocalDateTime;
@@ -33,6 +41,7 @@ public class BookingServiceImpl implements BookingService {
     private final TourScheduleRepository tourScheduleRepository;
     private final TicketRepository ticketRepository;
     private final BookingMapper bookingMapper;
+    private final UserServiceClient userServiceClient;
 
     @Override
     public List<BookingResponse> findBookingsByUserId(String userId) {
@@ -57,6 +66,22 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO createBooking(BookingRequest request) {
+        var context = SecurityContextHolder.getContext();
+        String name = context.getAuthentication().getName();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = null;
+        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            Jwt jwt = jwtAuth.getToken();
+            userId = jwt.getClaimAsString("userId");
+        }
+
+        UserResponse user = userServiceClient.getUserById(userId).getData();
+        System.out.println(user);
+        if (user == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
+
         Optional<TourSchedule> tourScheduleOpt = tourScheduleRepository.findById(request.getTourScheduleId());
         if (tourScheduleOpt.isEmpty()) {
             throw new RuntimeException("Tour Schedule không tồn tại!");
@@ -80,7 +105,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         Booking booking = Booking.builder()
-                .status(1) // Đang xử lý
+                .status(BookingStatus.PENDING) // Đang xử lý
                 .totalPrice(0) // Chưa tính tổng, sẽ cập nhật sau
                 .note(request.getNote())
                 .userFullName(request.getUserFullName())
@@ -88,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
                 .userEmail(request.getUserEmail())
                 .userAddress(request.getUserAddress())
                 .tourSchedule(tourSchedule)
-                .userId(request.getUserId())
+                .userId(userId)
                 .build();
 
         booking = bookingRepository.save(booking);
@@ -124,5 +149,6 @@ public class BookingServiceImpl implements BookingService {
 
         return response;
     }
+
 
 }
