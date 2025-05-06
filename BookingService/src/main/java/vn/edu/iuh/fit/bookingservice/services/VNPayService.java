@@ -3,6 +3,14 @@ package vn.edu.iuh.fit.bookingservice.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.configs.VNPayConfig;
+import vn.edu.iuh.fit.bookingservice.entities.Booking;
+import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.bookingservice.mapper.BookingMapper;
+import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -15,6 +23,10 @@ import java.util.*;
 public class VNPayService {
 
     private final VNPayConfig vnPayConfig;
+    private final BookingMapper bookingMapper;
+    private final BookingRepository bookingRepository;
+    private final TourScheduleRepository tourScheduleRepository;
+    private final TicketRepository ticketRepository;
 
     public String createPaymentUrl(String bookingId, long amount, String bankCode, String language) throws UnsupportedEncodingException {
 
@@ -51,7 +63,7 @@ public class VNPayService {
             vnp_Params.put("vnp_Locale", "vn");
         }
 
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         // Tạo thời gian tạo và hết hạn của giao dịch
@@ -98,9 +110,36 @@ public class VNPayService {
         String vnp_SecureHash = VNPayConfig.hmacSHA512(vnPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
 
-        // Trả về URL thanh toán
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
-        return paymentUrl;
+        return VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+    }
+
+    public void handleSuccessedPayment(String txnRef) {
+        Booking booking = bookingRepository.findById(txnRef)
+                .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
+
+        booking.setStatus(BookingStatus.PAID);
+        bookingRepository.save(booking);
+    }
+
+
+    public void handleFailedPayment(String txnRef) {
+        Booking booking = bookingRepository.findById(txnRef)
+                .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
+
+        // Cập nhật trạng thái booking thành FAILED
+        booking.setStatus(BookingStatus.FAILED);
+        bookingRepository.save(booking);
+
+        // Giải phóng slot tour: Trả lại số vé đã chiếm
+        TourSchedule tourSchedule = booking.getTourSchedule();
+        long bookedTicketsCount = ticketRepository.countByBooking_BookingId(booking.getBookingId());
+
+        // Trả lại slot tour
+        tourSchedule.setSlot((int) (tourSchedule.getSlot() + bookedTicketsCount));
+        tourScheduleRepository.save(tourSchedule);
+
+        // Xóa tất cả các vé liên quan đến booking thất bại
+        ticketRepository.deleteByBooking(booking);
     }
 }
 

@@ -5,6 +5,7 @@ app:
 vnpay:
   vnp_TmnCode: ${VNP_TMN_CODE}
   secretKey: ${VNP_SECRET_KEY}
+  vnp_ReturnUrl: ${VNP_RETURN_URL}
 
 server:
   port: ${BOOKING_SERVICE_PORT}
