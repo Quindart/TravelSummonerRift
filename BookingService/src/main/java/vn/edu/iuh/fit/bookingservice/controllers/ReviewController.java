@@ -1,13 +1,20 @@
 package vn.edu.iuh.fit.bookingservice.controllers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
 import vn.edu.iuh.fit.bookingservice.services.ReviewService;
+import vn.edu.iuh.fit.bookingservice.services.impl.ReviewServiceImpl;
+
+import java.io.IOException;
 import java.util.List;
 
 
@@ -15,7 +22,7 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
     @Autowired
-    private ReviewService reviewService;
+    private ReviewServiceImpl reviewService;
 
     @GetMapping
     public MessageResponse<List<ReviewResponse>> getAllReviews() {
@@ -23,12 +30,17 @@ public class ReviewController {
                 .statusCode(200)
                 .success(true)
                 .data(reviewService.getReviews())
-                .message("Tạo review thanh cong")
+                .message("Lấy danh sách thành công")
                 .build();
     }
-    @PostMapping("/create")
-    public  MessageResponse<ReviewResponse> createReview(@RequestBody ReviewRequest review) {
-       ReviewResponse reviewResponse = reviewService.addReview(review);
+    @PostMapping(value = "/create",consumes = "multipart/form-data")
+    public  MessageResponse<ReviewResponse> createReview(
+            @RequestPart("files") MultipartFile[] files,
+            @RequestPart("data") String data
+    ) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ReviewRequest review = objectMapper.readValue(data, ReviewRequest.class);
+        ReviewResponse reviewResponse = reviewService.addReview(files,review);
         return MessageResponse.<ReviewResponse>builder()
                 .statusCode(200)
                 .success(true)

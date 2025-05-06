@@ -32,17 +32,14 @@ public class Review extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-
-    @ElementCollection
-    @CollectionTable(name = "image_urls", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "image_url")
-    private List<String> imageUrls;
-
-    @ElementCollection
-    @CollectionTable(name = "review_videos", joinColumns = @JoinColumn(name = "review_id"))
-    @Column(name = "video_url")
-    @OrderColumn(name = "video_order")
-    private List<String> videoUrls;
+    @ElementCollection()
+    @CollectionTable(
+            name = "review_files",
+            joinColumns = @JoinColumn(name = "review_id")
+    )
+    @Column(name = "file_url")
+    @OrderColumn(name = "file_order")
+    private List<String> files;
 
     @ManyToOne()
     @JoinColumn(name = "tour_schedule_id", nullable = false)
