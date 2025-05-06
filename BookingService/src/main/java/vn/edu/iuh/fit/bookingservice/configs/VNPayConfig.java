@@ -14,13 +14,12 @@ import java.util.*;
 @Configuration
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "https://0f94-171-252-188-218.ngrok-free.app/api/v1/booking-service/vnpay/result";
+    @Value("${vnpay.vnp_ReturnUrl}")
+    public String vnp_ReturnUrl;
     @Value("${vnpay.vnp_TmnCode}")
     public String vnp_TmnCode;
     @Value("${vnpay.secretKey}")
     public String secretKey;
-    public static String vnp_IPNUrl = "https://e96f-42-112-152-48.ngrok-free.app/api/v1/booking-service/vnpay/ipn";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
         String digest = null;
@@ -58,7 +57,7 @@ public class VNPayConfig {
         return digest;
     }
 
-    //Util for VNPAY
+
     public String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
@@ -102,17 +101,5 @@ public class VNPayConfig {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
-        try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
-            }
-        } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
-        }
-        return ipAdress;
-    }
 
 }
