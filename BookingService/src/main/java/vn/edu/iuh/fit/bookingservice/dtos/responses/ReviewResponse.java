@@ -16,7 +16,7 @@ public class ReviewResponse {
     private String content;
     private float rating;
     private String tourScheduleId;
-    private List<String> files;
+    private List<FileReviewDto> files;
 
 
     public void setTourScheduleResponse(TourScheduleResponse tourScheduleResponse) {
