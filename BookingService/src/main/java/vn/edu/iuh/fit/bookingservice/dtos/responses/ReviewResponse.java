@@ -15,9 +15,9 @@ public class ReviewResponse {
     private String username;
     private String content;
     private float rating;
-    private List<String> imageUrls;
-    private List<String> videoUrls;
     private String tourScheduleId;
+    private List<String> files;
+
 
     public void setTourScheduleResponse(TourScheduleResponse tourScheduleResponse) {
         if (tourScheduleResponse != null) {

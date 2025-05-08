@@ -101,19 +101,19 @@ public class ReviewServiceImpl implements ReviewService {
         PrincipalAuthentication auth = this.authData.getAuth();
         String userId = auth.getUserId();
 
-        Object foundUser = this.userServiceClient.getUserById(userId);
+         UserResponse foundUser = this.userServiceClient.getUserById(userId).getData();
 
 
         TourSchedule foundTourSchedule = this.tourScheduleRepository.findById(review.getTourScheduleId()).orElseThrow(()->new NotFoundException("Không tìm thấy tour schedule"));
         List<String> linkFiles = new LinkedList<>();
         for(MultipartFile file:files){
-            String link = cloudinaryService.uploadImage(file);
+            String link = this.cloudinaryService.uploadImage(file);
             linkFiles.add(link);
         }
         Review modelReview = Review.builder()
             .reviewDate(LocalDateTime.now())
-//                .userId(foundUser.getUserId())
-//                .username(foundUser.getUsername())
+                .userId(foundUser.getUserId())
+                .username(foundUser.getUsername())
                 .rating(review.getRating())
                 .content(review.getContent())
                 .files(linkFiles)

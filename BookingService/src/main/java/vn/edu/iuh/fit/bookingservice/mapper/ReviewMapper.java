@@ -12,5 +12,7 @@ import vn.edu.iuh.fit.bookingservice.entities.Review;
 public interface ReviewMapper {
 
     Review toReview(ReviewRequest reviewRequest);
+    @Mapping(source = "tourSchedule.tourScheduleId",target ="tourScheduleId" )
+    @Mapping(source = "files",target = "files")
     ReviewResponse toReviewResponse(Review review);
 }
