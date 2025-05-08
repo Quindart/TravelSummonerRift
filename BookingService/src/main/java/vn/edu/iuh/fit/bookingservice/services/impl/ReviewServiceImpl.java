@@ -1,6 +1,9 @@
 package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.PrincipalAuthentication;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.FileReviewDto;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.ReviewResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourScheduleResponse;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
@@ -26,10 +30,12 @@ import vn.edu.iuh.fit.bookingservice.services.IAuthData;
 import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -58,62 +64,44 @@ public class ReviewServiceImpl implements ReviewService {
     private IAuthData authData;
 
     @Override
-    public List<ReviewResponse> getReviews() {
-        List<ReviewResponse> reviewResponses = reviewRepository.findAll()
-                .stream()
-                .map(reviewMapper::toReviewResponse)
-                .toList();
-        for (ReviewResponse reviewResponse : reviewResponses) {
-            Review review = reviewRepository.findById(reviewResponse.getReviewId())
-                    .orElseThrow(() -> new RuntimeException("Review not found"));
-            TourScheduleResponse tourScheduleResponse = tourScheduleMapper.entityToResponse(review.getTourSchedule());
-            reviewResponse.setTourScheduleResponse(tourScheduleResponse);
-        }
-        return reviewResponses;
+    public List<ReviewResponse> getReviewByTourId(int page, int size, String sortBy, String direction, String tour_id) {
+
+        Sort.Direction sortDirection = "ASC".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+
+        Pageable pageable = PageRequest.of(page , size, Sort.by(sortDirection, sortBy));
+        List<Object[]> result = reviewRepository.getReviewsByTourId(tour_id, pageable);
+        return result.stream()
+                .map(objects -> new ReviewResponse(
+                        (String) objects[0],
+                        ((Timestamp) objects[1]).toLocalDateTime(),
+                        (String) objects[2],
+                        (String) objects[3],
+                        (String) objects[4],
+                        (Float) objects[5],
+                        (String) objects[6],
+                        handleConvertStringToListFileReview((String)objects[7])
+                ))
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public ReviewResponse getReview(String id) {
-        return null;
-    }
-
-    @Override
-    public  List<ReviewResponse>  getReviewByTourId(String tourId) {
-        Tour current_tour = tourRepository.findById(tourId).orElseThrow();
-        List<String> tourScheduleIds = new ArrayList<>();
-
-        current_tour.getTourSchedules().stream().forEach(tour-> {
-            tourScheduleIds.add(tour.getTourScheduleId());
-        });
-        List<Review> reviewSaved = new ArrayList<>();
-        for (String tourScheduleId : tourScheduleIds) {
-            List<Review> reviews = reviewRepository.findByTourScheduleId(tourScheduleId);
-
-            reviews.stream().forEach(review -> {
-                 reviewSaved.add(review);
-            });
-        }
-        return reviewSaved.stream().map(reviewMapper::toReviewResponse).toList();
-    }
-
     @Override
     public ReviewResponse addReview(MultipartFile[] files, ReviewRequest review) throws IOException {
         PrincipalAuthentication auth = this.authData.getAuth();
         String userId = auth.getUserId();
 
-        Object foundUser = this.userServiceClient.getUserById(userId);
+         UserResponse foundUser = this.userServiceClient.getUserById(userId).getData();
 
 
         TourSchedule foundTourSchedule = this.tourScheduleRepository.findById(review.getTourScheduleId()).orElseThrow(()->new NotFoundException("Không tìm thấy tour schedule"));
         List<String> linkFiles = new LinkedList<>();
         for(MultipartFile file:files){
-            String link = cloudinaryService.uploadImage(file);
+            String link = this.cloudinaryService.uploadImage(file);
             linkFiles.add(link);
         }
         Review modelReview = Review.builder()
             .reviewDate(LocalDateTime.now())
-//                .userId(foundUser.getUserId())
-//                .username(foundUser.getUsername())
+                .userId(foundUser.getUserId())
+                .username(foundUser.getUsername())
                 .rating(review.getRating())
                 .content(review.getContent())
                 .files(linkFiles)
@@ -125,13 +113,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
-    @Override
-    public ReviewResponse updateReview(ReviewRequest review) {
-        return null;
-    }
-
-    @Override
-    public void deleteReview(String id) {
-
+    private List<FileReviewDto> handleConvertStringToListFileReview(String stringListFileReview){
+        List<FileReviewDto> result = new LinkedList<>();
+        String[] stringListData = stringListFileReview.split(",");
+        for (String stringData:stringListData){
+            String[] keyValue = stringData.split("Order");
+            String fileUrl = keyValue[0];
+            int fileOrder = Integer.parseInt(keyValue[1]);
+            result.add(new FileReviewDto(fileUrl,fileOrder));
+        }
+        return result;
     }
 }

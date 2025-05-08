@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public interface TourRepository extends JpaRepository<Tour, String>, JpaSpecificationExecutor<Tour> {
 
     List<Tour>  findByNameContainingIgnoreCase(String tourName);
     List<Tour> findToursByCategoryTour_CategoryTourId(String categoryTourId);
+    Optional<Tour> findToursByTourId(String tourId);
 }
