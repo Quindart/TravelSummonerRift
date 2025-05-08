@@ -45,14 +45,6 @@ public class TourController {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách tour", tourService.getAllTours());
     }
 
-    //TODO: REVIEW
-    @GetMapping("/{tourId}/reviews")
-    public ResponseEntity<MessageResponse<List<ReviewResponse>>> getReviewsByTourId(@PathVariable String tourId) {
-        List<ReviewResponse> reviews = reviewService.getReviewByTourId(tourId);
-        reviews.stream().forEach(System.out::println);
-        return SuccessEntityResponse.FoundResponse("Get all reviews success", reviews);
-    }
-
     @GetMapping("/{tourId}")
     public ResponseEntity<MessageResponse<TourResponse>> getTourById(@PathVariable String tourId) {
 
