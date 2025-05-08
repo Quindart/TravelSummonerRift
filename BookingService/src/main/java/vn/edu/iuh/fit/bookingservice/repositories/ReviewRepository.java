@@ -1,6 +1,5 @@
 package vn.edu.iuh.fit.bookingservice.repositories;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 
-import java.util.Collections;
 import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, String> {
@@ -24,5 +22,4 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
             GROUP BY r.review_id, r.review_date, r.user_id, r.username, r.content, r.rating, r.tour_schedule_id
             """, nativeQuery = true)
     List<Object[]> getReviewsByTourId(@Param("tourId") String tourId, Pageable pageable);
-
 }

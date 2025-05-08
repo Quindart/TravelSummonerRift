@@ -18,8 +18,6 @@ import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
-import vn.edu.iuh.fit.bookingservice.enums.SortFieldReview;
-import vn.edu.iuh.fit.bookingservice.exception.errors.BadRequestException;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.ReviewMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
@@ -35,7 +33,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,15 +63,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private IAuthData authData;
 
-    /**
-     *
-     * @param page page order
-     * @param size  size object/page
-     * @param sortBy field
-     * @param direction asc/desc
-     * @return
-     */
-
     @Override
     public List<ReviewResponse> getReviewByTourId(int page, int size, String sortBy, String direction, String tour_id) {
 
@@ -92,11 +80,10 @@ public class ReviewServiceImpl implements ReviewService {
                         (String) objects[4],
                         (Float) objects[5],
                         (String) objects[6],
-                         handleConvertStringToListFileReview((String)objects[7])
+                        handleConvertStringToListFileReview((String)objects[7])
                 ))
                 .collect(Collectors.toList());
     }
-
     @Override
     public ReviewResponse addReview(MultipartFile[] files, ReviewRequest review) throws IOException {
         PrincipalAuthentication auth = this.authData.getAuth();
@@ -124,6 +111,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewMapper.toReviewResponse(savedResult);
     }
+
 
     private List<FileReviewDto> handleConvertStringToListFileReview(String stringListFileReview){
         List<FileReviewDto> result = new LinkedList<>();
