@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,6 +25,7 @@ import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.BookingService;
+import vn.edu.iuh.fit.bookingservice.services.IAuthData;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +44,9 @@ public class BookingServiceImpl implements BookingService {
     private final TicketRepository ticketRepository;
     private final BookingMapper bookingMapper;
     private final UserServiceClient userServiceClient;
+
+    @Autowired
+    private IAuthData authData;
 
     @Override
     public List<BookingResponse> findBookingsByUserId(String userId) {
@@ -66,16 +71,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO createBooking(BookingRequest request) {
-        var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = null;
-        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
-            Jwt jwt = jwtAuth.getToken();
-            userId = jwt.getClaimAsString("userId");
-        }
-
+        String userId = this.authData.getAuth().getUserId();
         UserResponse user = userServiceClient.getUserById(userId).getData();
         System.out.println(user);
         if (user == null) {
