@@ -140,10 +140,9 @@ public class BookingServiceImpl implements BookingService {
         double totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
         booking.setTotalPrice(totalPrice);
         bookingRepository.save(booking);
-
-        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking, tickets);
+        booking.setTickets(tickets);
+        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking);
         response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
-
         return response;
     }
 
