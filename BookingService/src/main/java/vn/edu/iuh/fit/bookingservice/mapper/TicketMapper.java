@@ -13,6 +13,7 @@ import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Mapper(componentModel = "spring")
@@ -78,4 +79,7 @@ public interface TicketMapper {
 
     TicketDTO toDTO(Ticket ticket);
     Ticket toEntity(TicketDTO ticketDTO);
+    List<TicketDTO> toDTOList(List<Ticket> tickets);
+
+    List<Ticket> toEntityList(List<TicketDTO> ticketDTOs);
 }
