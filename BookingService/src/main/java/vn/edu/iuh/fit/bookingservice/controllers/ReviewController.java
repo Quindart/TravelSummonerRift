@@ -2,19 +2,14 @@ package vn.edu.iuh.fit.bookingservice.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
-import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.enums.SortFieldReview;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.exception.SuccessEntityResponse;
-import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 import vn.edu.iuh.fit.bookingservice.services.impl.ReviewServiceImpl;
 
 import java.io.IOException;
@@ -44,7 +39,7 @@ public class ReviewController {
     }
 
     @GetMapping("/total-rating/{tourId}")
-    private ResponseEntity<MessageResponse<List<RatingTotalResponse>>> getRatingList(
+    private ResponseEntity<MessageResponse<RatingTotalResponse>> getRatingList(
             @PathVariable("tourId") String tourId
     ) throws JsonProcessingException {
         return SuccessEntityResponse.OkResponse("Lấy tổng số rating thành công",this.reviewService.getRatingTotal(tourId));

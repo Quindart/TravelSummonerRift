@@ -2,8 +2,8 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.netflix.spectator.impl.AtomicDouble;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.PrincipalAuthentication;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.FileReviewDto;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.RatingTotalResponse;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.ReviewResponse;
-import vn.edu.iuh.fit.bookingservice.dtos.responses.UserResponse;
+import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
@@ -28,9 +25,12 @@ import vn.edu.iuh.fit.bookingservice.services.ReviewService;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,22 +94,32 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<RatingTotalResponse> getRatingTotal(String tourId) throws JsonProcessingException {
+    public RatingTotalResponse getRatingTotal(String tourId) throws JsonProcessingException {
         String findRedisKey = "RATING:"+tourId;
-        List<RatingTotalResponse> foundList = this.redisService.getValue(findRedisKey, new TypeReference<List<RatingTotalResponse>>() {
+        RatingTotalResponse foundList = this.redisService.getValue(findRedisKey, new TypeReference<RatingTotalResponse>() {
         });
         if(foundList != null) {
-            System.out.printf("DJEMEMEMM");
             return foundList;
         };
-        List<RatingTotalResponse> ratingList = this.reviewRepository.getTotalRatingOfTour(tourId)
-                .stream().map((object)-> new RatingTotalResponse((Float) object[0], Math.toIntExact((Long) object[1]))).toList();
+        List<RatingResponse> ratingList = this.reviewRepository.getTotalRatingOfTour(tourId)
+                .stream().map((object)-> new RatingResponse((Float) object[0], Math.toIntExact((Long) object[1]))).toList();
+        AtomicInteger quantity = new AtomicInteger(0);
+        AtomicDouble total = new AtomicDouble(0);
+        ratingList.forEach((rating)->{
+            quantity.addAndGet(rating.getTotal()) ;
+            total.addAndGet(rating.getTotal()* rating.getRating());
+        });
+        float resultAverage = (float) (total.get()/quantity.get());
+         resultAverage = Float.parseFloat(new DecimalFormat("#.0").format(resultAverage));
+        RatingTotalResponse ratingTotalResponse = RatingTotalResponse.builder().listRating(ratingList).average(resultAverage).build();
         try {
-            this.redisService.setValue(findRedisKey,ratingList);
+
+            this.redisService.setValue(findRedisKey,ratingTotalResponse,3*60);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        return ratingList;
+
+        return ratingTotalResponse;
     }
 
 
