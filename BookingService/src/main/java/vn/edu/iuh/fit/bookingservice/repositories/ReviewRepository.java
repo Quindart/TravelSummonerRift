@@ -22,4 +22,12 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
             GROUP BY r.review_id, r.review_date, r.user_id, r.username, r.content, r.rating, r.tour_schedule_id
             """, nativeQuery = true)
     List<Object[]> getReviewsByTourId(@Param("tourId") String tourId, Pageable pageable);
+
+    @Query(value = """
+            SELECT rating,count(rating)from tours t  join tour_schedules ts on t.tour_id = ts.tour_id
+                                    join reviews r on r.tour_schedule_id = ts.tour_schedule_id
+            WHERE t.tour_id = :tourId
+            group by rating
+        """,nativeQuery = true)
+    List<Object[]> getTotalRatingOfTour(String tourId);
 }

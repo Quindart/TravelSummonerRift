@@ -1,4 +1,5 @@
 package vn.edu.iuh.fit.bookingservice.controllers;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -41,6 +42,14 @@ public class ReviewController {
                 .message("Lấy danh sách thành công")
                 .build();
     }
+
+    @GetMapping("/total-rating/{tourId}")
+    private ResponseEntity<MessageResponse<List<RatingTotalResponse>>> getRatingList(
+            @PathVariable("tourId") String tourId
+    ) throws JsonProcessingException {
+        return SuccessEntityResponse.OkResponse("Lấy tổng số rating thành công",this.reviewService.getRatingTotal(tourId));
+    }
+
     @PostMapping(value = "/create",consumes = "multipart/form-data")
     public  MessageResponse<ReviewResponse> createReview(
             @RequestPart("files") MultipartFile[] files,
