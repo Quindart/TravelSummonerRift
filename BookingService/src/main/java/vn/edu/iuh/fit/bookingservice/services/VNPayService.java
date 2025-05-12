@@ -1,6 +1,8 @@
 package vn.edu.iuh.fit.bookingservice.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.configs.VNPayConfig;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
@@ -11,6 +13,7 @@ import vn.edu.iuh.fit.bookingservice.mapper.BookingMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
+import vn.edu.iuh.fit.bookingservice.services.impl.RedisService;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,6 +30,8 @@ public class VNPayService {
     private final BookingRepository bookingRepository;
     private final TourScheduleRepository tourScheduleRepository;
     private final TicketRepository ticketRepository;
+    private final RedisService redisService;
+    private final BookingCleanupService bookingCleanupService;
 
     public String createPaymentUrl(String bookingId, long amount, String bankCode, String language) throws UnsupportedEncodingException {
 
@@ -123,25 +128,19 @@ public class VNPayService {
         bookingRepository.save(booking);
     }
 
+    @Scheduled(fixedDelay = 60000*5)
+    public void checkExpiredBookings() {
+        List<Booking> bookings = bookingRepository.findAllByStatus(BookingStatus.PENDING);
 
-    public void handleFailedPayment(String txnRef) {
-        Booking booking = bookingRepository.findById(txnRef)
-                .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
-
-        // Cập nhật trạng thái booking thành FAILED
-        booking.setStatus(BookingStatus.FAILED);
-        bookingRepository.save(booking);
-
-        // Giải phóng slot tour: Trả lại số vé đã chiếm
-        TourSchedule tourSchedule = booking.getTourSchedule();
-        long bookedTicketsCount = ticketRepository.countByBooking_BookingId(booking.getBookingId());
-
-        // Trả lại slot tour
-        tourSchedule.setSlot((int) (tourSchedule.getSlot() + bookedTicketsCount));
-        tourScheduleRepository.save(tourSchedule);
-
-        // Xóa tất cả các vé liên quan đến booking thất bại
-        ticketRepository.deleteByBooking(booking);
+        for (Booking booking : bookings) {
+            long ttl = redisService.getTTL(booking.getBookingId());
+            if (ttl == -2) {
+                booking.setStatus(BookingStatus.EXPIRED);
+                bookingRepository.save(booking);
+                bookingCleanupService.handleFailedPayment(booking.getBookingId());
+            }
+        }
     }
+
 }
 
