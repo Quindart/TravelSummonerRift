@@ -101,17 +101,4 @@ public class VNPayController {
 
     }
 
-    @GetMapping("/result")
-    public ResponseEntity<?> paymentResult(@RequestParam Map<String, String> params) {
-        String transactionStatus = params.get("vnp_TransactionStatus");
-        String vnp_TxnRef = params.get("vnp_TxnRef");
-
-        if ("00".equals(transactionStatus)) {
-
-            return ResponseEntity.ok("Giao dịch thành công!");
-        } else {
-            // Thanh toán thất bại
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Giao dịch không thành công");
-        }
-    }
 }

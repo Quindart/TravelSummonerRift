@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -44,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
     private final TicketRepository ticketRepository;
     private final BookingMapper bookingMapper;
     private final UserServiceClient userServiceClient;
+    private final RedisService redisService;
 
     @Autowired
     private IAuthData authData;
@@ -143,8 +145,12 @@ public class BookingServiceImpl implements BookingService {
         booking.setTickets(tickets);
         BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking);
         response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
+
+        redisService.saveBooking(booking.getBookingId());
         return response;
     }
+
+
 
 
 }
