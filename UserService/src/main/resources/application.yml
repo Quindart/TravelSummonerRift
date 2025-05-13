@@ -62,8 +62,8 @@ spring:
               - email
               - profile
           github:
-            client-id: Ov23liumeIJXkXMH4Xy1
-            client-secret: eab058a632999418b0e028aea675c0ead9b2f6ff
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             redirect-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}${GITHUB_REDIRECT_URL}
         provider:
           google:
