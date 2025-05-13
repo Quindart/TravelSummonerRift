@@ -173,7 +173,7 @@ public class AuthController {
     }
 
     @GetMapping("/google/callback")
-    public ResponseEntity<?> googleCallback(@RequestParam String code, @RequestParam String state) {
+    public void googleCallback(@RequestParam String code, @RequestParam String state,HttpServletResponse redirect) throws IOException {
         System.out.println("LOGIN SUCCESS");
         String clientId = googleClientId;
         String clientSecret = googleSecret;
@@ -209,11 +209,18 @@ public class AuthController {
 
         String picture = (String ) userInfo.get("picture");
         String name = (String) userInfo.get("name");
-        return ResponseEntity.ok(this.authenticationService.loginWithGoogle(GoogleInfoRequest.
+        AuthenticationResponse loginData =  this.authenticationService.loginWithGoogle(GoogleInfoRequest.
                 builder()
                 .picture(picture)
                 .email(email)
-                .name(name).build()));
+                .name(name).build());
+        String redirectData = UriComponentsBuilder
+                .fromHttpUrl(frontendDomain)
+                .queryParam("token",loginData.getToken())
+                .queryParam("user",loginData.getUser())
+                .queryParam("authenticate",true)
+                .toUriString();
+        redirect.sendRedirect(redirectData);
     }
 
     @GetMapping("/test")
