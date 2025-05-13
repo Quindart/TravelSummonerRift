@@ -64,7 +64,7 @@ spring:
           github:
             client-id: Ov23liumeIJXkXMH4Xy1
             client-secret: eab058a632999418b0e028aea675c0ead9b2f6ff
-            redirect-uri: http://localhost:8080/api/v1/user-service/auth/github/callback
+            redirect-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${USER_SERVICE_CONTEXT_PATH}${GITHUB_REDIRECT_URL}
         provider:
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
