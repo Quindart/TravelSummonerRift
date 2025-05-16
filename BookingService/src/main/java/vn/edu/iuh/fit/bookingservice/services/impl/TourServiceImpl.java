@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.configs.TourSpecification;
@@ -273,5 +274,13 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourOverviewResponse)
                 .toList();
 
+    }
+
+    @Override
+    public List<TourScheduleDTO> getTourSchedules(String tourId) {
+        Tour tour = tourRepository.findById(tourId).orElseThrow(
+                () -> new NotFoundException("Không tìm thấy tour này")
+        );
+        return tourScheduleMapper.entityToDtoList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
     }
 }
