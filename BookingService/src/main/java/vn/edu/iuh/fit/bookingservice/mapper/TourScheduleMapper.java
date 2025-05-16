@@ -5,10 +5,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
+import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourScheduleRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourScheduleResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TourScheduleMapper {
@@ -29,4 +32,6 @@ public interface TourScheduleMapper {
         tour.setTourId(tourId);
         return  tour;
     }
+
+    List<TourScheduleDTO> entityToDtoList (List<TourSchedule> tourScheduleList);
 }

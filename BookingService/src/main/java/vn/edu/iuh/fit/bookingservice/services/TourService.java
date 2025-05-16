@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.bookingservice.services;
 
+import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
 import vn.edu.iuh.fit.bookingservice.entities.TourNote;
@@ -32,5 +33,5 @@ public interface TourService {
 
     List<TourOverviewResponse> getToursByCategory(String categoryId);
 
-
+    List<TourScheduleDTO> getTourSchedules(String tourId);
 }
