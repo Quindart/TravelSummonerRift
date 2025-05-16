@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.exception;
+package iuh.fit.notificationservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -59,6 +59,16 @@ spring:
               args:
                 name: bookingService
                 fallbackUri: forward:/fallback/booking
+        - id: notification_service
+          uri: ${GATEWAY_NOTIFICATION_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/notification-service/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: notificationService
+                fallbackUri: forward:/fallback/notification
 
 
       # Route cho Swagger UI, sử dụng cả hai dịch vụ
@@ -80,6 +90,13 @@ spring:
           uri: ${GATEWAY_BOOKING_SERVICE_URI}
           predicates:
             - Path=${app.api-prefix}/booking-service/v3/api-docs
+          filters:
+            - StripPrefix=2
+        #notification swagger
+        - id: notification-service-docs
+          uri: ${GATEWAY_NOTIFICATION_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/notification-service/v3/api-docs
           filters:
             - StripPrefix=2
 
@@ -105,26 +122,8 @@ springdoc:
         url: /api/v1/user-service/v3/api-docs
       - name: Booking Service
         url: /api/v1/booking-service/v3/api-docs
-
-#Cấu hình Circuit Breaker
-#resilience4j:
-#  circuitbreaker:
-#    instances:
-#      userServiceCircuitBreaker:
-#        registerHealthIndicator: true
-#        slidingWindowSize: 10
-#        failureRateThreshold: 50
-#        waitDurationInOpenState: 10s
-#        permittedNumberOfCallsInHalfOpenState: 3
-#        minimumNumberOfCalls: 5
-#
-#      bookingServiceCircuitBreaker:
-#        registerHealthIndicator: true
-#        slidingWindowSize: 10
-#        failureRateThreshold: 50
-#        waitDurationInOpenState: 10s
-#        permittedNumberOfCallsInHalfOpenState: 3
-#        minimumNumberOfCalls: 5
+      - name: Notification Service
+        url: /api/v1/notification-service/v3/api-docs
 
 logging:
   level:
@@ -154,6 +153,15 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         failureRateThreshold: 50
         automaticTransitionFromOpenToHalfOpenEnabled: true
+      notificationService:
+        slidingWindowSize: 10
+        slowCallDurationThreshold: 5s         # ← Tăng ngưỡng "chậm" lên
+        slowCallRateThreshold: 100            # ← Cho phép 100% call chậm vẫn ok
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
 
   timelimiter:
     instances:
@@ -161,3 +169,7 @@ resilience4j:
         timeoutDuration: 6s                   # ← Tăng timeout để sleep 5s vẫn chạy
       bookingService:
         timeoutDuration: 20s
+      notificationService:
+        timeoutDuration: 20s
+
+

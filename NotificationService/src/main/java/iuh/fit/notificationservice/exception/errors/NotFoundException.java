@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.exception.errors;
+package iuh.fit.notificationservice.exception.errors;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

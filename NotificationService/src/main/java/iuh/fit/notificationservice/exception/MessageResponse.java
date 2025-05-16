@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.userservice.exception;
+package iuh.fit.notificationservice.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;

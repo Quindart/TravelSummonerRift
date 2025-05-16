@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: ${NOTIFICATION_SERVICE_NAME}
+  datasource:
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_HIBERNATE_DDL_AUTO}
+    database: ${JPA_DATABASE}
+    database-platform: ${JPA_DATABASE_PLATFORM}
+    show-sql: ${JPA_SHOW_SQL}
+  data:
+    redis:
+      host: ${USER_SERVICE_REDIS_HOST}
+      port: ${USER_SERVICE_REDIS_PORT}
+      password: ${USER_SERVICE_REDIS_PASSWORD}
+
+server:
+  port: ${NOTIFICATION_SERVICE_PORT}
+  servlet:
+    context-path: ${NOTIFICATION_SERVICE_CONTEXT_PATH}
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_DEFAULT_ZONE}
+    registerWithEureka: true
+    fetchRegistry: true
+  instance:
+    preferIpAddress: true
+    hostname: ${HOSTNAME:localhost}
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
