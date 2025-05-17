@@ -59,6 +59,7 @@ spring:
               args:
                 name: bookingService
                 fallbackUri: forward:/fallback/booking
+        #Notification service
         - id: notification_service
           uri: ${GATEWAY_NOTIFICATION_SERVICE_URI}
           predicates:
