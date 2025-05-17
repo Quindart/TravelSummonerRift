@@ -33,5 +33,5 @@ public interface TourScheduleMapper {
         return  tour;
     }
 
-    List<TourScheduleDTO> entityToDtoList (List<TourSchedule> tourScheduleList);
+    List<TourScheduleResponse> entityToResponseList (List<TourSchedule> tourScheduleList);
 }

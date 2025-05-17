@@ -154,8 +154,8 @@ public class TourController {
     }
 
     @GetMapping("/{tourId}/tour-schedule")
-    public MessageResponse<List<TourScheduleDTO>> getTourScheduleByTourId(@PathVariable String tourId) {
-        return MessageResponse.<List<TourScheduleDTO>>builder()
+    public MessageResponse<List<TourScheduleResponse>> getTourScheduleByTourId(@PathVariable String tourId) {
+        return MessageResponse.<List<TourScheduleResponse>>builder()
                 .success(true)
                 .statusCode(200)
                 .message("Danh sách tour-schedule theo tourId")

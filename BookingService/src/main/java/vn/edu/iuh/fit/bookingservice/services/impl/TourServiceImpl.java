@@ -277,10 +277,10 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourScheduleDTO> getTourSchedules(String tourId) {
+    public List<TourScheduleResponse> getTourSchedules(String tourId) {
         Tour tour = tourRepository.findById(tourId).orElseThrow(
                 () -> new NotFoundException("Không tìm thấy tour này")
         );
-        return tourScheduleMapper.entityToDtoList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
+        return tourScheduleMapper.entityToResponseList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
     }
 }

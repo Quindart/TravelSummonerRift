@@ -33,5 +33,5 @@ public interface TourService {
 
     List<TourOverviewResponse> getToursByCategory(String categoryId);
 
-    List<TourScheduleDTO> getTourSchedules(String tourId);
+    List<TourScheduleResponse> getTourSchedules(String tourId);
 }
