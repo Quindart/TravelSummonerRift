@@ -54,31 +54,14 @@ public class TourController {
     }
 
     @PostMapping
-    public ResponseEntity<MessageResponse<TourResponse>> createTour(@RequestParam("price") double price,
-                                                              @RequestParam("destination") String destinationJson,
-                                                              @RequestParam("image_tour") ArrayList<MultipartFile> images,
-                                                              @RequestParam("duration") String duration,
-                                                              @RequestParam("description") String description,
-                                                              @RequestParam("name") String name
-                                                              ) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<TourDestinationRequest> destination = objectMapper.readValue(destinationJson, new TypeReference<List<TourDestinationRequest>>() {});
-        TourRequest tourRequest = new TourRequest();
-        tourRequest.setPrice(price);
-        tourRequest.setTourDestinationRequests(destination);
-        tourRequest.setDuration(duration);
-        tourRequest.setDescription(description);
-        tourRequest.setName(name);
-        List<TourImageRequest> tourImageRequests = new ArrayList<>();
-        for (MultipartFile image : images) {
-            TourImageRequest tourImageRequest = new TourImageRequest();
-            tourImageRequest.setImage(image);
-            tourImageRequests.add(tourImageRequest);
-        }
-        tourRequest.setTourImageRequests(tourImageRequests);
+    public MessageResponse<TourResponse> createTour(@RequestBody TourRequest tourRequest) {
         TourResponse tourResponse = tourService.createTour(tourRequest);
-//        return SuccessEntityResponse.CreateResponse("Tạo tour thành công", tourService.createTour(tourRequest));
-        return SuccessEntityResponse.CreateResponse("Tạo tour thành công", tourResponse);
+        return MessageResponse.<TourResponse>builder()
+                .success(true)
+                .statusCode(200)
+                .message("Tạo tour thành công!")
+                .data(tourResponse)
+                .build();
     }
 
     @PutMapping("/{tourId}")
