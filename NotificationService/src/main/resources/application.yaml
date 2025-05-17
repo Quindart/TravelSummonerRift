@@ -1,3 +1,5 @@
+app:
+  swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${NOTIFICATION_SERVICE_CONTEXT_PATH}
 spring:
   application:
     name: ${NOTIFICATION_SERVICE_NAME}
