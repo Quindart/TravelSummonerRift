@@ -12,7 +12,8 @@ import java.util.List;
 public class SecurityConfig {
     public static final String[] SWAGGER_WHITELIST = {
             "/swagger-ui/**",
-            "/v3/api-docs/**"
+            "/v3/api-docs/**",
+            "/test/**"
     };
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
