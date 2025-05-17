@@ -96,45 +96,13 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourResponse createTour(TourRequest tourRequest) {
-        if (tourRequest.getName() == null || tourRequest.getName().isEmpty()) {
-            throw new IllegalArgumentException("Tên tour không được để trống");
-        }
-
-        try{
             Optional<CategoryTour> foundCategory = this.categoryTourRepository.findByCategoryTourId(tourRequest.getCategoryId());
             if(foundCategory == null) throw new NotFoundException("Không tim thấy category id ");
             Tour tour = tourMapper.toTour(tourRequest);
-            System.out.printf("foudn categorty"+foundCategory.toString());
-
+            tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
-
-            List<TourDestinationResponse> tourDestinationResponses = new ArrayList<>();
-            for(TourDestinationRequest tourDestinationRequest : tourRequest.getTourDestinationRequests()) {
-                TourDestination tourDestination = TourDestination.builder()
-                        .name(tourDestinationRequest.getName())
-                        .description(tourDestinationRequest.getDescription())
-                        .tour(savedTour)
-                        .build();
-                tourDestinationRepository.save(tourDestination);
-                tourDestinationResponses.add(tourDestinationMapper.toTourDestinationResponse(tourDestination));
-            }
-
-            List<TourImageResponse> tourImageResponses = new ArrayList<>();
-            int i = 1;
-            for (TourImageRequest tourImageRequest : tourRequest.getTourImageRequests()) {
-                tourImageRequest.setTourId(savedTour.getTourId());
-                tourImageRequest.setOrderIndex(i++);
-                TourImageResponse tourImage = tourImageService.saveTourImage(tourImageRequest);
-                tourImageResponses.add(tourImage);
-            }
-
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
-            tourResponse.setTourDestinationResponses(tourDestinationResponses);
-            tourResponse.setTourImageResponses(tourImageResponses);
             return tourResponse;
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi tạo tour: " + e.getMessage());
-        }
 
     }
 
@@ -277,10 +245,10 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourScheduleDTO> getTourSchedules(String tourId) {
+    public List<TourScheduleResponse> getTourSchedules(String tourId) {
         Tour tour = tourRepository.findById(tourId).orElseThrow(
                 () -> new NotFoundException("Không tìm thấy tour này")
         );
-        return tourScheduleMapper.entityToDtoList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
+        return tourScheduleMapper.entityToResponseList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
     }
 }

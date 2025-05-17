@@ -21,14 +21,11 @@ public class TourRequest {
     @Min(value = 0, message = "Giá tour không thể nhỏ hơn 0")
     private double price;
 
-
     @NotBlank(message = "Thumbnail không được để trống")
     private String thumbnail;
 
     @NotBlank(message = "Thời lượng không được để trống")
 //    @Pattern(regexp = "^[0-9]+( ngày| giờ| phút)$", message = "Thời lượng phải có đơn vị (ví dụ: 3 ngày, 5 giờ, 45 phút)")
     private String duration;
-    private List<TourDestinationRequest> tourDestinationRequests;
-    private List<TourImageRequest> tourImageRequests;
     private String categoryId;
 }
