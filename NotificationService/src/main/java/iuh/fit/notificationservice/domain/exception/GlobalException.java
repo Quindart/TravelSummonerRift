@@ -1,6 +1,6 @@
-package iuh.fit.notificationservice.exception;
+package iuh.fit.notificationservice.domain.exception;
 
-import iuh.fit.notificationservice.exception.errors.*;
+import iuh.fit.notificationservice.domain.exception.errors.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -106,6 +106,16 @@ public class GlobalException {
                 false
         );
         return new ResponseEntity<>(errorMessageDto, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(EmailSendingException.class)
+    public  ResponseEntity<ErrorMessageDto> handleEmailException(EmailSendingException ex){
+        ErrorMessageDto errorMessageDto = new ErrorMessageDto(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Gửi mail lỗi" + ex.getMessage(),
+                false
+        );
+        return new ResponseEntity<>(errorMessageDto,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

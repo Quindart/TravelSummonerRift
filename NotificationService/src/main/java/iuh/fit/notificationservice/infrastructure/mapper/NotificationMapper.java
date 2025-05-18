@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.application.mapper;
+package iuh.fit.notificationservice.infrastructure.mapper;
 
 import org.mapstruct.Mapper;
 

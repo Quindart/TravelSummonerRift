@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.controller;
+package iuh.fit.notificationservice.infrastructure.controller;
 
 import iuh.fit.notificationservice.domain.entity.Notification;
 import iuh.fit.notificationservice.domain.exception.MessageResponse;
@@ -16,7 +16,7 @@ public class TestController {
     @PostMapping("/djtmemay")
     public MessageResponse<Notification> hello(@RequestBody Notification data) {
         return MessageResponse.<Notification>builder().message("djtmemay").success(true).statusCode(200).data(
-                Notification.builder().data(data.getData()).email(data.getEmail()).build()
+                Notification.builder().data(data.getData()).toEmail(data.getToEmail()).build()
         ).build();
     }
     @PutMapping("/djtmemay")

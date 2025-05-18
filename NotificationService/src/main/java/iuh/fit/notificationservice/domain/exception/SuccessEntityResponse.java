@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.exception;
+package iuh.fit.notificationservice.domain.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

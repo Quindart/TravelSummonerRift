@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.exception;
+package iuh.fit.notificationservice.domain.exception;
 
 public class ErrorMessageDto {
     private int statusCode;

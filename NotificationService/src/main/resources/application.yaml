@@ -1,5 +1,8 @@
 app:
   swagger-gateway-uri: ${GATEWAY_URI}${GATEWAY_API_PREFIX}${NOTIFICATION_SERVICE_CONTEXT_PATH}
+brevo:
+  apikey: ${SENDINBLUE_API_KEY}
+
 spring:
   application:
     name: ${NOTIFICATION_SERVICE_NAME}

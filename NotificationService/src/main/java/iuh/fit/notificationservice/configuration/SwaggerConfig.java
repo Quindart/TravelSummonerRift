@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.config;
+package iuh.fit.notificationservice.configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
