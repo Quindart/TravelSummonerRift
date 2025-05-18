@@ -11,11 +11,15 @@
         <option value="$PROJECT_DIR$/NotificationService/pom.xml" />
         <option value="$PROJECT_DIR$/GatewayService/pom.xml" />
         <option value="$PROJECT_DIR$/DiscoveryService/pom.xml" />
+        <option value="$PROJECT_DIR$/UserService/NotificationService/pom.xml" />
+        <option value="$PROJECT_DIR$/BookingService/NotificationService/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/BookingService/NotificationService/pom.xml" />
         <option value="$PROJECT_DIR$/TourService/pom.xml" />
+        <option value="$PROJECT_DIR$/UserService/NotificationService/pom.xml" />
       </set>
     </option>
   </component>

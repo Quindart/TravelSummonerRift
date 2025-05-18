@@ -36,6 +36,9 @@
         <module name="BookingService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="NotificationService (2) (iuh.fit)" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -43,6 +46,7 @@
       <module name="DiscoveryService" options="-parameters" />
       <module name="GatewayService" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
       <module name="NotificationService" options="-parameters" />
+      <module name="NotificationService (2) (iuh.fit)" options="-parameters" />
       <module name="UserService" options="-parameters -Amapstruct.suppressGeneratorTimestamp=true -Amapstruct.defaultComponentModel=spring -Amapstruct.verbose=true" />
     </option>
   </component>
