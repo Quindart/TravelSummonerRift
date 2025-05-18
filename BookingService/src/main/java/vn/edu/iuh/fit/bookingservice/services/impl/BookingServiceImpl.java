@@ -51,27 +51,6 @@ public class BookingServiceImpl implements BookingService {
     private IAuthData authData;
 
     @Override
-    public List<BookingResponse> findBookingsByUserId(String userId) {
-        String jpql = "SELECT b FROM Booking b WHERE b.userId = :userId";
-        TypedQuery<Booking> query = entityManager.createQuery(jpql, Booking.class);
-        query.setParameter("userId", userId);
-        List<Booking> bookings = query.getResultList();
-        return bookings.stream()
-                .map(booking -> new BookingResponse(
-                        booking.getBookingId(),
-                        booking.getStatus(),
-                        booking.getTotalPrice(),
-                        booking.getNote(),
-                        booking.getUserFullName(),
-                        booking.getUserPhone(),
-                        booking.getUserEmail(),
-                        booking.getUserAddress(),
-                        booking.getUserId()
-                ))
-                .toList();
-    }
-
-    @Override
     public BookingResponseDTO createBooking(BookingRequest request) {
 
         String userId = this.authData.getAuth().getUserId();
@@ -150,7 +129,20 @@ public class BookingServiceImpl implements BookingService {
         return response;
     }
 
+    @Override
+    public List<BookingResponseDTO> getBookingHistory() {
+        String userId = this.authData.getAuth().getUserId();
+        UserResponse user = userServiceClient.getUserById(userId).getData();
+        System.out.println(user);
+        if (user == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
 
+        List<Booking> bookings = bookingRepository.getBookingsByUserId(userId);
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponseDTO)
+                .collect(Collectors.toList());
+    }
 
 
 }

@@ -4,9 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourDestinationResponse;
+import vn.edu.iuh.fit.bookingservice.entities.Destination;
+import vn.edu.iuh.fit.bookingservice.entities.Tour;
 import vn.edu.iuh.fit.bookingservice.entities.TourDestination;
+import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
 import vn.edu.iuh.fit.bookingservice.mapper.TourDestinationMapper;
+import vn.edu.iuh.fit.bookingservice.repositories.DestinationRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourDestinationRepository;
+import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
+import vn.edu.iuh.fit.bookingservice.services.DestinationService;
 import vn.edu.iuh.fit.bookingservice.services.TourDestinationService;
 
 import java.util.List;
@@ -18,6 +24,10 @@ public class TourDestinationServiceImpl implements TourDestinationService {
     private TourDestinationRepository tourDestinationRepository;
     @Autowired
     private TourDestinationMapper tourDestinationMapper;
+    @Autowired
+    private TourRepository tourRepository;
+    @Autowired
+    private DestinationRepository destinationRepository;
 
     @Override
     public List<TourDestinationResponse> getAllTourDestination() {
@@ -34,8 +44,12 @@ public class TourDestinationServiceImpl implements TourDestinationService {
     }
 
     @Override
-    public TourDestinationResponse createTourDestination(TourDestinationRequest tourDestinationRequest) {
-        TourDestination tourDestination =  tourDestinationMapper.toTourDestination(tourDestinationRequest);
+    public TourDestinationResponse createTourDestination(TourDestinationRequest request) {
+        Tour tour = tourRepository.findById(request.getTourId()).orElseThrow(() -> new NotFoundException("Tour không tồn tại"));
+        Destination destination = destinationRepository.findById(request.getDestinationId()).orElseThrow(() -> new NotFoundException("Không tìm thấy Destiantion"));
+        TourDestination tourDestination =  tourDestinationMapper.toTourDestination(request);
+        tourDestination.setTour(tour);
+        tourDestination.setDestination(destination);
         TourDestination savedTourDestination = tourDestinationRepository.save(tourDestination);
         return tourDestinationMapper.toTourDestinationResponse(savedTourDestination);
     }

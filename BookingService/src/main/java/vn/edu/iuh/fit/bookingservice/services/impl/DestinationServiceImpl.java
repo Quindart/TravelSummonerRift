@@ -37,6 +37,7 @@ public class DestinationServiceImpl  implements DestinationService {
 
     @Override
     public DestinationResponse createDestination(DestinationRequest destinationRequest) {
+
         Destination destination = destinationMapper.toDestination(destinationRequest);
         destination = destinationRepository.save(destination);
         if (destination == null) {
