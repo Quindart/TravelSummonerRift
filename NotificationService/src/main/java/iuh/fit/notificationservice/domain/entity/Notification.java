@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.entity;
+package iuh.fit.notificationservice.domain.entity;
 
 
 import lombok.*;

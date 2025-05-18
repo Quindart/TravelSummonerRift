@@ -1,7 +1,7 @@
 package iuh.fit.notificationservice.controller;
 
-import iuh.fit.notificationservice.entity.Notification;
-import iuh.fit.notificationservice.exception.MessageResponse;
+import iuh.fit.notificationservice.domain.entity.Notification;
+import iuh.fit.notificationservice.domain.exception.MessageResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
