@@ -4,12 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
+import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, String> {
     List<Booking> getBookingsByUserId(String userId);
+    List<Booking> findAllByStatus(BookingStatus status);
 
     Optional<Booking> findByUserIdAndTourSchedule_tourScheduleId(String userId, String tourScheduleId);
 }

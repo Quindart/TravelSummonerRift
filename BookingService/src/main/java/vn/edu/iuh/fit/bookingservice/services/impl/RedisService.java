@@ -21,10 +21,13 @@ public class RedisService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     private  final ObjectMapper  objectMapper;
+    private static final String PREFIX = "booking:";
 
     public RedisService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
+
+
 
 
     public <T> void setValue(String key, Object value, int timeout) throws JsonProcessingException {
@@ -41,6 +44,26 @@ public class RedisService {
         String json = (String) this.redisTemplate.opsForValue().get(key);
         if(json == null) return null;
         return objectMapper.readValue(json,typeReference);
+    }
+
+
+    // Lưu booking vào Redis với TTL 15 phút
+    public void saveBooking(String bookingId) {
+        String key = PREFIX + bookingId;
+        redisTemplate.opsForValue().set(key, "PENDING", 20, TimeUnit.MINUTES);
+    }
+
+    // Kiểm tra TTL còn lại
+    public long getTTL(String bookingId) {
+        String key = PREFIX + bookingId;
+        Long ttl = redisTemplate.getExpire(key, TimeUnit.SECONDS);
+        return ttl != null ? ttl : -2;  // -2 là không tồn tại
+    }
+
+    // Kiểm tra key còn tồn tại
+    public boolean isBookingExist(String bookingId) {
+        String key = PREFIX + bookingId;
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
 }
