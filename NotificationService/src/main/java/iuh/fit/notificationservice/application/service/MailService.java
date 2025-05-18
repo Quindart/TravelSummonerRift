@@ -30,7 +30,7 @@ public class MailService {
         SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
 
         sendSmtpEmail.setSubject("OTP Verification");
-        sendSmtpEmail.setTemplateId(2L);
+        sendSmtpEmail.setTemplateId(3L);
         sendSmtpEmail.setTo(List.of(new SendSmtpEmailTo().email("ldmhieudev@gmail.com").name("HieuDepTrai")));
         sendSmtpEmail.setReplyTo(new SendSmtpEmailReplyTo().email("support@yourdomain.com").name("Support"));
         sendSmtpEmail.setParams(Map.of("otp", otp, "url", "https://yourdomain.com/verify?code=" + otp));
