@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BookingService{
-    List<BookingResponse> findBookingsByUserId(String userId);
     BookingResponseDTO createBooking(BookingRequest request);
+    List<BookingResponseDTO> getBookingHistory();
 }
