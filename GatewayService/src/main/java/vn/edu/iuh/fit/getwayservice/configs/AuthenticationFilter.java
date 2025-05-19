@@ -49,6 +49,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             "/booking-service/reviews.*",
             "/booking-service/category-tours.*",
             "/booking-service/vnpay.*",
+            "/notification-service/.*",
             //swagger
             "/swagger-ui.*",
             "/swagger-ui/.*",

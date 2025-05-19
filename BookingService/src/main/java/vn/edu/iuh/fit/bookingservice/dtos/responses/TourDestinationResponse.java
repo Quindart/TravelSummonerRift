@@ -9,5 +9,6 @@ public class TourDestinationResponse {
     private String description;
     private String image;
     private boolean isActive;
+    private int orderIndex;
     private DestinationResponse destination;
 }

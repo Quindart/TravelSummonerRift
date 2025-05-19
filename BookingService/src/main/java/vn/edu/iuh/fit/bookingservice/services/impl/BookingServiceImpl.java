@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -24,6 +26,7 @@ import vn.edu.iuh.fit.bookingservice.repositories.TicketRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
 import vn.edu.iuh.fit.bookingservice.services.BookingService;
+import vn.edu.iuh.fit.bookingservice.services.IAuthData;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,40 +45,15 @@ public class BookingServiceImpl implements BookingService {
     private final TicketRepository ticketRepository;
     private final BookingMapper bookingMapper;
     private final UserServiceClient userServiceClient;
+    private final RedisService redisService;
 
-    @Override
-    public List<BookingResponse> findBookingsByUserId(String userId) {
-        String jpql = "SELECT b FROM Booking b WHERE b.userId = :userId";
-        TypedQuery<Booking> query = entityManager.createQuery(jpql, Booking.class);
-        query.setParameter("userId", userId);
-        List<Booking> bookings = query.getResultList();
-        return bookings.stream()
-                .map(booking -> new BookingResponse(
-                        booking.getBookingId(),
-                        booking.getStatus(),
-                        booking.getTotalPrice(),
-                        booking.getNote(),
-                        booking.getUserFullName(),
-                        booking.getUserPhone(),
-                        booking.getUserEmail(),
-                        booking.getUserAddress(),
-                        booking.getUserId()
-                ))
-                .toList();
-    }
+    @Autowired
+    private IAuthData authData;
 
     @Override
     public BookingResponseDTO createBooking(BookingRequest request) {
-        var context = SecurityContextHolder.getContext();
-        String name = context.getAuthentication().getName();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = null;
-        if (authentication instanceof JwtAuthenticationToken jwtAuth) {
-            Jwt jwt = jwtAuth.getToken();
-            userId = jwt.getClaimAsString("userId");
-        }
-
+        String userId = this.authData.getAuth().getUserId();
         UserResponse user = userServiceClient.getUserById(userId).getData();
         System.out.println(user);
         if (user == null) {
@@ -143,11 +121,27 @@ public class BookingServiceImpl implements BookingService {
         double totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
         booking.setTotalPrice(totalPrice);
         bookingRepository.save(booking);
-
-        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking, tickets);
+        booking.setTickets(tickets);
+        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking);
         response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
 
+        redisService.saveBooking(booking.getBookingId());
         return response;
+    }
+
+    @Override
+    public List<BookingResponseDTO> getBookingHistory() {
+        String userId = this.authData.getAuth().getUserId();
+        UserResponse user = userServiceClient.getUserById(userId).getData();
+        System.out.println(user);
+        if (user == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
+
+        List<Booking> bookings = bookingRepository.getBookingsByUserId(userId);
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponseDTO)
+                .collect(Collectors.toList());
     }
 
 

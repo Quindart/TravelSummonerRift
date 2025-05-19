@@ -12,6 +12,7 @@ import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 @Mapper(componentModel = "spring")
 public interface TourMapper {
     Tour toTour(TourRequest tourRequest);
+    @Mapping(target = "categoryTour", source = "categoryTour")
     TourResponse toTourResponse(Tour tour);
 
     TourOverviewResponse toTourOverviewResponse(Tour tour);

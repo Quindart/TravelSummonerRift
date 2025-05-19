@@ -36,7 +36,7 @@ public class SecurityConfig {
             "/users/register",
             "files/**",
             "/api/em-zy-cute-voai",
-
+"/files/**"
     };
 
 

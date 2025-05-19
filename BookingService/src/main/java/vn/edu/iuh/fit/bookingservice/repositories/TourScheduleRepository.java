@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TourScheduleRepository extends JpaRepository<TourSchedule, String> {
     public List<TourSchedule> findTourScheduleByTour_TourId(String tourId);
+
 }

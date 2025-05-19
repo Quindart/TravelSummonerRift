@@ -144,8 +144,6 @@ public class AuthenticationService {
     }
 
     private String generateToken(User user) {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
-
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("zycute")
@@ -157,18 +155,20 @@ public class AuthenticationService {
                 .claim("userId", user.getUserId())
                 .build();
 
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-
-        JWSObject jwsObject = new JWSObject(header, payload);
+        SignedJWT signedJWT = new SignedJWT(
+                new JWSHeader(JWSAlgorithm.HS512),
+                jwtClaimsSet
+        );
 
         try {
-            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-            return jwsObject.serialize();
+            signedJWT.sign(new MACSigner(SIGNER_KEY.getBytes()));
+            return signedJWT.serialize();
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
             throw new RuntimeException(e);
         }
     }
+
 
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());

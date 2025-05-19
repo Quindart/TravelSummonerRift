@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.bookingservice.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.configs.TourSpecification;
@@ -95,45 +96,13 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourResponse createTour(TourRequest tourRequest) {
-        if (tourRequest.getName() == null || tourRequest.getName().isEmpty()) {
-            throw new IllegalArgumentException("Tên tour không được để trống");
-        }
-
-        try{
             Optional<CategoryTour> foundCategory = this.categoryTourRepository.findByCategoryTourId(tourRequest.getCategoryId());
             if(foundCategory == null) throw new NotFoundException("Không tim thấy category id ");
             Tour tour = tourMapper.toTour(tourRequest);
-            System.out.printf("foudn categorty"+foundCategory.toString());
-
+            tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
-
-            List<TourDestinationResponse> tourDestinationResponses = new ArrayList<>();
-            for(TourDestinationRequest tourDestinationRequest : tourRequest.getTourDestinationRequests()) {
-                TourDestination tourDestination = TourDestination.builder()
-                        .name(tourDestinationRequest.getName())
-                        .description(tourDestinationRequest.getDescription())
-                        .tour(savedTour)
-                        .build();
-                tourDestinationRepository.save(tourDestination);
-                tourDestinationResponses.add(tourDestinationMapper.toTourDestinationResponse(tourDestination));
-            }
-
-            List<TourImageResponse> tourImageResponses = new ArrayList<>();
-            int i = 1;
-            for (TourImageRequest tourImageRequest : tourRequest.getTourImageRequests()) {
-                tourImageRequest.setTourId(savedTour.getTourId());
-                tourImageRequest.setOrderIndex(i++);
-                TourImageResponse tourImage = tourImageService.saveTourImage(tourImageRequest);
-                tourImageResponses.add(tourImage);
-            }
-
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
-            tourResponse.setTourDestinationResponses(tourDestinationResponses);
-            tourResponse.setTourImageResponses(tourImageResponses);
             return tourResponse;
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi tạo tour: " + e.getMessage());
-        }
 
     }
 
@@ -273,5 +242,13 @@ public class TourServiceImpl implements TourService {
                 .map(tourMapper::toTourOverviewResponse)
                 .toList();
 
+    }
+
+    @Override
+    public List<TourScheduleResponse> getTourSchedules(String tourId) {
+        Tour tour = tourRepository.findById(tourId).orElseThrow(
+                () -> new NotFoundException("Không tìm thấy tour này")
+        );
+        return tourScheduleMapper.entityToResponseList(tourScheduleRepository.findTourScheduleByTour_TourId(tourId));
     }
 }

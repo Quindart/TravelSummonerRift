@@ -58,3 +58,10 @@ WORKDIR /app
 COPY --from=builder /app/BookingService/target/*.jar app.jar
 EXPOSE 1902
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Notification Service
+FROM eclipse-temurin:17-jre AS notification-service
+WORKDIR /app
+COPY --from=builder /app/NotificationService/target/*.jar app.jar
+EXPOSE 2005
+ENTRYPOINT ["java", "-jar", "app.jar"]

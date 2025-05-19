@@ -11,5 +11,5 @@ import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 public interface TicketRepository extends JpaRepository<Ticket, String> {
     long countByTourSchedule(TourSchedule tourSchedule);
     long countByBooking_BookingId(String bookingId);
-    void deleteByBooking(Booking booking);
+    void deleteByBooking_BookingId(String bookingId);
 }
