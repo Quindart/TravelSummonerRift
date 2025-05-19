@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+py-eureka-client
+python-dotenv
+langchain-core
+langgraph>0.2.27
+langchain[mistralai]
+langchain[openai]
+langchainhub
+langchain_community
+langchain
+psycopg2-binary
