@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class NotificationController {
     private final MailService mailService;
-    private  final Logger logger = (Logger) LoggerFactory.getLogger(NotificationController.class);
     @PostMapping(value = "/send-mail")
     public MessageResponse<Notification> sendMail(@RequestBody() NotificationRequest data){
 
