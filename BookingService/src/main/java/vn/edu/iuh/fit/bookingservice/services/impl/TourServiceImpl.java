@@ -55,7 +55,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourResponse> getAllTours() {
-        List<TourResponse> tourResponses =  tourRepository.findAll().stream()
+        List<TourResponse> tourResponses =  tourRepository.findByIsActiveTrue().stream()
                                 .map(tourMapper::toTourResponse)
                                 .toList();
         for (TourResponse tourResponse : tourResponses) {
@@ -115,10 +115,8 @@ public class TourServiceImpl implements TourService {
         updatedTour.setDescription(tourRequest.getDescription());
         updatedTour.setDuration(tourRequest.getDuration());
         updatedTour.setPrice(tourRequest.getPrice());
-
-
+        updatedTour.setThumbnail(tourRequest.getThumbnail());
         tourRepository.save(updatedTour);
-
         return getTourById(tourId);
     }
 
