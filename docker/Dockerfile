@@ -27,7 +27,7 @@ COPY DiscoveryService DiscoveryService/
 RUN mvn -f BookingService/pom.xml clean package -DskipTests
 RUN mvn -f UserService/pom.xml clean package -DskipTests
 RUN mvn -f GatewayService/pom.xml clean package -DskipTests
-# RUN mvn -f NotificationService/pom.xml clean package -DskipTests
+RUN mvn -f NotificationService/pom.xml clean package -DskipTests
 RUN mvn -f DiscoveryService/pom.xml clean package -DskipTests
 
 # ========================== RUNTIME STAGES ==========================
