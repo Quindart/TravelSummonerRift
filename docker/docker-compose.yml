@@ -69,16 +69,32 @@ services:
     networks:
       - my-network
 
-  notification-service:
+  # notification-service:
+  #   build:
+  #     context: ..
+  #     dockerfile: docker/Dockerfile
+  #     target: notification-service
+  #   container_name: notification-service
+  #   env_file:
+  #     - ../.env
+  #   ports:
+  #     - "2005:2005"
+  #   depends_on:
+  #     discovery-service:
+  #       condition: service_healthy
+  #   restart: always
+  #   networks:
+  #     - my-network
+  chatbot-service:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
-      target: notification-service
-    container_name: notification-service
+      context: ..                            # Cùng context như các service khác
+      dockerfile: docker/Dockerfile          # Trỏ đúng đến Dockerfile
+      target: chatbot-service                # Target cụ thể nếu bạn đang dùng multi-stage
+    container_name: chatbot-service
     env_file:
       - ../.env
     ports:
-      - "2005:2005"
+      - "1210:1210"
     depends_on:
       discovery-service:
         condition: service_healthy
