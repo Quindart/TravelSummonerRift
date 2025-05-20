@@ -5,6 +5,7 @@ import vn.edu.iuh.fit.bookingservice.entities.Destination;
 
 @Data
 public class TourDestinationResponse {
+    private String tourDestinationId;
     private String name;
     private String description;
     private String image;
