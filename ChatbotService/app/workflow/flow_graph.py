@@ -45,9 +45,6 @@ class FlowGraph:
     def run(self, question: str, thread_id: str, user_id: str):
         initial_state: State = {
             "question": question,
-            "query": "",
-            "result": "",
-            "answer": "",
             "language": "Vietnamese",
             "next_state": "generate",
             "messages": [],

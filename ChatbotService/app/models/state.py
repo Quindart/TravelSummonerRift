@@ -1,14 +1,11 @@
 from typing import List
 from typing_extensions import TypedDict
-
+from app.models.message import Message
 
 class State(TypedDict):
     question: str
-    query: str
-    result: str
-    answer: str
     language: str
     next_state: str
     thread_id: str
     user_id: str
-    messages: List[any]
+    messages: List[Message]

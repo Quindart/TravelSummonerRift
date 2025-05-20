@@ -1,23 +1,27 @@
 class BasePrompt:
     def __init__(self):
         self.route_instruction = """
-            Bạn là chuyên gia định tuyến câu hỏi cho ứng dụng du lịch.  
+            ***** Lưu ý: Chỉ trả về kết quả dưới dạng được yêu cầu *****
+            Bạn là chuyên gia định tuyến câu hỏi cho ứng dụng du lịch .  
             Hãy phân tích nội dung câu hỏi và quyết định nguồn xử lý phù hợp theo quy tắc sau:
 
             - **tools**: Sử dụng khi câu hỏi cần truy vấn dữ liệu nội bộ từ cơ sở dữ liệu, ví dụ:
-            - “Cho tôi 5 tour có giá rẻ nhất”
-            - “Lấy danh sách tour Hà Nội”
-            - “Thông tin chi tiết tour biển Đà Nẵng”
-            - **generate**: Sử dụng khi câu hỏi không yêu cầu truy vấn DB, ví dụ:
-            - “Tư vấn lịch trình du lịch 3 ngày ở Sài Gòn”
-            - “Giải thích vì sao nên đi du lịch miền Tây”
-            - “Mẹo chuẩn bị hành lý khi đi du lịch”
+                - “Cho tôi 5 tour có giá rẻ nhất”
+                - “Lấy danh sách tour Hà Nội”
+                - “Thông tin chi tiết tour biển Đà Nẵng”
+                - “Tôi đã đặt những tour nào rồi?”
+                - “Lịch sử đặt tour của tôi là gì?”
+                - “Thông tin tài khoản của tôi là gì?”
+                - “Email và số điện thoại tôi đã dùng để đăng ký?”
+                - “Tôi đã đặt tour đi Đà Lạt chưa?”
+            - **generate**: Sử dụng khi câu hỏi không cần truy vấn dữ liệu nội bộ hoặc không thể truy vấn được từ cơ sở dữ liệu
+
 
             Luôn trả về kết quả dưới dạng JSON, chỉ chứa key `datasource` với giá trị `"tools"` hoặc `"generate"`. Ví dụ:
 
-            {{
+            {
                 "datasource": "tools"
-            }}
+            }
         """
         
         self.generate_prompt =  """
@@ -101,12 +105,36 @@ class BasePrompt:
         """
 
         self.tool_prompt = """
-            Tạo câu trả lời Markdown từ câu hỏi {question} và dữ liệu API {tool_run}.
-            Nếu chứa tour_id, thêm liên kết dưới dạng: [Xem chi tiết tour](https://localhost:3000/tour/tour_id), 
-            thay `tour_id` bằng giá trị thực tế.
+            Tạo câu trả lời dạng Markdown từ câu hỏi: {question} và dữ liệu API: {tool_run}.
 
-            Trả về Markdown cơ bản, đừng viết markdown code block hoặc bảng (table) nào cả.
-            Lưu ý: Chỉ trả về Markdown, không được thêm chú thích, tiêu đề phụ hoặc ` ```markdown ` vào nội dung.
+            Phân tích {question} nếu có địa điểm thì hãy nhớ nó
+            Nếu câu hỏi liên quan đến "tour ở đâu", "tour tại", "tour đi đến", "tour + địa điểm" hoặc các từ khóa tương tự về địa điểm, chỉ trả lời các tour có tên (field `name` hoặc `description`) chứa tên địa điểm được hỏi trong dữ liệu trước khi trình bày.
+            Nếu không tìm thấy tour nào phù hợp, hãy trả lời: "Xin lỗi, hiện tại không có tour nào phù hợp với yêu cầu của bạn. Bạn có muốn tìm hiểu thêm về các tour khác không?"
+
+
+            ****** Lưu ý: Trả về kết quả dưới dạng được yêu cầu *****
+            Nếu dữ liệu chứa `tour_id`, tạo liên kết dưới dạng:
+            [Xem chi tiết](https://localhost:3000/tour/tour_id), thay `tour_id` bằng giá trị thực tế.
+
+            Nếu dữ liệu chứa thông tin người dùng, hiển thị các trường như tên, email, số điện thoại, ngày sinh, giới tính... một cách tự nhiên, rõ ràng, lịch sự và dễ hiểu.
+
+            Nếu dữ liệu liên quan đến đặt tour (booking), trả lời như sau:
+            Danh sách các tour mà bạn đã đặt:
+            - Mã đặt tour (`booking_id`)
+            - Tên tour
+            - Ngày bắt đầu và kết thúc
+            - Tổng số tiền đã thanh toán (`total_price`)
+            - Trạng thái đơn (`status`)
+            - Các mức giá tour (người lớn, trẻ em, em bé)
+            - Xem chi tiết tour [Xem chi tiết](https://localhost:3000/tour/tour_id), thay `tour_id` bằng giá trị thực tế.
+
+
+            Trình bày thông tin một cách rõ ràng, tự nhiên, thân thiện và dễ đọc. Diễn giải như bạn đang là 1 tư vấn viên trả lời cho khách hàng.
+
+            Chỉ trả về nội dung Markdown đơn giản. Không sử dụng tiêu đề phụ, bảng (table), block code hoặc ghi chú không cần thiết.
+            Không bao gồm ` ```markdown ` hay bất kỳ ký hiệu đánh dấu nào ngoài cú pháp Markdown thông thường.
+
         """
+
 
 

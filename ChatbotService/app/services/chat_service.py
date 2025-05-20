@@ -12,6 +12,6 @@ async def root():
 async def chat(request: ChatRequest):
     try:
         result = flow_graph.run(request.question, request.thread_id, request.user_id)
-        return result
+        return { "data": result, "status": 200 }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
