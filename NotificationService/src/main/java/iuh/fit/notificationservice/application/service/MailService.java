@@ -21,7 +21,7 @@ public class MailService {
     @Value("${brevo.apikey}")
     private String apiKeyString;
     private static final Logger logger = LoggerFactory.getLogger(MailService.class);
-    public boolean sendUserConfirmation(String account, String otp) {
+    public boolean sendUserConfirmation(String toEmail, String otp) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
         apiKey.setApiKey(apiKeyString);
@@ -31,7 +31,7 @@ public class MailService {
 
         sendSmtpEmail.setSubject("OTP Verification");
         sendSmtpEmail.setTemplateId(3L);
-        sendSmtpEmail.setTo(List.of(new SendSmtpEmailTo().email("ldmhieudev@gmail.com").name("HieuDepTrai")));
+        sendSmtpEmail.setTo(List.of(new SendSmtpEmailTo().email(toEmail).name(otp)));
         sendSmtpEmail.setReplyTo(new SendSmtpEmailReplyTo().email("support@yourdomain.com").name("Support"));
         sendSmtpEmail.setParams(Map.of("otp", otp, "url", "https://yourdomain.com/verify?code=" + otp));
 
