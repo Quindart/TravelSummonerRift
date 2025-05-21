@@ -13,7 +13,7 @@ import vn.edu.iuh.fit.bookingservice.services.TourDestinationService;
 import java.util.List;
 
 @RestController
-    @RequestMapping("/tour-destinations")
+@RequestMapping("/tour-destinations")
 public class TourDestinationController {
 
     @Autowired
@@ -23,11 +23,16 @@ public class TourDestinationController {
     public ResponseEntity<MessageResponse<List<TourDestinationResponse>>> getAllTourDestinations() {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy danh sách điểm đến", tourDestinationService.getAllTourDestination());
     }
-
     @GetMapping("/{tourDestinationId}")
     public ResponseEntity<MessageResponse<TourDestinationResponse>> getTourDestinationById(@PathVariable String tourDestinationId) {
         return SuccessEntityResponse.FoundResponse("Đã tìm thấy điểm đến", tourDestinationService.getTourDestinationById(tourDestinationId));
     }
+
+    @GetMapping("tourId/{tourId}")
+    public ResponseEntity<MessageResponse<List<TourDestinationResponse>>> getTourDestinationByTourId(@PathVariable String tourId) {
+        return SuccessEntityResponse.FoundResponse("Đã tìm thấy điểm đến", tourDestinationService.getAllTourDestinationByTourId(tourId));
+    }
+
 
     @PostMapping
     public ResponseEntity<MessageResponse<TourDestinationResponse>> createTourDestination(@RequestBody @Valid TourDestinationRequest tourDestinationRequest) {

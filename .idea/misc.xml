@@ -11,15 +11,19 @@
         <option value="$PROJECT_DIR$/NotificationService/pom.xml" />
         <option value="$PROJECT_DIR$/GatewayService/pom.xml" />
         <option value="$PROJECT_DIR$/DiscoveryService/pom.xml" />
+        <option value="$PROJECT_DIR$/UserService/NotificationService/pom.xml" />
+        <option value="$PROJECT_DIR$/BookingService/NotificationService/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/BookingService/NotificationService/pom.xml" />
         <option value="$PROJECT_DIR$/TourService/pom.xml" />
+        <option value="$PROJECT_DIR$/UserService/NotificationService/pom.xml" />
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="com.github.lipiridi.spotless.applier.ui.settings.ModuleSettingsState">

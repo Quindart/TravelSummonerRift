@@ -12,10 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.bookingservice.dtos.PrincipalAuthentication;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.ReviewRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.*;
+import vn.edu.iuh.fit.bookingservice.entities.Booking;
 import vn.edu.iuh.fit.bookingservice.entities.Review;
 import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import vn.edu.iuh.fit.bookingservice.exception.errors.NotFoundException;
+import vn.edu.iuh.fit.bookingservice.exception.errors.UnauthorizedException;
 import vn.edu.iuh.fit.bookingservice.mapper.ReviewMapper;
+import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.ReviewRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourScheduleRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.httpclient.UserServiceClient;
@@ -43,6 +46,8 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserServiceClient userServiceClient;
     private final IAuthData authData;
     private final RedisService redisService;
+    private final BookingRepository bookingRepository;
+
 
     @Override
     public List<ReviewResponse> getReviewByTourId(int page, int size, String sortBy, String direction, String tour_id) {
@@ -69,9 +74,10 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponse addReview(MultipartFile[] files, ReviewRequest review) throws IOException {
         PrincipalAuthentication auth = this.authData.getAuth();
         String userId = auth.getUserId();
-
-         UserResponse foundUser = this.userServiceClient.getUserById(userId).getData();
-
+        UserResponse foundUser = this.userServiceClient.getUserById(userId).getData();
+        Booking booking = this.bookingRepository.findByUserIdAndTourSchedule_tourScheduleId(review.getTourScheduleId(),userId).orElseThrow(()->{
+            throw new UnauthorizedException("Bạn chưa đặt tour này nên chưa được đánh giá");
+        });
 
         TourSchedule foundTourSchedule = this.tourScheduleRepository.findById(review.getTourScheduleId()).orElseThrow(()->new NotFoundException("Không tìm thấy tour schedule"));
         List<String> linkFiles = new LinkedList<>();
@@ -121,7 +127,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ratingTotalResponse;
     }
-
 
     private List<FileReviewDto> handleConvertStringToListFileReview(String stringListFileReview){
         List<FileReviewDto> result = new LinkedList<>();
