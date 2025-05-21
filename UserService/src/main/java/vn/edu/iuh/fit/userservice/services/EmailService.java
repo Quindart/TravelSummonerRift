@@ -5,19 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.userservice.dtos.requests.NotificationRequest;
+import vn.edu.iuh.fit.userservice.dtos.requests.SendOtp;
+import vn.edu.iuh.fit.userservice.infra.client.MailServiceClient;
 
 @Service
 @Slf4j
 public class EmailService {
-    @Autowired
-    private JavaMailSender emailSender;
-
+   @Autowired
+   private MailServiceClient mailServiceClient;
     public void sendOtpEmail(String email, String otp) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("tieuvy5723@gmail.com");
-        message.setTo(email);
-        message.setSubject("Reset Password - OTP Verification");
-        message.setText("OTP của bạn là: " + otp + ".OTP này sẽ hết hạn trong 5 phút.");
-        emailSender.send(message);
+         mailServiceClient.sendMailOtp(SendOtp.builder().toEmail(email).otp(otp).build());
     }
 }

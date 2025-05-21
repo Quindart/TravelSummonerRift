@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.application.dto.request.notification;
+package vn.edu.iuh.fit.bookingservice.dtos.requests;
 
 import lombok.AccessLevel;
 import lombok.Builder;

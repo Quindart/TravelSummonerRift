@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.bookingservice.dtos.requests;
+package vn.edu.iuh.fit.userservice.dtos.requests;
 
 import lombok.AccessLevel;
 import lombok.Builder;

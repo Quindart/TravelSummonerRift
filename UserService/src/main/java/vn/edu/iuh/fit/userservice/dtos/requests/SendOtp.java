@@ -1,4 +1,4 @@
-package iuh.fit.notificationservice.application.dto.request.user;
+package vn.edu.iuh.fit.userservice.dtos.requests;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
