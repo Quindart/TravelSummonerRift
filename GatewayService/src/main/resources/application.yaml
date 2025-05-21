@@ -70,9 +70,16 @@ spring:
               args:
                 name: notificationService
                 fallbackUri: forward:/fallback/notification
+        
+        #Chatbot service
+        - id: chatbot_service
+          uri: ${GATEWAY_CHATBOT_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/chatbot-service/**
+          filters:
+            - StripPrefix=3
 
-
-      # Route cho Swagger UI, sử dụng cả hai dịch vụ
+        # Route cho Swagger UI, sử dụng cả hai dịch vụ
         - id: swagger-ui
           uri: http://localhost:${GATEWAY_SERVICE_PORT}
           predicates:
@@ -101,6 +108,14 @@ spring:
           filters:
             - StripPrefix=2
 
+        #chatbot swagger
+        - id: chatbot-service-docs
+          uri: ${GATEWAY_CHATBOT_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/chatbot-service/openapi.json
+          filters:
+            - StripPrefix=3
+
 
     zookeeper:
       config:
@@ -125,6 +140,8 @@ springdoc:
         url: /api/v1/booking-service/v3/api-docs
       - name: Notification Service
         url: /api/v1/notification-service/v3/api-docs
+      - name: Chatbot Service
+        url: /api/v1/chatbot-service/openapi.json
 
 logging:
   level:

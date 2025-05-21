@@ -4,3 +4,8 @@
 *.iml
 *.iws
 docker/nginx
+*.venv
+venv/
+**/__pycache__/
+**/*.py[cod]
+*.pyc

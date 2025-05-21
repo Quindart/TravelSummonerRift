@@ -85,6 +85,22 @@ services:
     restart: always
     networks:
       - my-network
+  chatbot-service:
+    build:
+      context: ..                            # Cùng context như các service khác
+      dockerfile: docker/Dockerfile          # Trỏ đúng đến Dockerfile
+      target: chatbot-service                # Target cụ thể nếu bạn đang dùng multi-stage
+    container_name: chatbot-service
+    env_file:
+      - ../.env
+    ports:
+      - "1210:1210"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+    restart: always
+    networks:
+      - my-network
 
   redis:
     image: redis
