@@ -124,8 +124,14 @@ public class VNPayService {
         Booking booking = bookingRepository.findById(txnRef)
                 .orElseThrow(() -> new NotFoundException("Booking không tồn tại!"));
 
+
+
         booking.setStatus(BookingStatus.PAID);
         bookingRepository.save(booking);
+
+        if(redisService.isBookingExist(txnRef)){
+            redisService.deleteBooking(txnRef);
+        }
     }
 
     @Scheduled(fixedDelay = 60000*5)
