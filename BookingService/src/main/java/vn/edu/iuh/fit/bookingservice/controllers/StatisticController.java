@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.bookingservice.dtos.BookingCategoryStatDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.TopTourByIdDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
@@ -20,7 +21,7 @@ public class StatisticController {
     private StatisticService statisticService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/category")
     public MessageResponse<List<BookingCategoryStatDTO>> statisticByCategory(@RequestParam int year) {
         List<BookingCategoryStatDTO> ls = statisticService.countBookingsByCategory(year);
         return MessageResponse.<List<BookingCategoryStatDTO>>builder()
@@ -30,4 +31,18 @@ public class StatisticController {
                 .data(ls)
                 .build();
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("top3-tour")
+    public MessageResponse<List<TopTourByIdDTO>> statisticTop3TourByYear(@RequestParam int year) {
+        List<TopTourByIdDTO> ls = statisticService.countTop3TourByYear(year);
+        return MessageResponse.<List<TopTourByIdDTO>>builder()
+                .success(true)
+                .statusCode(200)
+                .message("Thống kê booking theo category")
+                .data(ls)
+                .build();
+    }
+
+
 }
