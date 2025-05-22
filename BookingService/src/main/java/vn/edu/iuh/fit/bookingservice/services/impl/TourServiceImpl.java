@@ -28,10 +28,7 @@ import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 import vn.edu.iuh.fit.bookingservice.services.TourScheduleService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -109,16 +106,19 @@ public class TourServiceImpl implements TourService {
             tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
             List<String> listToken = this.tourRepository.findAllRecipientTokensOfActiveUsers();
-            listToken.stream().map((token)->{
-                this.mailServiceClient.sendNotification(NotificationRequest.builder()
-                        .recipientToken(token)
-                        .title("Thông báo từ tour TravelSummonorift")
-                        .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
-                        .image( "https://yourdomain.com/image.jpg")
-                        .data(new HashMap<>())
-                        .build());
-                return null;
-            });
+
+                listToken.stream()
+                .filter(Objects::nonNull)
+                .forEach(token -> {
+                    System.out.println(token);
+                    this.mailServiceClient.sendNotification(NotificationRequest.builder()
+                            .recipientToken(token)
+                            .title("Thông báo từ tour TravelSummonorift")
+                            .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
+                            .image("https://yourdomain.com/image.jpg")
+                            .data(new HashMap<>())
+                            .build());
+                });
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
             return tourResponse;
 
