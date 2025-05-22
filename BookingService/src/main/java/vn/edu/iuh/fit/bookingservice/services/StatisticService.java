@@ -7,6 +7,7 @@ import vn.edu.iuh.fit.bookingservice.dtos.BookingCategoryStatDTO;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,7 +16,7 @@ public class StatisticService {
     @Autowired
     private BookingRepository bookingRepository;
 
-    public List<BookingCategoryStatDTO> countBookingsByCategory() {
-        return bookingRepository.countBookingsByCategoryNative();
+    public List<BookingCategoryStatDTO> countBookingsByCategory(int year) {
+        return bookingRepository.countBookingsByCategoryInYear(year);
     }
 }

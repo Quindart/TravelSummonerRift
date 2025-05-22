@@ -10,6 +10,7 @@ import vn.edu.iuh.fit.bookingservice.exception.MessageResponse;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.services.StatisticService;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,8 +21,8 @@ public class StatisticController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public MessageResponse<List<BookingCategoryStatDTO>> statisticByCategory() {
-        List<BookingCategoryStatDTO> ls = statisticService.countBookingsByCategory();
+    public MessageResponse<List<BookingCategoryStatDTO>> statisticByCategory(@RequestParam int year) {
+        List<BookingCategoryStatDTO> ls = statisticService.countBookingsByCategory(year);
         return MessageResponse.<List<BookingCategoryStatDTO>>builder()
                 .success(true)
                 .statusCode(200)
