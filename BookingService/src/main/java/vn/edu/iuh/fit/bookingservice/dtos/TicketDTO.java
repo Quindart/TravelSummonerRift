@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,7 @@ public class TicketDTO {
     int status;
     String note;
     TicketType ticketType;
+    String fullName;
+    String gender;
+    Date birthDate;
 }
