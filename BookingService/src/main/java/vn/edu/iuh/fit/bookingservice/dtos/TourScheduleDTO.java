@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.iuh.fit.bookingservice.entities.Tour;
 
 import java.time.LocalDateTime;
 
@@ -17,4 +18,5 @@ public class TourScheduleDTO {
     String description;
     LocalDateTime startDate;
     LocalDateTime endDate;
+    String tourId;
 }

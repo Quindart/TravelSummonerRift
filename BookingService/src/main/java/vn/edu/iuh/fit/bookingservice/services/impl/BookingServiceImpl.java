@@ -112,6 +112,9 @@ public class BookingServiceImpl implements BookingService {
                     .note(ticketDTO.getNote())
                     .booking(finalBooking)
                     .tourSchedule(tourSchedule)
+                    .fullName(ticketDTO.getFullName())
+                    .birthDate(ticketDTO.getBirthDate())
+                    .gender(ticketDTO.getGender())
                     .build();
         }).collect(Collectors.toList());
 
@@ -129,6 +132,88 @@ public class BookingServiceImpl implements BookingService {
         return response;
     }
 
+
+    @Override
+    public BookingResponseDTO createBookingForAdmin(BookingRequest request) {
+
+        String userId = this.authData.getAuth().getUserId();
+        UserResponse user = userServiceClient.getUserById(userId).getData();
+        System.out.println(user);
+        if (user == null) {
+            throw new NotFoundException("Không tìm thấy người dùng");
+        }
+
+        Optional<TourSchedule> tourScheduleOpt = tourScheduleRepository.findById(request.getTourScheduleId());
+        if (tourScheduleOpt.isEmpty()) {
+            throw new RuntimeException("Tour Schedule không tồn tại!");
+        }
+        TourSchedule tourSchedule = tourScheduleOpt.get();
+
+        if (LocalDateTime.now().isAfter(tourSchedule.getStartDate())) {
+            throw new RuntimeException("Không thể đặt tour, ngày khởi hành đã qua!");
+        }
+
+        // Đếm số vé đã được đặt trước đó
+        long bookedTicketsCount = ticketRepository.countByTourSchedule(tourSchedule);
+
+        // Số lượng vé muốn đặt
+        int requestedTicketsCount = request.getTickets().size();
+
+        // Kiểm tra nếu đủ chỗ
+        if (bookedTicketsCount + requestedTicketsCount > tourSchedule.getSlot()) {
+            throw new RuntimeException("Không đủ chỗ để đặt vé! Số chỗ còn lại: "
+                    + (tourSchedule.getSlot() - bookedTicketsCount));
+        }
+
+        Booking booking = Booking.builder()
+                .status(BookingStatus.PAID)
+                .totalPrice(0) // Chưa tính tổng, sẽ cập nhật sau
+                .note(request.getNote())
+                .userFullName(request.getUserFullName())
+                .userPhone(request.getUserPhone())
+                .userEmail(request.getUserEmail())
+                .userAddress(request.getUserAddress())
+                .tourSchedule(tourSchedule)
+                .userId(userId)
+                .build();
+
+        booking = bookingRepository.save(booking);
+
+        // Tạo danh sách Ticket và lưu xuống DB
+        Booking finalBooking = booking;
+        List<Ticket> tickets = request.getTickets().stream().map(ticketDTO -> {
+            double ticketPrice = switch (ticketDTO.getTicketType()) {
+                case ADULT -> tourSchedule.getAdultPrice();
+                case CHILD -> tourSchedule.getChildPrice();
+                case BABY -> tourSchedule.getBabyPrice();
+            };
+
+            return Ticket.builder()
+                    .ticketType(ticketDTO.getTicketType())
+                    .price(ticketPrice) // Giá từ TourSchedule
+                    .status(1) // Mặc định active
+                    .note(ticketDTO.getNote())
+                    .booking(finalBooking)
+                    .tourSchedule(tourSchedule)
+                    .fullName(ticketDTO.getFullName())
+                    .birthDate(ticketDTO.getBirthDate())
+                    .gender(ticketDTO.getGender())
+                    .build();
+        }).collect(Collectors.toList());
+
+        ticketRepository.saveAll(tickets);
+
+        // Cập nhật lại tổng tiền booking
+        double totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
+        booking.setTotalPrice(totalPrice);
+        bookingRepository.save(booking);
+        booking.setTickets(tickets);
+        BookingResponseDTO response = bookingMapper.toBookingResponseDTO(booking);
+        response.setTickets(bookingMapper.toTicketResponseDTOs(tickets));
+        return response;
+    }
+
+
     @Override
     public List<BookingResponseDTO> getBookingHistory() {
         String userId = this.authData.getAuth().getUserId();
@@ -139,6 +224,14 @@ public class BookingServiceImpl implements BookingService {
         }
 
         List<Booking> bookings = bookingRepository.getBookingsByUserId(userId);
+        return bookings.stream()
+                .map(bookingMapper::toBookingResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookingResponseDTO> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll();
         return bookings.stream()
                 .map(bookingMapper::toBookingResponseDTO)
                 .collect(Collectors.toList());

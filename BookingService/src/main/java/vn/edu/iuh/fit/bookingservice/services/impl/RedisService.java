@@ -66,4 +66,9 @@ public class RedisService {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
+    public void deleteBooking(String bookingId) {
+        String key = PREFIX + bookingId;
+        redisTemplate.delete(key);
+    }
+
 }
