@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.bookingservice.dtos.BookingCategoryStatDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.MonthlyRevenueDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.TopTourByIdDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
@@ -37,6 +38,18 @@ public class StatisticController {
     public MessageResponse<List<TopTourByIdDTO>> statisticTop3TourByYear(@RequestParam int year) {
         List<TopTourByIdDTO> ls = statisticService.countTop3TourByYear(year);
         return MessageResponse.<List<TopTourByIdDTO>>builder()
+                .success(true)
+                .statusCode(200)
+                .message("Thống kê booking theo category")
+                .data(ls)
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("monthly-revenue")
+    public MessageResponse<List<MonthlyRevenueDTO>> statisticMonthlyRevenueByYear(@RequestParam int year) {
+        List<MonthlyRevenueDTO> ls = statisticService.statisticMonthlyRevenueByYear(year);
+        return MessageResponse.<List<MonthlyRevenueDTO>>builder()
                 .success(true)
                 .statusCode(200)
                 .message("Thống kê booking theo category")

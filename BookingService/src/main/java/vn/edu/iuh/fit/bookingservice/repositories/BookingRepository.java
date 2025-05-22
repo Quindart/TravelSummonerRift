@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.bookingservice.dtos.BookingCategoryStatDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.MonthlyRevenueDTO;
 import vn.edu.iuh.fit.bookingservice.entities.Booking;
 import vn.edu.iuh.fit.bookingservice.enums.BookingStatus;
 
@@ -32,4 +33,18 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
         ORDER BY count DESC
         """, nativeQuery = true)
     List<BookingCategoryStatDTO> countBookingsByCategoryInYear(@Param("year") int year);
+
+
+    @Query(value = """
+    SELECT 
+        EXTRACT(MONTH FROM b.created_at) AS month,
+        SUM(b.total_price) AS totalRevenue
+        FROM bookings b
+        WHERE b.status = 'PAID'
+          AND EXTRACT(YEAR FROM b.created_at) = :year
+        GROUP BY month
+        ORDER BY month
+        """, nativeQuery = true)
+    List<MonthlyRevenueDTO> getMonthlyRevenueByYear(@Param("year") int year);
+
 }

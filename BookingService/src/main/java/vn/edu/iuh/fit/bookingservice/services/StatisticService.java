@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.BookingCategoryStatDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.MonthlyRevenueDTO;
 import vn.edu.iuh.fit.bookingservice.dtos.TopTourByIdDTO;
 import vn.edu.iuh.fit.bookingservice.repositories.BookingRepository;
 import vn.edu.iuh.fit.bookingservice.repositories.TourRepository;
@@ -27,5 +28,9 @@ public class StatisticService {
 
     public List<TopTourByIdDTO> countTop3TourByYear(int year) {
         return tourRepository.findTop3TourIdsByYear(year);
+    }
+
+    public List<MonthlyRevenueDTO> statisticMonthlyRevenueByYear(int year) {
+        return bookingRepository.getMonthlyRevenueByYear(year);
     }
 }
