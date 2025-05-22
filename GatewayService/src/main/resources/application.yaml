@@ -59,9 +59,27 @@ spring:
               args:
                 name: bookingService
                 fallbackUri: forward:/fallback/booking
+        #Notification service
+        - id: notification_service
+          uri: ${GATEWAY_NOTIFICATION_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/notification-service/**
+          filters:
+            - StripPrefix=2
+            - name: CircuitBreaker
+              args:
+                name: notificationService
+                fallbackUri: forward:/fallback/notification
+        
+        #Chatbot service
+        - id: chatbot_service
+          uri: ${GATEWAY_CHATBOT_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/chatbot-service/**
+          filters:
+            - StripPrefix=3
 
-
-      # Route cho Swagger UI, sử dụng cả hai dịch vụ
+        # Route cho Swagger UI, sử dụng cả hai dịch vụ
         - id: swagger-ui
           uri: http://localhost:${GATEWAY_SERVICE_PORT}
           predicates:
@@ -82,6 +100,21 @@ spring:
             - Path=${app.api-prefix}/booking-service/v3/api-docs
           filters:
             - StripPrefix=2
+        #notification swagger
+        - id: notification-service-docs
+          uri: ${GATEWAY_NOTIFICATION_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/notification-service/v3/api-docs
+          filters:
+            - StripPrefix=2
+
+        #chatbot swagger
+        - id: chatbot-service-docs
+          uri: ${GATEWAY_CHATBOT_SERVICE_URI}
+          predicates:
+            - Path=${app.api-prefix}/chatbot-service/openapi.json
+          filters:
+            - StripPrefix=3
 
 
     zookeeper:
@@ -105,26 +138,10 @@ springdoc:
         url: /api/v1/user-service/v3/api-docs
       - name: Booking Service
         url: /api/v1/booking-service/v3/api-docs
-
-#Cấu hình Circuit Breaker
-#resilience4j:
-#  circuitbreaker:
-#    instances:
-#      userServiceCircuitBreaker:
-#        registerHealthIndicator: true
-#        slidingWindowSize: 10
-#        failureRateThreshold: 50
-#        waitDurationInOpenState: 10s
-#        permittedNumberOfCallsInHalfOpenState: 3
-#        minimumNumberOfCalls: 5
-#
-#      bookingServiceCircuitBreaker:
-#        registerHealthIndicator: true
-#        slidingWindowSize: 10
-#        failureRateThreshold: 50
-#        waitDurationInOpenState: 10s
-#        permittedNumberOfCallsInHalfOpenState: 3
-#        minimumNumberOfCalls: 5
+      - name: Notification Service
+        url: /api/v1/notification-service/v3/api-docs
+      - name: Chatbot Service
+        url: /api/v1/chatbot-service/openapi.json
 
 logging:
   level:
@@ -154,6 +171,15 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         failureRateThreshold: 50
         automaticTransitionFromOpenToHalfOpenEnabled: true
+      notificationService:
+        slidingWindowSize: 10
+        slowCallDurationThreshold: 5s         # ← Tăng ngưỡng "chậm" lên
+        slowCallRateThreshold: 100            # ← Cho phép 100% call chậm vẫn ok
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
 
   timelimiter:
     instances:
@@ -161,3 +187,7 @@ resilience4j:
         timeoutDuration: 6s                   # ← Tăng timeout để sleep 5s vẫn chạy
       bookingService:
         timeoutDuration: 20s
+      notificationService:
+        timeoutDuration: 20s
+
+

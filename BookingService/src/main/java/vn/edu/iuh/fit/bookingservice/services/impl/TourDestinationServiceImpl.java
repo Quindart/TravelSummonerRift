@@ -37,11 +37,20 @@ public class TourDestinationServiceImpl implements TourDestinationService {
     }
 
     @Override
+    public List<TourDestinationResponse> getAllTourDestinationByTourId(String tourId) {
+        return tourDestinationRepository.findByTour_TourId(tourId)
+                .stream().map(tourDestinationMapper::toTourDestinationResponse)
+                .toList();
+    }
+
+    @Override
     public TourDestinationResponse getTourDestinationById(String tourDestinationId) {
         return tourDestinationRepository.findById(tourDestinationId)
                 .map(tourDestinationMapper::toTourDestinationResponse)
                 .orElse(null);
     }
+
+
 
     @Override
     public TourDestinationResponse createTourDestination(TourDestinationRequest request) {

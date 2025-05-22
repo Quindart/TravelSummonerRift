@@ -22,10 +22,6 @@ public interface TourScheduleMapper {
     @Mapping(source = "tourId", target = "tour", qualifiedByName = "IdToTour")
     TourSchedule requestToEntity (TourScheduleRequest tourScheduleRequest);
 
-//    @Named("TourToId")
-//    default String TourToId(Tour tour){
-//        return tour != null?tour.getTourId():null;
-//    }
     @Named("IdToTour")
     default Tour IdToTour(String tourId){
         Tour tour = new Tour();

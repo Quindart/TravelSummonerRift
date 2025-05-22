@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface TourDestinationService {
     List<TourDestinationResponse> getAllTourDestination();
+    List<TourDestinationResponse> getAllTourDestinationByTourId(String tourId);
     TourDestinationResponse getTourDestinationById(String tourDestinationId);
     TourDestinationResponse createTourDestination(TourDestinationRequest tourDestination);
     TourDestinationResponse updateTourDestination(String tourDestinationId, TourDestinationRequest tourDestination);
     void deleteTourDestination(String tourDestinationId);
+
 }

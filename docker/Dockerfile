@@ -58,3 +58,28 @@ WORKDIR /app
 COPY --from=builder /app/BookingService/target/*.jar app.jar
 EXPOSE 1902
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Notification Service
+FROM eclipse-temurin:17-jre AS notification-service
+WORKDIR /app
+COPY --from=builder /app/NotificationService/target/*.jar app.jar
+EXPOSE 2005
+ENTRYPOINT ["java", "-jar", "app.jar"]
+# Sử dụng Python 3.12 slim image
+FROM python:3.12-slim AS chatbot-service
+
+# Thiết lập thư mục làm việc trong container
+WORKDIR /app
+
+# Sao chép requirements và cài đặt thư viện
+COPY ChatbotService/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Sao chép toàn bộ mã nguồn vào container
+COPY ChatbotService/ .
+
+# Expose port (tùy theo port bạn chạy, ở đây là 1210)
+EXPOSE 1210
+
+# Lệnh chạy Uvicorn với reload (không nên dùng reload trong production)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "1210"]
