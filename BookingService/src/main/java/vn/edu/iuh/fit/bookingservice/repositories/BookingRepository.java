@@ -29,4 +29,5 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
         ORDER BY count DESC
         """, nativeQuery = true)
     List<BookingCategoryStatDTO> countBookingsByCategoryNative();
+    Optional<List<Booking>> findByUserIdAndTourSchedule_tourScheduleId(String userId, String tourScheduleId);
 }
