@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.bookingservice.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.BookingRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.BookingResponseDTO;
@@ -34,6 +35,17 @@ public class BookingController {
                 .success(true)
                 .data(bookingService.getBookingHistory())
                 .message("Lịch sử booking")
+                .build();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping()
+    public MessageResponse<List<BookingResponseDTO>> getAllBookings(){
+        return MessageResponse.<List<BookingResponseDTO>>builder()
+                .statusCode(200)
+                .success(true)
+                .data(bookingService.getAllBookings())
+                .message("Danh sách booking")
                 .build();
     }
 

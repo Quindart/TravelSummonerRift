@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface BookingService{
     BookingResponseDTO createBooking(BookingRequest request);
     List<BookingResponseDTO> getBookingHistory();
+    List<BookingResponseDTO> getAllBookings();
 }
