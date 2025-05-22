@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.bookingservice.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import vn.edu.iuh.fit.bookingservice.dtos.responses.TourResponse;
 import vn.edu.iuh.fit.bookingservice.entities.Tour;
 
@@ -14,4 +15,6 @@ public interface TourRepository extends JpaRepository<Tour, String>, JpaSpecific
     List<Tour> findToursByCategoryTour_CategoryTourId(String categoryTourId);
     Optional<Tour> findToursByTourId(String tourId);
     List<Tour> findByIsActiveTrue();
+    @Query(value = "SELECT recipient_token FROM users WHERE is_active = true", nativeQuery = true)
+    List<String> findAllRecipientTokensOfActiveUsers();
 }

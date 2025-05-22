@@ -60,9 +60,6 @@ public class TourServiceImpl implements TourService {
     @Autowired
     private MailServiceClient mailServiceClient;
 
-    @Autowired
-    private  IAuthData authData;
-
 
     @Override
     public List<TourResponse> getAllTours() {
@@ -111,14 +108,17 @@ public class TourServiceImpl implements TourService {
             Tour tour = tourMapper.toTour(tourRequest);
             tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
-
-            this.mailServiceClient.sendNotification(NotificationRequest.builder()
-                            .recipientToken("fNIcXCYiIqLJ5NNJB8YgEp:APA91bEIvTLpAKiSXIVFrZw2WbRZUfGByfXy0bi9SHtj99yAAOtbOjiAfrlO7TvCHM4ozNO1A4fRIVW75CKPxEc7NIBqNGRukPD0REhhOVwMb8TkyE1rAuE")
-                            .title("Thông báo từ tour TravelSummonorift")
-                            .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
-                            .image( "https://yourdomain.com/image.jpg")
-                            .data(new HashMap<>())
-                    .build());
+            List<String> listToken = this.tourRepository.findAllRecipientTokensOfActiveUsers();
+            listToken.stream().map((token)->{
+                this.mailServiceClient.sendNotification(NotificationRequest.builder()
+                        .recipientToken(token)
+                        .title("Thông báo từ tour TravelSummonorift")
+                        .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
+                        .image( "https://yourdomain.com/image.jpg")
+                        .data(new HashMap<>())
+                        .build());
+                return null;
+            });
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
             return tourResponse;
 
