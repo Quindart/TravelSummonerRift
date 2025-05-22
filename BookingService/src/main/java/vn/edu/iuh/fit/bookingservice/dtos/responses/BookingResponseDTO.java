@@ -28,4 +28,5 @@ public class BookingResponseDTO {
 
     TourScheduleDTO tourSchedule;
     List<TicketDTO> tickets;
+
 }

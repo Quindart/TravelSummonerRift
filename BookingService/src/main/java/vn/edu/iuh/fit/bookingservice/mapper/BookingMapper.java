@@ -12,7 +12,9 @@ import vn.edu.iuh.fit.bookingservice.entities.Ticket;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
+
 public interface BookingMapper {
+    @Mapping(source = "tourSchedule.tour.tourId",target = "tourSchedule.tourId")
     BookingResponseDTO toBookingResponseDTO(Booking booking);
 
     List<TicketDTO> toTicketResponseDTOs(List<Ticket> tickets);

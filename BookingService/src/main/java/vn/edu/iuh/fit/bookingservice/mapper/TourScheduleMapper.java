@@ -14,6 +14,7 @@ import vn.edu.iuh.fit.bookingservice.entities.TourSchedule;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
+
 public interface TourScheduleMapper {
     //    Entity to ResponseDTO
     @Mapping(source = "tour.tourId",target = "tourId")
@@ -29,5 +30,6 @@ public interface TourScheduleMapper {
         return  tour;
     }
 
+    @Mapping(source = "tour.tourId",target = "tourId")
     List<TourScheduleResponse> entityToResponseList (List<TourSchedule> tourScheduleList);
 }
