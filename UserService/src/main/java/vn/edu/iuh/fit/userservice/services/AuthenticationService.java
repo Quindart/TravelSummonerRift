@@ -206,6 +206,10 @@ public class AuthenticationService {
         return "ROLE_" + user.getRole().name();
     }
 
+    public void notification(String userId, String token){
+        userRepository.updateRecipientTokenByUserId(userId, token);
+    }
+
     public void processForgotPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));

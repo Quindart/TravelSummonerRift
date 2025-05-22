@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.userservice.entities;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -27,11 +28,13 @@ public class User extends BaseEntity {
     String password;
     String fullName;
     String avatarUrl;
-
     Date birthday;
 
     Integer gender; //1: nam, 0 nữ
 
     @Enumerated(EnumType.STRING)
     Role role;
+
+    @Nullable
+    String recipientToken;
 }
