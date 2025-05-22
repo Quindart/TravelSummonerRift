@@ -28,6 +28,18 @@ public class BookingController {
                 .build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/create-booking-admin")
+    public MessageResponse<BookingResponseDTO> createBookingAdmin(@RequestBody BookingRequest request){
+        BookingResponseDTO response = bookingService.createBookingForAdmin(request);
+        return MessageResponse.<BookingResponseDTO>builder()
+                .statusCode(200)
+                .success(true)
+                .data(response)
+                .message("Dat tour thanh cong")
+                .build();
+    }
+
     @GetMapping("/my-bookings")
     public MessageResponse<List<BookingResponseDTO>> getBookingHistory(){
         return MessageResponse.<List<BookingResponseDTO>>builder()
