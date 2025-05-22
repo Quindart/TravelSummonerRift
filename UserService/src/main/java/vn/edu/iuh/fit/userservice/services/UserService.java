@@ -50,6 +50,8 @@ public class UserService {
         return userRepository.findByIsActive(true).orElse(Collections.emptyList()).stream().map(userMapper::toUserResponse).toList();
     }
 
+
+
     public UserResponse registerUser(UserRegisterRequest request) {
         String username = request.getUsername();
         if (userRepository.existsByUsername(username)) {

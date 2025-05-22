@@ -60,6 +60,14 @@ public class AuthController {
         return SuccessEntityResponse.OkResponse("Đăng nhập thành công", result);
     }
 
+    @PostMapping("/notification")
+    public MessageResponse<Object> saveToken(@RequestBody() FcmTokenRequest request) {
+        this.authenticationService.notification(request.getUserId(), request.getToken());
+        System.out.println(request+"aaaaa");
+        return MessageResponse.builder().message("Gửi token notification success").statusCode(200).success(true).build();
+    }
+
+
     @PostMapping("/introspect")
     ResponseEntity<MessageResponse<IntrospectResponse>> authenticate(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {

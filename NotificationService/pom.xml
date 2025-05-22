@@ -139,7 +139,22 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>9.4.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.auth</groupId>
+					<artifactId>google-auth-library-oauth2-http</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>1.19.0</version> <!-- Use a compatible version -->
+		</dependency>	</dependencies>
 
 	<build>
 		<plugins>

@@ -1,14 +1,18 @@
 package iuh.fit.notificationservice.application.dto.request.notification;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Map;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class NotificationRequest {
-    private String toEmail;
-    private String data;
+    String recipientToken;
+    String title;
+    String body;
+    String image;
+    Map<String,String> data;
 }
