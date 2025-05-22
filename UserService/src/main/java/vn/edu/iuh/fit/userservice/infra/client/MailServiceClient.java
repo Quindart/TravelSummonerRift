@@ -8,7 +8,7 @@ import vn.edu.iuh.fit.userservice.dtos.requests.NotificationRequest;
 import vn.edu.iuh.fit.userservice.dtos.requests.SendOtp;
 import vn.edu.iuh.fit.userservice.exception.MessageResponse;
 
-@FeignClient(name = "notification-service-client", contextId = "notificationClient", url = "http://localhost:2005/notification-service", configuration = {AuthenticationRequestInterceptor.class})
+@FeignClient(name = "notification-service-client", contextId = "notificationClient", url = "https://travelsummonerrift.me/api/v1/notification-service", configuration = {AuthenticationRequestInterceptor.class})
 public interface MailServiceClient {
     @PostMapping("/sendMail/send-mail")
     MessageResponse<Boolean> sendMailOtp(@RequestBody() SendOtp sendOtp);

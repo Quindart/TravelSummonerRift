@@ -116,6 +116,9 @@ public class TourServiceImpl implements TourService {
         updatedTour.setDuration(tourRequest.getDuration());
         updatedTour.setPrice(tourRequest.getPrice());
         updatedTour.setThumbnail(tourRequest.getThumbnail());
+        updatedTour.setCategoryTour(categoryTourRepository.findByCategoryTourId(tourRequest.getCategoryId()).orElseThrow(
+                ()->new NotFoundException("Không tim thấy category này")
+        ));
         tourRepository.save(updatedTour);
         return getTourById(tourId);
     }
