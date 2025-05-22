@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.bookingservice.dtos.TourScheduleDTO;
+import vn.edu.iuh.fit.bookingservice.dtos.requests.NotificationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourDestinationRequest;
 import vn.edu.iuh.fit.bookingservice.dtos.requests.TourImageRequest;
 import vn.edu.iuh.fit.bookingservice.configs.TourSpecification;
@@ -21,11 +22,14 @@ import vn.edu.iuh.fit.bookingservice.mapper.TourImageMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourMapper;
 import vn.edu.iuh.fit.bookingservice.mapper.TourScheduleMapper;
 import vn.edu.iuh.fit.bookingservice.repositories.*;
+import vn.edu.iuh.fit.bookingservice.repositories.httpclient.MailServiceClient;
+import vn.edu.iuh.fit.bookingservice.services.IAuthData;
 import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 import vn.edu.iuh.fit.bookingservice.services.TourScheduleService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +56,13 @@ public class TourServiceImpl implements TourService {
 
     @Autowired
     private CategoryTourRepository categoryTourRepository;
+
+    @Autowired
+    private MailServiceClient mailServiceClient;
+
+    @Autowired
+    private  IAuthData authData;
+
 
     @Override
     public List<TourResponse> getAllTours() {
@@ -87,7 +98,6 @@ public class TourServiceImpl implements TourService {
                         .stream()
                         .map(tourScheduleMapper::entityToResponse)
                         .toList();
-
         tourResponse.setTourDestinationResponses(tourDestinationResponses);
         tourResponse.setTourImageResponses(tourImageResponses);
         tourResponse.setTourScheduleResponses(tourScheduleResponses);
@@ -101,6 +111,14 @@ public class TourServiceImpl implements TourService {
             Tour tour = tourMapper.toTour(tourRequest);
             tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
+
+            this.mailServiceClient.sendNotification(NotificationRequest.builder()
+                            .recipientToken("fNIcXCYiIqLJ5NNJB8YgEp:APA91bEIvTLpAKiSXIVFrZw2WbRZUfGByfXy0bi9SHtj99yAAOtbOjiAfrlO7TvCHM4ozNO1A4fRIVW75CKPxEc7NIBqNGRukPD0REhhOVwMb8TkyE1rAuE")
+                            .title("Thông báo từ tour TravelSummonorift")
+                            .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
+                            .image( "https://yourdomain.com/image.jpg")
+                            .data(new HashMap<>())
+                    .build());
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
             return tourResponse;
 
