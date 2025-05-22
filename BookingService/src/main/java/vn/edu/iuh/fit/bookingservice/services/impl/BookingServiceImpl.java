@@ -112,6 +112,9 @@ public class BookingServiceImpl implements BookingService {
                     .note(ticketDTO.getNote())
                     .booking(finalBooking)
                     .tourSchedule(tourSchedule)
+                    .fullName(ticketDTO.getFullName())
+                    .birthDate(ticketDTO.getBirthDate())
+                    .gender(ticketDTO.getGender())
                     .build();
         }).collect(Collectors.toList());
 

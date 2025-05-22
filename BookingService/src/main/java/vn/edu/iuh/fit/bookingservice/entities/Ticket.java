@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.bookingservice.enums.TicketType;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "tickets")
@@ -39,5 +40,5 @@ public class Ticket extends BaseEntity {
 
     String fullName;
     String gender;
-    LocalDate birthDate;
+    Date birthDate;
 }
