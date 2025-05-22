@@ -75,7 +75,7 @@ public class ReviewServiceImpl implements ReviewService {
         PrincipalAuthentication auth = this.authData.getAuth();
         String userId = auth.getUserId();
         UserResponse foundUser = this.userServiceClient.getUserById(userId).getData();
-        Booking booking = this.bookingRepository.findByUserIdAndTourSchedule_tourScheduleId(userId,review.getTourScheduleId()).orElseThrow(()->{
+         this.bookingRepository.findByUserIdAndTourSchedule_tourScheduleId(userId,review.getTourScheduleId()).orElseThrow(()->{
             throw new UnauthorizedException("Bạn chưa đặt tour này nên chưa được đánh giá");
         });
 
