@@ -28,10 +28,7 @@ import vn.edu.iuh.fit.bookingservice.services.TourImageService;
 import vn.edu.iuh.fit.bookingservice.services.TourScheduleService;
 import vn.edu.iuh.fit.bookingservice.services.TourService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -59,9 +56,6 @@ public class TourServiceImpl implements TourService {
 
     @Autowired
     private MailServiceClient mailServiceClient;
-
-    @Autowired
-    private  IAuthData authData;
 
 
     @Override
@@ -111,14 +105,20 @@ public class TourServiceImpl implements TourService {
             Tour tour = tourMapper.toTour(tourRequest);
             tour.setCategoryTour(foundCategory.get());
             Tour savedTour = tourRepository.save(tour);
+            List<String> listToken = this.tourRepository.findAllRecipientTokensOfActiveUsers();
 
-            this.mailServiceClient.sendNotification(NotificationRequest.builder()
-                            .recipientToken("fNIcXCYiIqLJ5NNJB8YgEp:APA91bEIvTLpAKiSXIVFrZw2WbRZUfGByfXy0bi9SHtj99yAAOtbOjiAfrlO7TvCHM4ozNO1A4fRIVW75CKPxEc7NIBqNGRukPD0REhhOVwMb8TkyE1rAuE")
+                listToken.stream()
+                .filter(Objects::nonNull)
+                .forEach(token -> {
+                    System.out.println(token);
+                    this.mailServiceClient.sendNotification(NotificationRequest.builder()
+                            .recipientToken(token)
                             .title("Thông báo từ tour TravelSummonorift")
                             .body("Có tour mới được tạo từ travel, Nhận để xem ngay. Đăng kí ngay kẻo bỏ lỡ")
-                            .image( "https://yourdomain.com/image.jpg")
+                            .image("https://yourdomain.com/image.jpg")
                             .data(new HashMap<>())
-                    .build());
+                            .build());
+                });
             TourResponse tourResponse = tourMapper.toTourResponse(savedTour);
             return tourResponse;
 
